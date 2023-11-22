@@ -72,108 +72,99 @@ const upgradeBanner = computed(() => {
     </template>
 
     <template #vertical-nav-content>
-      <VerticalNavLink
-        :item="{
-          title: 'Dashboard',
-          icon: 'mdi-home-outline',
-          to: '/dashboard',
-        }"
-      />
-      <VerticalNavLink
-        :item="{
-          title: 'Account Settings',
-          icon: 'mdi-account-cog-outline',
-          to: '/account-settings',
-        }"
-      />
+      <div id="nav-container">
+        <div id="nav-group-1">
+          <!-- 👉 User Interface -->
+          <VerticalNavSectionTitle
+            :item="{
+              heading: '메뉴',
+            }"
+          />
+          <VerticalNavLink
+            :item="{
+              title: '홈',
+              icon: 'mdi-home-outline',
+              to: '/dashboard',
+            }"
+          />
+          <VerticalNavLink
+            :item="{
+              title: '접수',
+              icon: 'mdi-account-plus-outline',
+              // icon: 'mdi-account-cog-outline',
+              to: '/account-settings',
+            }"
+          />
 
-      <!-- 👉 Pages -->
-      <VerticalNavSectionTitle
-        :item="{
-          heading: 'Pages',
-        }"
-      />
-      <VerticalNavLink
-        :item="{
-          title: 'Login',
-          icon: 'mdi-login',
-          to: '/login',
-        }"
-      />
-      <VerticalNavLink
-        :item="{
-          title: 'Register',
-          icon: 'mdi-account-plus-outline',
-          to: '/register',
-        }"
-      />
-      <VerticalNavLink
-        :item="{
-          title: 'Error',
-          icon: 'mdi-information-outline',
-          to: '/no-existence',
-        }"
-      />
+          <VerticalNavLink
+            :item="{
+              title: '차트',
+              icon: 'mdi-form-select',
+              // icon: 'mdi-login',
+              to: '/login'
+            }"
+          />
+          <VerticalNavLink
+            :item="{
+              title: '검사',
+              // icon: 'mdi-account-plus-outline',
+              to: '/register',
+            }"
+          />
+          <VerticalNavLink
+            :item="{
+              title: '청구',
+              icon: 'mdi-credit-card-outline',
+              // icon: 'mdi-information-outline',
+              to: '/no-existence',
+            }"
+          />
+        </div>
 
-      <!-- 👉 User Interface -->
-      <VerticalNavSectionTitle
-        :item="{
-          heading: 'User Interface',
-        }"
-      />
-      <VerticalNavLink
-        :item="{
-          title: 'Typography',
-          icon: 'mdi-alpha-t-box-outline',
-          to: '/typography',
-        }"
-      />
-      <VerticalNavLink
-        :item="{
-          title: 'Icons',
-          icon: 'mdi-eye-outline',
-          to: '/icons',
-        }"
-      />
-      <VerticalNavLink
-        :item="{
-          title: 'Cards',
-          icon: 'mdi-credit-card-outline',
-          to: '/cards',
-        }"
-      />
-      <VerticalNavLink
-        :item="{
-          title: 'Tables',
-          icon: 'mdi-table',
-          to: '/tables',
-        }"
-      />
-      <VerticalNavLink
-        :item="{
-          title: 'Form Layouts',
-          icon: 'mdi-form-select',
-          to: '/form-layouts',
-        }"
-      />
-    </template>
-
-    <template #after-vertical-nav-items>
-      <!-- 👉 illustration -->
-      <a
-        href="https://themeselection.com/item/materio-vuetify-vuejs-admin-template"
-        target="_blank"
-        rel="noopener noreferrer"
-        style="margin-left: 7px;"
-      >
-        <img
-          :src="upgradeBanner"
-          alt="upgrade-banner"
-          transition="scale-transition"
-          class="upgrade-banner mx-auto"
-          style="max-width: 230px;"
-        >
-      </a>
+        <div id="nav-group-2">
+          <!-- 👉 User Interface -->
+          <VerticalNavSectionTitle
+            :item="{
+              heading: '환자 리스트',
+            }"
+          />
+          <VerticalNavLink
+            :item="{
+              title: 'Typography',
+              icon: 'mdi-alpha-t-box-outline',
+              to: '/typography',
+            }"
+          />
+          <VerticalNavLink
+            :item="{
+              title: 'Icons',
+              icon: 'mdi-eye-outline',
+              to: '/icons',
+            }"
+          />
+          <VerticalNavLink
+            :item="{
+              title: 'Cards',
+              icon: 'mdi-credit-card-outline',
+              to: '/cards',
+            }"
+          />
+          <VerticalNavLink
+            :item="{
+              title: 'Tables',
+              icon: 'mdi-table',
+              to: '/tables',
+            }"
+          />
+          <VerticalNavLink
+            :item="{
+              title: 'Form Layouts',
+              icon: 'mdi-form-select',
+              to: '/form-layouts',
+            }"
+          />
+        </div>
+      </div>
     </template>
 
     <!-- 👉 Pages -->
@@ -194,5 +185,14 @@ const upgradeBanner = computed(() => {
   line-height: 1.3125rem;
   padding-block: 0.125rem;
   padding-inline: 0.25rem;
+}
+
+#nav-container {
+  display: flex;
+}
+
+#nav-group-1,
+#nav-group-2 {
+  flex: 1
 }
 </style>

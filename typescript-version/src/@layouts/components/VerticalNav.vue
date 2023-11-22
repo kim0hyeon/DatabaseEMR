@@ -64,7 +64,7 @@ const handleNavScroll = (evt: Event) => {
           />
 
           <h1 class="font-weight-medium leading-normal text-xl text-uppercase">
-            Materio
+            EMR SYSTEM
           </h1>
         </RouterLink>
       </slot>
@@ -106,6 +106,7 @@ const handleNavScroll = (evt: Event) => {
   inset-inline-start: 0;
   transition: transform 0.25s ease-in-out, inline-size 0.25s ease-in-out, box-shadow 0.25s ease-in-out;
   will-change: transform, inline-size;
+  width: 30%;
 
   .nav-header {
     display: flex;

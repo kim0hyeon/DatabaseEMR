@@ -136,6 +136,13 @@ const clickList = () => {
               to: '/physiotherapy',
             }"
           />
+          <VerticalNavLink
+            :item="{
+              title: '통계',
+              icon: 'mdi-form-select',
+              to: '/statistics',
+            }"
+          />
         </div>
         
         <div id="nav-group-2">

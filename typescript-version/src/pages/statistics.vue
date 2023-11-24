@@ -3,38 +3,31 @@
 </script>
 
 <template>
-
-  <VRow>
-    <VCol cols="9">
-      <VCard title="진료내용">
-        <p style="text-align : center">진료 내용이 들어올 자리</p>
-      </VCard>
-    </VCol>
-
-    <VCol cols="3">
-      <VCard title="사진 & 영상" style="padding : 10px">
-        <p style="text-align : center">사진&영상 미리보기</p>
-        <VBtn class="mt-5 offset-md-8"> 업로드 </VBtn>
-      </VCard>
-    </VCol>
-  </VRow>
-
-  <VRow>
-    <VCol cols="6">
-      <VCard title="진단">
-        <p style="text-align : center">진단 내용이 들어올 자리</p>
-      </VCard>
-    </VCol>
-    
-    <VCol cols="6">
-      <VCard title="처방">
-        <p style="text-align : center">처방 내용이 들어올 자리</p>
-      </VCard>
-    </VCol>
-  </VRow>
+    <input text='text' placeholder="이름을 입력하세요" style="margin-bottom: 20px">
+    <VBtn class="mt- offset-md-0.1" style=""> 검색 </VBtn>
+    <VRow>
+        <VCol col=12>
+            <VCard title="환자 리스트">
+                <p style="text-align : center">검색한 환자 리스트</p>
+            </VCard>
+        </VCol>
+    </VRow>
+    <VRow>
+        <VCol col=12>
+            <VCard title="환자 통계">
+                <p style="text-align : center">통계 프레임</p>
+            </VCard>
+        </VCol>
+    </VRow>
 
 </template>
 
 <style lang="scss">
 @use "@core/scss/pages/page-auth.scss";
+input{
+    padding: 8px;
+    border: 3px solid blueviolet;
+    border-radius: 7px;
+    font-size: 14px;
+}
 </style>

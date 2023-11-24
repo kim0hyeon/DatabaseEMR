@@ -12,7 +12,7 @@
     </VCol>
 
     <VCol cols="3">
-      <VCard title="사진 & 영상" style="padding : 10px">
+      <VCard title="사진&영상" style="padding : 10px">
         <p style="text-align : center">사진&영상 미리보기</p>
         <VBtn class="mt-5 offset-md-8"> 업로드 </VBtn>
       </VCard>

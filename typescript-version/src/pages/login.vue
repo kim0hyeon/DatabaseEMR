@@ -1,121 +1,39 @@
 <script setup lang="ts">
-import AuthProvider from '@/views/pages/authentication/AuthProvider.vue'
-import { useTheme } from 'vuetify'
 
-import logo from '@images/logo.svg?raw'
-import authV1MaskDark from '@images/pages/auth-v1-mask-dark.png'
-import authV1MaskLight from '@images/pages/auth-v1-mask-light.png'
-import authV1Tree2 from '@images/pages/auth-v1-tree-2.png'
-import authV1Tree from '@images/pages/auth-v1-tree.png'
 
-const form = ref({
-  email: '',
-  password: '',
-  remember: false,
-})
-
-const vuetifyTheme = useTheme()
-const authThemeMask = computed(() => {
-  return vuetifyTheme.global.name.value === 'light'
-    ? authV1MaskLight
-    : authV1MaskDark
-})
-
-const isPasswordVisible = ref(false)
 </script>
 
 <template>
-    <div class="auth-wrapper d-flex align-center justify-center pa-4">
-      <VCard
-        class="auth-card pa-4 pt-7"
-        max-width="448"
-      >
-        <VCardItem class="justify-center">
-          <template #prepend>
-            <div class="d-flex">
-              <div v-html="logo" />
-            </div>
-          </template>
 
-          <VCardTitle class="font-weight-semibold text-2xl text-uppercase">
-            Materio
-          </VCardTitle>
-        </VCardItem>
-
-        <VCardText class="pt-2">
-          <h5 class="text-h5 font-weight-semibold mb-1">
-            Welcome to Materio! 👋🏻
-          </h5>
-          <p class="mb-0">
-            Please sign-in to your account and start the adventure
-          </p>
-        </VCardText>
-
-        <VCardText>
-          <VForm @submit.prevent="() => {}">
-            <VRow>
-              <!-- email -->
-              <VCol cols="12">
-                <VTextField
-                  v-model="form.email"
-                  label="Email"
-                  type="email"
-                />
-              </VCol>
-
-              <!-- password -->
-              <VCol cols="12">
-                <VTextField
-                  v-model="form.password"
-                  label="Password"
-                  :type="isPasswordVisible ? 'text' : 'password'"
-                  :append-inner-icon="isPasswordVisible ? 'mdi-eye-off-outline' : 'mdi-eye-outline'"
-                  @click:append-inner="isPasswordVisible = !isPasswordVisible"
-                />
-
-                <!-- remember me checkbox -->
-                <div class="d-flex align-center justify-space-between flex-wrap mt-1 mb-4">
-                  <VCheckbox
-                    v-model="form.remember"
-                    label="Remember me"
-                  />
-
-                  <a
-                    class="ms-2 mb-1"
-                    href="javascript:void(0)"
-                  >
-                    Forgot Password?
-                  </a>
-                </div>
-
-                <!-- login button -->
-                <VBtn
-                  block
-                  type="submit"
-                  to="/"
-                >
-                  Login
-                </VBtn>
-              </VCol>
-
-              <!-- create account -->
-              <VCol
-                cols="12"
-                class="text-center text-base"
-              >
-                <span>New on our platform?</span>
-                <RouterLink
-                  class="text-primary ms-2"
-                  to="/register"
-                >
-                  Create an account
-                </RouterLink>
-              </VCol>
-            </VRow>
-          </VForm>
-        </VCardText>
+  <VRow>
+    <VCol cols="9">
+      <VCard title="진료내용">
+        <p style="text-align : center">진료 내용이 들어올 자리</p>
       </VCard>
-    </div>
+    </VCol>
+
+    <VCol cols="3">
+      <VCard title="사진 & 영상" style="padding : 10px">
+        <p style="text-align : center">사진&영상 미리보기</p>
+        <VBtn class="mt-5 offset-md-8"> 업로드 </VBtn>
+      </VCard>
+    </VCol>
+  </VRow>
+
+  <VRow>
+    <VCol cols="6">
+      <VCard title="진단">
+        <p style="text-align : center">진단 내용이 들어올 자리</p>
+      </VCard>
+    </VCol>
+    
+    <VCol cols="6">
+      <VCard title="처방">
+        <p style="text-align : center">처방 내용이 들어올 자리</p>
+      </VCard>
+    </VCol>
+  </VRow>
+
 </template>
 
 <style lang="scss">

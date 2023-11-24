@@ -7,6 +7,7 @@ import router from '@/router'
 import '@core/scss/template/index.scss'
 import '@layouts/styles/index.scss'
 import '@styles/styles.scss'
+import axios from 'axios'
 import { createPinia } from 'pinia'
 import { createApp } from 'vue'
 
@@ -19,6 +20,7 @@ const app = createApp(App)
 app.use(vuetify)
 app.use(createPinia())
 app.use(router)
+app.config.globalProperties.$axios = axios
 
 // Mount vue app
 app.mount('#app')

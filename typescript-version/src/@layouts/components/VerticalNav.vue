@@ -1,8 +1,8 @@
 <script lang="ts" setup>
-import logo from '@images/logo.svg?raw'
-import type { Component } from 'vue'
-import { PerfectScrollbar } from 'vue3-perfect-scrollbar'
-import { useDisplay } from 'vuetify'
+import logo from '@images/logo.svg?raw';
+import type { Component } from 'vue';
+import { PerfectScrollbar } from 'vue3-perfect-scrollbar';
+import { useDisplay } from 'vuetify';
 
 interface Props {
   tag?: string | Component
@@ -50,7 +50,7 @@ const handleNavScroll = (evt: Event) => {
         'overlay-nav': mdAndDown,
       },
     ]"
-  >
+ >
     <!-- 👉 Header -->
     <div class="nav-header">
       <slot name="nav-header">
@@ -101,12 +101,13 @@ const handleNavScroll = (evt: Event) => {
   display: flex;
   flex-direction: column;
   block-size: 100%;
-  inline-size: variables.$layout-vertical-nav-width;
+
+  // inline-size: variables.$layout-vertical-nav-width;
+  inline-size: 30%;
   inset-block-start: 0;
   inset-inline-start: 0;
   transition: transform 0.25s ease-in-out, inline-size 0.25s ease-in-out, box-shadow 0.25s ease-in-out;
   will-change: transform, inline-size;
-  width: 30%;
 
   .nav-header {
     display: flex;

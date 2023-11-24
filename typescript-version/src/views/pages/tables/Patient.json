@@ -1,0 +1,28 @@
+{
+    "patients": [
+        {
+            "id": 1,
+            "name": "홍길동",
+            "age": 35,
+            "gender": "남성",
+            "diagnosis": "고혈압",
+            "admitted": true
+        },
+        {
+            "id": 2,
+            "name": "이순신",
+            "age": 45,
+            "gender": "남성",
+            "diagnosis": "당뇨",
+            "admitted": false
+        },
+        {
+            "id": 3,
+            "name": "김영희",
+            "age": 28,
+            "gender": "여성",
+            "diagnosis": "감기",
+            "admitted": true
+        }
+    ]
+}

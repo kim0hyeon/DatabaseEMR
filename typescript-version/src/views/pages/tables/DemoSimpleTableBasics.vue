@@ -1,40 +1,36 @@
 <script setup lang="ts">
-const desserts = [
+const examinations = [
   {
-    dessert: 'Frozen Yogurt',
-    calories: 159,
-    fat: 6,
-    carbs: 24,
-    protein: 4,
+    examination: '간 초음파 검사',
+    cost: 10300,
+    origin: 10300*7/8,
+    tax: 10300/8,
   },
   {
-    dessert: 'Ice cream sandwich',
-    calories: 237,
-    fat: 6,
-    carbs: 24,
-    protein: 4,
+    examination: '관절조영술',
+    cost: 21000,
+    origin: 21000*7/8,
+    tax: 21000/8,
   },
   {
-    dessert: 'Eclair',
-    calories: 262,
-    fat: 6,
-    carbs: 24,
-    protein: 4,
+    examination: '담도조영술',
+    cost: 9500,
+    origin: 9500*7/8,
+    tax: 9500/8,
   },
   {
-    dessert: 'Cupcake',
-    calories: 305,
-    fat: 6,
-    carbs: 24,
-    protein: 4,
+    examination: '청력검사',
+    cost: 6000,
+    origin: 6000*7/8,
+    tax: 6000/8,
   },
   {
-    dessert: 'Gingerbread',
-    calories: 356,
-    fat: 6,
-    carbs: 24,
-    protein: 4,
+    examination: '내시경검사',
+    cost: 1200,
+    origin: 1200*7/8,
+    tax: 1200/8,
   },
+
 ]
 </script>
 
@@ -43,42 +39,36 @@ const desserts = [
     <thead>
       <tr>
         <th class="text-uppercase">
-          Desserts(100g Servings)
+          examinations
         </th>
         <th class="text-uppercase text-center">
-          calories
+          origin
         </th>
         <th class="text-uppercase text-center">
-          Fat(g)
+          tax
         </th>
         <th class="text-uppercase text-center">
-          Carbs(g)
-        </th>
-        <th class="text-uppercase text-center">
-          protein(g)
+          cost
         </th>
       </tr>
     </thead>
 
     <tbody>
       <tr
-        v-for="item in desserts"
-        :key="item.dessert"
+        v-for="item in examinations"
+        :key="item.examination"
       >
         <td>
-          {{ item.dessert }}
+          {{ item.examination }}
         </td>
         <td class="text-center">
-          {{ item.calories }}
+          {{ item.origin }}
         </td>
         <td class="text-center">
-          {{ item.fat }}
+          {{ item.tax }}
         </td>
         <td class="text-center">
-          {{ item.carbs }}
-        </td>
-        <td class="text-center">
-          {{ item.protein }}
+          {{ item.cost }}
         </td>
       </tr>
     </tbody>

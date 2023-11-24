@@ -1,24 +1,33 @@
 <script lang="ts" setup>
 import { useTheme } from 'vuetify'
 
+import VerticalNavSectionTitle from '@/@layouts/components/VerticalNavSectionTitle.vue'
 import upgradeBannerDark from '@images/pro/upgrade-banner-dark.png'
 import upgradeBannerLight from '@images/pro/upgrade-banner-light.png'
 import VerticalNavLayout from '@layouts/components/VerticalNavLayout.vue'
 import VerticalNavLink from '@layouts/components/VerticalNavLink.vue'
-import VerticalNavSectionTitle from '@/@layouts/components/VerticalNavSectionTitle.vue'
 
 // Components
 import Footer from '@/layouts/components/Footer.vue'
 import NavbarThemeSwitcher from '@/layouts/components/NavbarThemeSwitcher.vue'
 import UserProfile from '@/layouts/components/UserProfile.vue'
-
+import { useRouter } from 'vue-router'
+import PatientData from './PatientData.json'
 // Banner
-
+const patient = PatientData.patients
 const vuetifyTheme = useTheme()
 
 const upgradeBanner = computed(() => {
   return vuetifyTheme.global.name.value === 'light' ? upgradeBannerLight : upgradeBannerDark
 })
+
+const clickList = () => {
+  useRouter().push({
+    name: "dashboard",
+    state: { name: "Query 프로그래밍 방식", age: 2 },
+  })
+}
+
 </script>
 
 <template>
@@ -116,11 +125,12 @@ const upgradeBanner = computed(() => {
               title: '청구',
               icon: 'mdi-credit-card-outline',
               // icon: 'mdi-information-outline',
-              to: '/no-existence',
+              // to: '/no-existence',
+              to: '/tables',
             }"
           />
         </div>
-
+        
         <div id="nav-group-2">
           <!-- 👉 User Interface -->
           <VerticalNavSectionTitle
@@ -128,41 +138,43 @@ const upgradeBanner = computed(() => {
               heading: '환자 리스트',
             }"
           />
-          <VerticalNavLink
-            :item="{
-              title: 'Typography',
-              icon: 'mdi-alpha-t-box-outline',
-              to: '/typography',
-            }"
-          />
-          <VerticalNavLink
-            :item="{
-              title: 'Icons',
-              icon: 'mdi-eye-outline',
-              to: '/icons',
-            }"
-          />
-          <VerticalNavLink
-            :item="{
-              title: 'Cards',
-              icon: 'mdi-credit-card-outline',
-              to: '/cards',
-            }"
-          />
-          <VerticalNavLink
-            :item="{
-              title: 'Tables',
-              icon: 'mdi-table',
-              to: '/tables',
-            }"
-          />
-          <VerticalNavLink
-            :item="{
-              title: 'Form Layouts',
-              icon: 'mdi-form-select',
-              to: '/form-layouts',
-            }"
-          />
+         
+          <div v-for="item in patient" :key="item.id" >
+            <VerticalNavLink 
+              :item="{
+                title: item.name,
+                icon: 'mdi-alpha-t-box-outline',
+              }"
+            />
+        </div>
+          
+          <!-- <VTable>
+    <thead>
+      <tr>
+        <th class="text-uppercase">
+          name
+        </th>
+        <th class="text-uppercase text-center">
+          gender
+        </th>
+      </tr>
+    </thead>
+
+    <tbody>
+        <tr
+        v-for="item in patient"
+        :key="item.id"
+      >
+        <td>
+          {{ item.name }}
+        </td>
+        <td class="text-center">
+          {{ item.gender }}
+        </td>
+
+    </tr>
+  </tbody>
+  </VTable> -->
         </div>
       </div>
     </template>
@@ -193,6 +205,6 @@ const upgradeBanner = computed(() => {
 
 #nav-group-1,
 #nav-group-2 {
-  flex: 1
+  flex: 1;
 }
 </style>

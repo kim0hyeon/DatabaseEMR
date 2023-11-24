@@ -129,6 +129,13 @@ const clickList = () => {
               to: '/tables',
             }"
           />
+          <VerticalNavLink
+            :item="{
+              title: '물리,재활치료',
+              icon: 'mdi-form-select',
+              to: '/physiotherapy',
+            }"
+          />
         </div>
         
         <div id="nav-group-2">

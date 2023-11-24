@@ -40,6 +40,10 @@ const router = createRouter({
           path: 'login',
           component: () => import('../pages/login.vue'),
         },
+        {
+          path: 'physiotherapy',
+          component : () => import('../pages/physiotherapy.vue'),
+        },
       ],
     },
     {

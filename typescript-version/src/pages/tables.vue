@@ -7,14 +7,7 @@ import { onMounted, ref } from 'vue';
 const queryName = ref('')
 const queryAge = ref(0)
 const router = useRouter()
-const url = window.location.href;
-  // URL에서 "practice" 부분 추출
-  const match = url.match(/\/(\w+)2/);
 
-  // match 배열의 두 번째 요소에 추출된 부분이 들어 있음
-  const extractedValue = match ? match[1] : null;
-
-  console.log(extractedValue); // "practice"
 onMounted(() => {
   // 컴포넌트가 마운트되면 URL 쿼리 매개변수를 받아와 설정
   queryName.value = history.state.name || ''

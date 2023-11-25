@@ -1,9 +1,10 @@
 import { createRouter, createWebHistory } from 'vue-router'
+import LoginView from '../pages/login.vue'
 import TableView2 from '../pages/table2.vue'
 import TableView from '../pages/tables.vue'
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
-  routes: [
+  routes:  [
     { path: '/', redirect: '/dashboard' },
     {
       path: '/',
@@ -35,10 +36,8 @@ const router = createRouter({
           path: 'form-layouts',
           component: () => import('../pages/form-layouts.vue'),
         },
-        {
-          path: 'login',
-          component: () => import('../pages/login.vue'),
-        },
+        {path: '/login',component: LoginView,name: 'login'},
+        {path: '/login/:id',component: LoginView,name: 'login-detail'},
         {
           path: 'physiotherapy',
           component : () => import('../pages/physiotherapy.vue'),
@@ -65,5 +64,6 @@ const router = createRouter({
     },
   ],
 })
+
 
 export default router

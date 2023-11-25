@@ -13,18 +13,31 @@ import NavbarThemeSwitcher from '@/layouts/components/NavbarThemeSwitcher.vue'
 import UserProfile from '@/layouts/components/UserProfile.vue'
 import PatientData from '../../exampleJson/patient.json'
 // Banner
+import { watch } from 'vue'
+import { useRoute } from 'vue-router'
 const patient = PatientData.patients
 const vuetifyTheme = useTheme()
-
+const route = useRoute()
 const upgradeBanner = computed(() => {
   return vuetifyTheme.global.name.value === 'light' ? upgradeBannerLight : upgradeBannerDark
 })
-
+watch(() => {
+  return route.path;
+},(newP,oldP) => {
+console.log(`ID changed from ${oldP} to ${newP}`);
+getRoutePath();});
+var str = route.path;
+var pathway = null;
+const getRoutePath = () => {
+  str = route.path
+  pathway = route['name'];
+}
 
 </script>
 
 <template>
   <VerticalNavLayout>
+    {{ pathway }}
     <!-- 👉 navbar -->
     <template #navbar="{ toggleVerticalOverlayNavActive }">
       <div class="d-flex h-100 align-center">
@@ -145,16 +158,16 @@ const upgradeBanner = computed(() => {
               heading: '환자 리스트',
             }"
           />
-         
-          <div v-for="item in patient" :key="item.id" >
-            <router-link :to="{name:'tables-detail', params:{id: item.id}}" >{{ item.name }}</router-link>
-
-            <!-- <VerticalNavLink 
+         <!-- <div class="patList1"> -->
+          <div class="patList2" v-for="item in patient" :key="item.id" >
+            <!--<router-link class="patItem" :to="{name:'tables-detail', params :{id: item.id}}" >{{ item.name }} </router-link>&nbsp;{{ item.gender }}
+          </div> -->
+            <VerticalNavLink 
               :item="{
                 title: item.name,
                 icon: 'mdi-alpha-t-box-outline',
               }"
-            /> -->
+            />
         </div>
           
           <!-- <VTable>
@@ -199,6 +212,26 @@ const upgradeBanner = computed(() => {
 </template>
 
 <style lang="scss" scoped>
+.patList1 {
+  display: grid;
+}
+
+.patList2 {
+  align-content: center;
+  margin-block-start: 30px;
+}
+
+.patItem {
+  border: thin solid rgba(var(--v-border-color), var(--v-border-opacity));
+  border-radius: 6px;
+  block-size: 1.5625rem;
+  color: black;
+  font-size: 24px;
+  line-height: 1.3125rem;
+  padding-block: 0.3rem;
+  padding-inline: 1rem;
+}
+
 .meta-key {
   border: thin solid rgba(var(--v-border-color), var(--v-border-opacity));
   border-radius: 6px;

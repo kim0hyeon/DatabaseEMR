@@ -40,7 +40,7 @@ getUserInfoByID();
 <template>
   <VRow>
     <VCol cols="12">
-      {{ $route.params.id }}
+      {{ $route }}
       {{ patientInfo }}
       <!-- {{ data }} -->
       <VCard :title="patientInfo['name']">

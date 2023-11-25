@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import PatientData from './Patient.json';
+import PatientData from "../../..//exampleJson/patient.json";
 
 const patient = PatientData.patients;
 

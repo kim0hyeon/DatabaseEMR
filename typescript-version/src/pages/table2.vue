@@ -2,48 +2,24 @@
 import DemoSimpleTableBasics from '@/views/pages/tables/DemoSimpleTableBasics.vue';
 import DemoSimpleTableDensity from '@/views/pages/tables/DemoSimpleTableDensity.vue';
 import DemoSimpleTableTheme from '@/views/pages/tables/DemoSimpleTableTheme.vue';
-import { ref, watch } from 'vue';
-import { useRoute } from 'vue-router';
+import { onMounted, ref } from 'vue';
 
-import patientData from '../exampleJson/patient.json';
-interface Patient {
-  id: number;
-  name: string;
-  age: number;
-  gender: string;
-  diagnosis: string;
-}
-var isEmptyInfo = false;
-const route = useRoute();
-interface PatientsData {
-  patients: Patient[];
-}
-const patientsData: PatientsData = patientData;
+const queryName = ref('')
+const queryAge = ref(0)
+const router = useRouter()
 
-const patientInfo = ref<Patient | undefined>(undefined);
-
-
-const getUserInfoByID = () => {
-  // Update the value of patientInfo
-  patientInfo.value = patientsData.patients.find(patient => patient.id === Number(route.params.id));
-  isEmptyInfo = true;
-  console.log(isEmptyInfo);
-}
-watch(() => {
-  return route.params.id;
-},(newId,oldId) => {
-console.log(`ID changed from ${oldId} to ${newId}`);
-getUserInfoByID();});
-getUserInfoByID();
+onMounted(() => {
+  // 컴포넌트가 마운트되면 URL 쿼리 매개변수를 받아와 설정
+  queryName.value = history.state.name || ''
+  queryAge.value = history.state.age || 0
+})
 
 </script>
+
 <template>
   <VRow>
     <VCol cols="12">
-      {{ $route.params.id }}
-      {{ patientInfo }}
-      <!-- {{ data }} -->
-      <VCard :title="patientInfo['name']">
+      <VCard title="환자이름(검사비)">
         <DemoSimpleTableBasics />
       </VCard>
     </VCol>

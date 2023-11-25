@@ -11,8 +11,7 @@ import VerticalNavLink from '@layouts/components/VerticalNavLink.vue'
 import Footer from '@/layouts/components/Footer.vue'
 import NavbarThemeSwitcher from '@/layouts/components/NavbarThemeSwitcher.vue'
 import UserProfile from '@/layouts/components/UserProfile.vue'
-import { useRouter } from 'vue-router'
-import PatientData from './PatientData.json'
+import PatientData from '../../exampleJson/patient.json'
 // Banner
 const patient = PatientData.patients
 const vuetifyTheme = useTheme()
@@ -21,12 +20,6 @@ const upgradeBanner = computed(() => {
   return vuetifyTheme.global.name.value === 'light' ? upgradeBannerLight : upgradeBannerDark
 })
 
-const clickList = () => {
-  useRouter().push({
-    name: "dashboard",
-    state: { name: "Query 프로그래밍 방식", age: 2 },
-  })
-}
 
 </script>
 
@@ -44,10 +37,10 @@ const clickList = () => {
         </IconBtn>
 
         <!-- 👉 Search -->
-        <div
-          class="d-flex align-center cursor-pointer"
-          style="user-select: none;"
-        >
+          <div
+            class="d-flex align-center cursor-pointer"
+            style="user-select: none;"
+          >
           <!-- 👉 Search Trigger button -->
           <IconBtn>
             <VIcon icon="mdi-magnify" />
@@ -154,12 +147,14 @@ const clickList = () => {
           />
          
           <div v-for="item in patient" :key="item.id" >
-            <VerticalNavLink 
+            <router-link :to="{name:'tables-detail', params:{id: item.id}}" >{{ item.name }}</router-link>
+
+            <!-- <VerticalNavLink 
               :item="{
                 title: item.name,
                 icon: 'mdi-alpha-t-box-outline',
               }"
-            />
+            /> -->
         </div>
           
           <!-- <VTable>

@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
-
+import TableView2 from '../pages/table2.vue'
+import TableView from '../pages/tables.vue'
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
@@ -28,10 +29,8 @@ const router = createRouter({
           path: 'cards',
           component: () => import('../pages/cards.vue'),
         },
-        {
-          path: 'tables',
-          component: () => import('../pages/tables.vue'),
-        },
+        { path: '/tables', component: TableView2, name: 'tables' },
+        { path: '/tables/:id', component: TableView, name: 'tables-detail' },
         {
           path: 'form-layouts',
           component: () => import('../pages/form-layouts.vue'),

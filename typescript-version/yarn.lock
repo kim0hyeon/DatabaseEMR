@@ -5328,7 +5328,7 @@ vue3-perfect-scrollbar@^1.6.0:
     perfect-scrollbar "^1.5.5"
     postcss-import "^12.0.0"
 
-vuetify@^3.0.0-beta.4, vuetify@3.2.1:
+vuetify@^3.0.0-beta.4, vuetify@^3.2.1:
   version "3.2.1"
   resolved "https://registry.npmjs.org/vuetify/-/vuetify-3.2.1.tgz"
   integrity sha512-XOGfDuDGG4j/dJSu73JrkfrGB141LoiLyoZecGtUou24xMf17Rnk+pzOH+YYRVgQ7HFc4kG95DzFmAXS5ysEGA==

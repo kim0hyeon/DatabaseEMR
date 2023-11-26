@@ -1,7 +1,8 @@
 import { createRouter, createWebHistory } from 'vue-router'
+import ChartView from '../pages/chart.vue'
 import LoginView from '../pages/login.vue'
-import TableView2 from '../pages/table2.vue'
-import TableView from '../pages/tables.vue'
+import CostView2 from '../pages/table2.vue'
+import CostView from '../pages/tables.vue'
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes:  [
@@ -15,7 +16,11 @@ const router = createRouter({
           component: () => import('../pages/dashboard.vue'),
         },
         {
-          path: 'account-settings',
+          path: 'examination',
+          component: () => import('../pages/examination.vue'),
+        },
+        {
+          path: 'patient-register',
           component: () => import('../pages/account-settings.vue'),
         },
         {
@@ -30,14 +35,15 @@ const router = createRouter({
           path: 'cards',
           component: () => import('../pages/cards.vue'),
         },
-        { path: '/tables', component: TableView2, name: 'tables' },
-        { path: '/tables/:id', component: TableView, name: 'tables-detail' },
+        { path: '/cost', component: CostView2, name: 'cost' },
+        { path: '/cost/:id', component: CostView, name: 'cost-detail' },
         {
           path: 'form-layouts',
           component: () => import('../pages/form-layouts.vue'),
         },
-        {path: '/login',component: LoginView,name: 'login'},
-        {path: '/login/:id',component: LoginView,name: 'login-detail'},
+        
+        {path: '/chart',component: ChartView,name: 'chart'},
+        {path: '/chart/:id',component: ChartView,name: 'chart-detail'},
         {
           path: 'physiotherapy',
           component : () => import('../pages/physiotherapy.vue'),
@@ -56,6 +62,7 @@ const router = createRouter({
           path: 'register',
           component: () => import('../pages/register.vue'),
         },
+        {path: '/login',component: LoginView,name: 'login'},
         {
           path: '/:pathMatch(.*)*',
           component: () => import('../pages/[...all].vue'),

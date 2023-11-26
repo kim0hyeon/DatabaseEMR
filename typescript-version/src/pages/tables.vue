@@ -30,7 +30,7 @@ const getUserInfoByID = () => {
   console.log(isEmptyInfo);
 }
 watch(() => {
-  return route.params.id;
+  return route.params.id; 
 },(newId,oldId) => {
 console.log(`ID changed from ${oldId} to ${newId}`);
 getUserInfoByID();});

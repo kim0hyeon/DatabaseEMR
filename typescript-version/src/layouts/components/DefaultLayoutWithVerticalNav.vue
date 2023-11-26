@@ -15,7 +15,7 @@ import PatientData from '../../exampleJson/patient.json'
 // Banner
 import { watch } from 'vue'
 import { useRoute } from 'vue-router'
-const patient = PatientData.patients
+var patient = PatientData.patients
 const vuetifyTheme = useTheme()
 const route = useRoute()
 const upgradeBanner = computed(() => {
@@ -25,6 +25,7 @@ watch(() => {
   return route.path;
 },(newP,oldP) => {
 console.log(`ID changed from ${oldP} to ${newP}`);
+patient = PatientData.patients;
 getRoutePath();});
 var str = route.path;
 var pathway = null;
@@ -69,7 +70,7 @@ const getRoutePath = () => {
 
         <IconBtn
           class="me-2"
-          href="https://github.com/themeselection/materio-vuetify-vuejs-admin-template-free"
+          href="https://github.com/kim0hyeon/DatabaseEMR"
           target="_blank"
           rel="noopener noreferrer"
         >
@@ -107,23 +108,23 @@ const getRoutePath = () => {
               title: '접수',
               icon: 'mdi-account-plus-outline',
               // icon: 'mdi-account-cog-outline',
-              to: '/account-settings',
+              to: '/patient-register',
             }"
           />
 
           <VerticalNavLink
             :item="{
               title: '차트',
-              icon: 'mdi-form-select',
+              icon: 'mdi-chart-bar',
               // icon: 'mdi-login',
-              to: '/login'
+              to: '/chart'
             }"
           />
           <VerticalNavLink
             :item="{
               title: '검사',
-              // icon: 'mdi-account-plus-outline',
-              to: '/register',
+              icon: 'mdi-test-tube',
+              to: '/examination',
             }"
           />
           <VerticalNavLink
@@ -132,13 +133,13 @@ const getRoutePath = () => {
               icon: 'mdi-credit-card-outline',
               // icon: 'mdi-information-outline',
               // to: '/no-existence',
-              to: '/tables',
+              to: '/cost',
             }"
           />
           <VerticalNavLink
             :item="{
               title: '물리,재활치료',
-              icon: 'mdi-form-select',
+              icon: 'mdi-weight-lifter',
               to: '/physiotherapy',
             }"
           />
@@ -147,6 +148,21 @@ const getRoutePath = () => {
               title: '통계',
               icon: 'mdi-form-select',
               to: '/statistics',
+            }"
+          />
+          <div style="height: 50px;"></div>
+          <VerticalNavLink
+            :item="{
+              title: '로그인',
+              icon: 'mdi-login',
+              to: '/login',
+            }"
+          />
+          <VerticalNavLink
+          :item="{
+            title: '회원가입',
+              icon: 'mdi-file-sign',
+              to: '/register',
             }"
           />
         </div>
@@ -158,16 +174,16 @@ const getRoutePath = () => {
               heading: '환자 리스트',
             }"
           />
-         <!-- <div class="patList1"> -->
+         <div class="patList1">
           <div class="patList2" v-for="item in patient" :key="item.id" >
-            <!--<router-link class="patItem" :to="{name:'tables-detail', params :{id: item.id}}" >{{ item.name }} </router-link>&nbsp;{{ item.gender }}
-          </div> -->
-            <VerticalNavLink 
+            <router-link class="patItem" :to="{name:'cost-detail',params :{id: item.id}}" >{{ item.name }} </router-link>&nbsp;{{ item.gender }}
+          </div>
+            <!-- <VerticalNavLink 
               :item="{
                 title: item.name,
                 icon: 'mdi-alpha-t-box-outline',
               }"
-            />
+            /> -->
         </div>
           
           <!-- <VTable>

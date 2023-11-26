@@ -1,8 +1,11 @@
 import { createRouter, createWebHistory } from 'vue-router'
-
+import ChartView from '../pages/chart.vue'
+import LoginView from '../pages/login.vue'
+import CostView2 from '../pages/table2.vue'
+import CostView from '../pages/tables.vue'
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
-  routes: [
+  routes:  [
     { path: '/', redirect: '/dashboard' },
     {
       path: '/',
@@ -17,6 +20,10 @@ const router = createRouter({
           component: () => import('../pages/PatientRegistration.vue'),
         },
         {
+          path: 'examination',
+          component: () => import('../pages/examination.vue'),
+        },
+        {
           path: 'typography',
           component: () => import('../pages/typography.vue'),
         },
@@ -28,18 +35,15 @@ const router = createRouter({
           path: 'cards',
           component: () => import('../pages/cards.vue'),
         },
-        {
-          path: 'tables',
-          component: () => import('../pages/tables.vue'),
-        },
+        { path: '/cost', component: CostView2, name: 'cost' },
+        { path: '/cost/:id', component: CostView, name: 'cost-detail' },
         {
           path: 'form-layouts',
           component: () => import('../pages/form-layouts.vue'),
         },
-        {
-          path: 'login',
-          component: () => import('../pages/login.vue'),
-        },
+        
+        {path: '/chart',component: ChartView,name: 'chart'},
+        {path: '/chart/:id',component: ChartView,name: 'chart-detail'},
         {
           path: 'physiotherapy',
           component : () => import('../pages/physiotherapy.vue'),
@@ -58,6 +62,7 @@ const router = createRouter({
           path: 'register',
           component: () => import('../pages/register.vue'),
         },
+        {path: '/login',component: LoginView,name: 'login'},
         {
           path: '/:pathMatch(.*)*',
           component: () => import('../pages/[...all].vue'),

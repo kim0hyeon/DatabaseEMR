@@ -11,27 +11,34 @@ import VerticalNavLink from '@layouts/components/VerticalNavLink.vue'
 import Footer from '@/layouts/components/Footer.vue'
 import NavbarThemeSwitcher from '@/layouts/components/NavbarThemeSwitcher.vue'
 import UserProfile from '@/layouts/components/UserProfile.vue'
-import { useRouter } from 'vue-router'
-import PatientData from './PatientData.json'
+import PatientData from '../../exampleJson/patient.json'
 // Banner
-const patient = PatientData.patients
+import { watch } from 'vue'
+import { useRoute } from 'vue-router'
+var patient = PatientData.patients
 const vuetifyTheme = useTheme()
-
+const route = useRoute()
 const upgradeBanner = computed(() => {
   return vuetifyTheme.global.name.value === 'light' ? upgradeBannerLight : upgradeBannerDark
 })
-
-const clickList = () => {
-  useRouter().push({
-    name: "dashboard",
-    state: { name: "Query 프로그래밍 방식", age: 2 },
-  })
+watch(() => {
+  return route.path;
+},(newP,oldP) => {
+console.log(`ID changed from ${oldP} to ${newP}`);
+patient = PatientData.patients;
+getRoutePath();});
+var str = route.path;
+var pathway = null;
+const getRoutePath = () => {
+  str = route.path
+  pathway = route['name'];
 }
 
 </script>
 
 <template>
   <VerticalNavLayout>
+    <!-- {{ pathway }} -->
     <!-- 👉 navbar -->
     <template #navbar="{ toggleVerticalOverlayNavActive }">
       <div class="d-flex h-100 align-center">
@@ -44,10 +51,10 @@ const clickList = () => {
         </IconBtn>
 
         <!-- 👉 Search -->
-        <div
-          class="d-flex align-center cursor-pointer"
-          style="user-select: none;"
-        >
+          <div
+            class="d-flex align-center cursor-pointer"
+            style="user-select: none;"
+          >
           <!-- 👉 Search Trigger button -->
           <IconBtn>
             <VIcon icon="mdi-magnify" />
@@ -63,7 +70,7 @@ const clickList = () => {
 
         <IconBtn
           class="me-2"
-          href="https://github.com/themeselection/materio-vuetify-vuejs-admin-template-free"
+          href="https://github.com/kim0hyeon/DatabaseEMR"
           target="_blank"
           rel="noopener noreferrer"
         >
@@ -101,23 +108,23 @@ const clickList = () => {
               title: '접수',
               icon: 'mdi-account-plus-outline',
               // icon: 'mdi-account-cog-outline',
-              to: '/patient-registration',
+              to: '/patient-registration'
             }"
           />
 
           <VerticalNavLink
             :item="{
               title: '차트',
-              icon: 'mdi-form-select',
+              icon: 'mdi-chart-bar',
               // icon: 'mdi-login',
-              to: '/login'
+              to: '/chart'
             }"
           />
           <VerticalNavLink
             :item="{
               title: '검사',
-              // icon: 'mdi-account-plus-outline',
-              to: '/register',
+              icon: 'mdi-test-tube',
+              to: '/examination',
             }"
           />
           <VerticalNavLink
@@ -126,13 +133,13 @@ const clickList = () => {
               icon: 'mdi-credit-card-outline',
               // icon: 'mdi-information-outline',
               // to: '/no-existence',
-              to: '/tables',
+              to: '/cost',
             }"
           />
           <VerticalNavLink
             :item="{
               title: '물리,재활치료',
-              icon: 'mdi-form-select',
+              icon: 'mdi-weight-lifter',
               to: '/physiotherapy',
             }"
           />
@@ -141,6 +148,21 @@ const clickList = () => {
               title: '통계',
               icon: 'mdi-form-select',
               to: '/statistics',
+            }"
+          />
+          <div style="height: 50px;"></div>
+          <VerticalNavLink
+            :item="{
+              title: '로그인',
+              icon: 'mdi-login',
+              to: '/login',
+            }"
+          />
+          <VerticalNavLink
+          :item="{
+            title: '회원가입',
+              icon: 'mdi-file-sign',
+              to: '/register',
             }"
           />
         </div>
@@ -152,14 +174,16 @@ const clickList = () => {
               heading: '환자 리스트',
             }"
           />
-         
-          <div v-for="item in patient" :key="item.id" >
-            <VerticalNavLink 
+         <div class="patList1">
+          <div class="patList2" v-for="item in patient" :key="item.id" >
+            <router-link class="patItem" :to="{name:'cost-detail',params :{id: item.id}}" >{{ item.name }} </router-link>&nbsp;{{ item.gender }}
+          </div>
+            <!-- <VerticalNavLink 
               :item="{
                 title: item.name,
                 icon: 'mdi-alpha-t-box-outline',
               }"
-            />
+            /> -->
         </div>
           
           <!-- <VTable>
@@ -204,6 +228,26 @@ const clickList = () => {
 </template>
 
 <style lang="scss" scoped>
+.patList1 {
+  display: grid;
+}
+
+.patList2 {
+  align-content: center;
+  margin-block-start: 30px;
+}
+
+.patItem {
+  border: thin solid rgba(var(--v-border-color), var(--v-border-opacity));
+  border-radius: 6px;
+  block-size: 1.5625rem;
+  color: black;
+  font-size: 24px;
+  line-height: 1.3125rem;
+  padding-block: 0.3rem;
+  padding-inline: 1rem;
+}
+
 .meta-key {
   border: thin solid rgba(var(--v-border-color), var(--v-border-opacity));
   border-radius: 6px;

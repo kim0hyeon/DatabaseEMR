@@ -1,66 +1,59 @@
-<script setup lang="ts">
-import DemoFormLayoutHorizontalForm from '@/views/pages/form-layouts/DemoFormLayoutHorizontalForm.vue'
-import DemoFormLayoutHorizontalFormWithIcons from '@/views/pages/form-layouts/DemoFormLayoutHorizontalFormWithIcons.vue'
-import DemoFormLayoutMultipleColumn from '@/views/pages/form-layouts/DemoFormLayoutMultipleColumn.vue'
-import DemoFormLayoutVerticalForm from '@/views/pages/form-layouts/DemoFormLayoutVerticalForm.vue'
-import DemoFormLayoutVerticalFormWithIcons from '@/views/pages/form-layouts/DemoFormLayoutVerticalFormWithIcons.vue'
+<script lang="ts" setup>
+import AccountSettingsAccount from '@/views/pages/account-settings/AccountSettingsAccount.vue';
+import AccountSettingsNotification from '@/views/pages/account-settings/AccountSettingsNotification.vue';
+import AccountSettingsSecurity from '@/views/pages/account-settings/AccountSettingsSecurity.vue';
+import { useRoute } from 'vue-router';
+
+const route = useRoute()
+
+const activeTab = ref(route.params.tab)
+
+// tabs
+const tabs = [
+  { title: 'Medical Imaging', icon: 'mdi-camera', tab: 'image' },
+  { title: 'Blood', icon: 'mdi-water', tab: 'blood' },
+  { title: 'Physical', icon: 'mdi-gymnastics', tab: 'physical' },
+]
 </script>
 
 <template>
   <div>
-    <VRow>
-      <VCol
-        cols="12"
-        md="6"
+    <VTabs
+      v-model="activeTab"
+      show-arrows
+    >
+      <VTab
+        v-for="item in tabs"
+        :key="item.icon"
+        :value="item.tab"
       >
-        <!-- 👉 Horizontal Form -->
-        <VCard title="Horizontal Form">
-          <VCardText>
-            <DemoFormLayoutHorizontalForm />
-          </VCardText>
-        </VCard>
-      </VCol>
-      <VCol
-        cols="12"
-        md="6"
-      >
-        <!-- 👉 Horizontal Form with Icons -->
-        <VCard title="Horizontal Form with Icons">
-          <VCardText>
-            <DemoFormLayoutHorizontalFormWithIcons />
-          </VCardText>
-        </VCard>
-      </VCol>
-      <VCol
-        cols="12"
-        md="6"
-      >
-        <!-- 👉 Vertical Form -->
-        <VCard title="Vertical Form">
-          <VCardText>
-            <DemoFormLayoutVerticalForm />
-          </VCardText>
-        </VCard>
-      </VCol>
-      <VCol
-        cols="12"
-        md="6"
-      >
-        <!-- 👉 Vertical Form with Icons -->
-        <VCard title="Vertical Form with Icons">
-          <VCardText>
-            <DemoFormLayoutVerticalFormWithIcons />
-          </VCardText>
-        </VCard>
-      </VCol>
-      <VCol cols="12">
-        <!-- 👉 Multiple Column -->
-        <VCard title="Multiple Column">
-          <VCardText>
-            <DemoFormLayoutMultipleColumn />
-          </VCardText>
-        </VCard>
-      </VCol>
-    </VRow>
+        <VIcon
+          size="20"
+          start
+          :icon="item.icon"
+        />
+        {{ item.title }}
+      </VTab>
+    </VTabs>
+    <VDivider />
+    <VWindow
+      v-model="activeTab"
+      class="mt-5 disable-tab-transition"
+    >
+      <!-- Account -->
+      <VWindowItem value="image">
+        <AccountSettingsAccount />
+      </VWindowItem>
+
+      <!-- Security -->
+      <VWindowItem value="blood">
+        <AccountSettingsSecurity />
+      </VWindowItem>
+
+      <!-- Notification -->
+      <VWindowItem value="physical">
+        <AccountSettingsNotification />
+      </VWindowItem>
+    </VWindow>
   </div>
 </template>

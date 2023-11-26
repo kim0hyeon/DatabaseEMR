@@ -40,10 +40,10 @@ getUserInfoByID();
 <template>
   <VRow>
     <VCol cols="12">
-      {{ $route }}
+      <!-- {{ $route }} -->
       {{ patientInfo }}
       <!-- {{ data }} -->
-      <VCard :title="patientInfo['name']">
+      <VCard :title="patientInfo?.name">
         <DemoSimpleTableBasics />
       </VCard>
     </VCol>

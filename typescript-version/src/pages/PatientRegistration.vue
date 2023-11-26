@@ -1,9 +1,9 @@
 <script lang="ts" setup>
-import { useRoute } from 'vue-router'
-import NewPatientRegistration from '@/views/pages/account-settings/NewPatientRegistration.vue'
+import NewPatientRegistration from '@/views/pages/account-settings/NewPatientRegistration.vue';
 import avatar1 from "@images/avatars/avatar-1.png";
-import PatientData from './PatientData.json'
-import {Ref} from "vue";
+import { Ref } from "vue";
+import { useRoute } from 'vue-router';
+import PatientData from './PatientData.json';
 
 const route = useRoute()
 
@@ -254,47 +254,47 @@ const selectPatient = (patient: Patient | null) => {
 /* 검색어 자동 완성 스타일 */
 .search-container {
   position: relative;
-  width: 70%;
+  inline-size: 70%;
 }
 
 .search-results {
   position: absolute;
-  top: 100%;
-  width: 30%;
   z-index: 999;
+  inline-size: 30%;
+  inset-block-start: 100%;
 }
 
 /* 환자 사진 스타일 */
 .avatar-container {
-  width: 100%;
-  height: 100%;
   display: flex;
-  justify-content: center;
-  justify-items: center;
   align-items: center;
+  justify-content: center;
+  block-size: 100%;
+  inline-size: 100%;
+  justify-items: center;
 }
 
 .avatar {
-  top: 50%;
-  left: 50%;
+  block-size: 100%;
+  inline-size: 150px;
+  inset-block-start: 50%;
+  inset-inline-start: 50%;
   transform: translate(-15%, -50%);
-  width:150px;
-  height: 100%;
 }
 
 .avatar img {
-  width: 100%;
-  height: 100%;
+  block-size: 100%;
+  inline-size: 100%;
   object-fit: cover;
 }
 
 /* 내원 기록 카드 스크롤바 변환 및 재방문 사유 카드와 높이 맞춤 */
 .full-height {
-  height: 250px;
+  block-size: 250px;
 }
 
 .scrollable-area {
-  max-height: 135px;
+  max-block-size: 135px;
   overflow-y: auto;
 }
 

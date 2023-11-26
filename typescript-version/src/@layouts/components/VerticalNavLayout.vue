@@ -171,7 +171,7 @@ export default defineComponent({
   }
 
   &:not(.layout-overlay-nav) .layout-content-wrapper {
-    padding-inline-start: 30%;
+    padding-inline-start: 29%;
   }
 
   // Adjust right column pl when vertical nav is collapsed

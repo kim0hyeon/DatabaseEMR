@@ -1,0 +1,301 @@
+<script lang="ts" setup>
+import { useRoute } from 'vue-router'
+import NewPatientRegistration from '@/views/pages/account-settings/NewPatientRegistration.vue'
+import avatar1 from "@images/avatars/avatar-1.png";
+import PatientData from './PatientData.json'
+import {Ref} from "vue";
+
+const route = useRoute()
+
+const accountData = {
+  avatarImg: avatar1,
+}
+
+const refInputEl = ref<HTMLElement>()
+
+const accountDataLocal = ref(structuredClone(accountData))
+
+// 모달창 구현
+const isModalOpen = ref(false)
+const openModal = () => {
+  isModalOpen.value = true
+}
+
+// 사진 교체
+const changeAvatar = (file: Event) => {
+  const fileReader = new FileReader()
+  const { files } = file.target as HTMLInputElement
+
+  if (files && files.length) {
+    fileReader.readAsDataURL(files[0])
+    fileReader.onload = () => {
+      if (typeof fileReader.result === 'string')
+        accountDataLocal.value.avatarImg = fileReader.result
+    }
+  }
+}
+
+// 환자 정보 검색
+
+// json 양식
+interface Patient {
+  id: number
+  name: string
+  age: number
+  gender: string,
+  firstRRN: string
+  lastRRN: string
+  address: string
+  phone: string
+  emergencyPhone: string
+  lastVisit: string
+  diagnosis: string
+  admitted: boolean
+  record: string[]
+}
+
+const patients = reactive<Patient[]>(PatientData.patients)
+const searchTerm: Ref<string> = ref('')
+const searchResults = reactive<Patient[]>([])
+const selectedPatient = ref<Patient | null>(null)
+
+const search = (event: Event) => {
+  searchTerm.value = (event.target as HTMLInputElement).value;
+  if (searchTerm.value) {
+    searchResults.splice(
+      0,
+      searchResults.length,
+      ...patients.filter((patient) => patient.name.includes(searchTerm.value))
+    );
+  } else {
+    searchResults.splice(0, searchResults.length);
+  }
+}
+
+const selectPatient = (patient: Patient | null) => {
+  selectedPatient.value = patient
+  searchResults.splice(0, searchResults.length);
+}
+</script>
+
+<template>
+  <!-- 검색창 및 신규 환자 등록 버튼 -->
+  <div class="d-flex h-100 align-center">
+    <!-- 검색 버튼 -->
+    <IconBtn>
+      <VIcon icon="mdi-magnify" />
+    </IconBtn>
+
+    <div class="search-container">
+      <!-- 검색창 -->
+      <div
+        class="d-flex align-center cursor-pointer"
+        style="user-select: none;"
+      >
+        <input type="text" v-model="searchTerm" placeholder="환자 검색" @input="search">
+
+        <div class="search-results" v-if="searchResults.length">
+          <div v-for="result in searchResults" :key="result.id" @click="selectPatient(result)">
+            <VCard class="mt-1 title-text">
+              <p>{{ result.name }}</p>
+            </VCard>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <VSpacer/>
+
+    <!-- 신규 환자 등록 버튼 -->
+    <NewPatientRegistration v-model="isModalOpen" />
+
+    <VBtn @click="openModal">신규 환자 등록</VBtn>
+  </div>
+
+  <VDivider class="mt-2"/>
+
+  <VCard class="mt-4">
+    <template v-slot:title>
+      <div class="d-flex align-center justify-space-between">
+        기존 환자 접수
+        <VBtn color="primary">접수</VBtn>
+      </div>
+    </template>
+    <VDivider class="mb-1"/>
+
+    <!-- 환자 기본 정보 -->
+    <VRow>
+      <VCol cols="12" md="2">
+        <!-- 환자 사진 -->
+        <VCardText class="d-flex avatar-container">
+          <VAvatar
+            rounded="lg"
+            class="me-6 cursor-pointer avatar"
+            :image="accountDataLocal.avatarImg"
+            @click="refInputEl?.click()"
+          />
+
+          <!-- 사진 클릭 시 사진 업로드 -->
+          <form class="d-flex flex-column justify-center gap-5">
+            <div class="d-flex flex-wrap gap-2">
+
+              <input
+                ref="refInputEl"
+                type="file"
+                name="file"
+                accept=".jpeg,.png,.jpg,GIF"
+                hidden
+                @input="changeAvatar"
+              >
+            </div>
+          </form>
+        </VCardText>
+      </VCol>
+      <VCol cols="12" md="10">
+        <VRow>
+          <VCol cols="12" md="3">
+            <VCardText>
+              이름 : {{ selectedPatient?.name }}(환자ID : {{ selectedPatient?.id }})
+            </VCardText>
+          </VCol>
+
+          <VCol cols="12" md="2">
+            <VCardText>
+              성별 : {{ selectedPatient?.gender }}
+            </VCardText>
+          </VCol>
+
+          <VCol cols="12" md="2">
+            <VCardText>
+              나이 : {{ selectedPatient?.age }}
+            </VCardText>
+          </VCol>
+
+          <VCol cols="12" md="5">
+            <VCardText>
+              주민등록번호 : {{ selectedPatient?.firstRRN }} - {{ selectedPatient?.lastRRN }}
+            </VCardText>
+          </VCol>
+
+          <VCol cols="12" md="4">
+            <VCardText>
+              연락처 : {{ selectedPatient?.phone }}
+            </VCardText>
+          </VCol>
+
+          <VCol cols="12" md="4">
+            <VCardText>
+              비상 연락처 : {{ selectedPatient?.emergencyPhone }}
+            </VCardText>
+          </VCol>
+
+          <VCol cols="12" md="4">
+            <VCardText>
+              최근 방문일 : {{ selectedPatient?.lastVisit }}
+            </VCardText>
+          </VCol>
+
+          <VCol cols="12" md="5">
+            <VCardText>
+              주소 : {{ selectedPatient?.address }}
+            </VCardText>
+          </VCol>
+
+          <VCol cols="12" md="2">
+            <VCardText>
+              증상 : {{ selectedPatient?.diagnosis }}
+            </VCardText>
+          </VCol>
+
+          <VCol cols="12" md="5">
+            <VCardText>
+              약관 동의 여부 : {{ selectedPatient?.admitted ? '동의' : '비동의' }}
+            </VCardText>
+          </VCol>
+        </VRow>
+      </VCol>
+    </VRow>
+  </VCard>
+
+  <VDivider class="mt-4"/>
+
+  <VRow class="mt-0 d-flex">
+    <!-- 내원 기록 -->
+    <VCol cols="12" md="6">
+      <VCard title="내원 기록" class="full-height">
+
+        <VDivider/>
+
+        <VCardText>
+          <div class="scrollable-area">
+            <div v-for="record in selectedPatient?.record">
+              {{ record }}
+            </div>
+          </div>
+        </VCardText>
+      </VCard>
+    </VCol>
+
+    <!-- 방문 사유 -->
+    <VCol cols="12" md="6">
+      <VCard title="재방문 사유" class="full-height">
+        <VDivider/>
+        <VCol>
+          <div>
+            <VTextarea label="재방문 사유 기입"></VTextarea>
+          </div>
+        </VCol>
+      </VCard>
+    </VCol>
+  </VRow>
+</template>
+
+<style scoped>
+/* 검색어 자동 완성 스타일 */
+.search-container {
+  position: relative;
+  width: 70%;
+}
+
+.search-results {
+  position: absolute;
+  top: 100%;
+  width: 30%;
+  z-index: 999;
+}
+
+/* 환자 사진 스타일 */
+.avatar-container {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  justify-items: center;
+  align-items: center;
+}
+
+.avatar {
+  top: 50%;
+  left: 50%;
+  transform: translate(-15%, -50%);
+  width:150px;
+  height: 100%;
+}
+
+.avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* 내원 기록 카드 스크롤바 변환 및 재방문 사유 카드와 높이 맞춤 */
+.full-height {
+  height: 250px;
+}
+
+.scrollable-area {
+  max-height: 135px;
+  overflow-y: auto;
+}
+
+</style>

@@ -101,7 +101,7 @@ const clickList = () => {
               title: '접수',
               icon: 'mdi-account-plus-outline',
               // icon: 'mdi-account-cog-outline',
-              to: '/account-settings',
+              to: '/patient-registration',
             }"
           />
 

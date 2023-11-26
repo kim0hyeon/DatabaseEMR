@@ -13,8 +13,8 @@ const router = createRouter({
           component: () => import('../pages/dashboard.vue'),
         },
         {
-          path: 'account-settings',
-          component: () => import('../pages/account-settings.vue'),
+          path: 'patient-registration',
+          component: () => import('../pages/PatientRegistration.vue'),
         },
         {
           path: 'typography',

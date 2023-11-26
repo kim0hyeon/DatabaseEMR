@@ -1,13 +1,17 @@
 <script lang="ts" setup>
 import { IdStore } from '@/store'
-import { ref } from 'vue'
 const store = IdStore()
+
+import { ref } from 'vue'
 
 interface Photo {
   url: string
   name: string
 }
-
+const clickedSendFile = () => {
+  photos.value = []
+  alert('CT 저장완료')
+}
 const photos = ref<Photo[]>([])
 const selectedPhoto = ref('')
 function handleFilesUpload(event: Event) {
@@ -51,9 +55,9 @@ function selectImage(image: Photo) {
 }
 
 .sel-photo {
-  block-size: 600px; /* 이미지의 최대 높이를 조절하세요 */
+  block-size: 80vh; /* 이미지의 최대 높이를 조절하세요 */
   cursor: pointer;
-  inline-size: 600px;
+  inline-size: 80vh;
 }
 
 .photo {
@@ -62,12 +66,12 @@ function selectImage(image: Photo) {
 }
 
 .noimage {
-  block-size: 600px; /* 이미지의 최대 높이를 조절하세요 */
+  block-size: 80vh; /* 이미지의 최대 높이를 조절하세요 */
   color: #555;
   cursor: pointer;
   font-size: 16px;
   font-weight: bold;
-  inline-size: 600px;
+  inline-size: 80vh;
   inset-block-start: 50%;
   inset-inline-start: 50%;
   transform: translate(41%, 45%);
@@ -93,7 +97,8 @@ function selectImage(image: Photo) {
 }
 
 .photo_list {
-  inline-size: 300px;
+  inline-size: 250px;
+  max-block-size: 75vh;
 }
 
 .name {
@@ -144,7 +149,11 @@ function selectImage(image: Photo) {
             @change="handleFilesUpload"
           />
         </label>
-        <VBtn class="ma-2">제출</VBtn>
+        <VBtn
+          @click="clickedSendFile"
+          class="ma-2"
+          >저장</VBtn
+        >
         <div v-if="photos.length > 0">
           <div
             v-for="(photo, index) in photos"

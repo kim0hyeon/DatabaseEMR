@@ -1,5 +1,6 @@
 import { useUserStore } from '@/store';
 import { createRouter, createWebHistory } from 'vue-router';
+import PhotoView from '../pages/ImageViewer.vue';
 import ChartView from '../pages/chart.vue';
 import LoginView from '../pages/login.vue';
 import CostView from '../pages/cost.vue';
@@ -132,6 +133,14 @@ const router = createRouter({
           requiresAuth: false , // 인증이 필요한 경로일 경우 설정
           jobAuth: [0,0,0,0] // 의사 간호사만 
         }},
+        {
+          path: '/files',name: 'files',
+          component : PhotoView,
+          meta: {
+            requiresAuth: true,  // 인증이 필요한 경로일 경우 설정
+            jobAuth: [1,1,,0] // 의사 간호사 물리치료사만 
+          }
+        },
         {
           path: '/:pathMatch(.*)*',
           component: () => import('../pages/[...all].vue'),

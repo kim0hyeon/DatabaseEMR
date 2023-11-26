@@ -59,7 +59,7 @@ watch(
     return route.path
   },
   (newP, oldP) => {
-    console.log(`ID changed from ${oldP} to ${newP}`)
+    console.log(`route changed from ${oldP} to ${newP}`)
     patients.value = PatientData.patients // 페이지 바뀌면 초기화
     getRoutePath()
   },
@@ -128,7 +128,7 @@ const userInfo = useUserStore().$state.userInfo
             :item="{
               title: '접수',
               icon: 'mdi-account-plus-outline',
-              to: '/patient-registration'
+              to: '/patient-registration',
             }"
           />
 
@@ -136,7 +136,7 @@ const userInfo = useUserStore().$state.userInfo
             :item="{
               title: '차트',
               icon: 'mdi-chart-bar',
-              to: '/chart'
+              to: '/chart',
             }"
           />
           <VerticalNavLink
@@ -171,8 +171,8 @@ const userInfo = useUserStore().$state.userInfo
             :item="{
               title: '예약',
               icon: 'mdi-calendar-month-outline',
-              to: '/reservation'
-          }"
+              to: '/reservation',
+            }"
           />
           <div style="height: 200px" />
           <VerticalNavSectionTitle :item="{ heading: '관리자 메뉴' }" />
@@ -213,7 +213,8 @@ const userInfo = useUserStore().$state.userInfo
                 @click="getID(item.id)"
                 active-class="patItem"
                 :to="pathway"
-                >{{ item.name }} </router-link>&nbsp;{{ item.gender }}
+                >{{ item.name }} </router-link
+              >&nbsp;{{ item.gender }}
             </div>
           </div>
         </div>

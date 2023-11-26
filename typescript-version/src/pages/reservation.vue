@@ -1,14 +1,14 @@
 <script setup lang="ts">
-import PatientSearch from './PatientSearch.vue'
 import Schedule from '@/exampleJson/Schedule.json'
-import {Ref} from "vue";
+import { Ref } from 'vue'
+import PatientSearch from './PatientSearch.vue'
 
 // json 양식
 interface Event {
   date: Date
   hour: number
   minute: number
-  title : string
+  title: string
   diagnosis: string
 }
 
@@ -43,7 +43,7 @@ const clearSelectedDate = () => {
   selectedDate.value = null
 }
 
-let scheduleData: Ref<Schedule[] | null> = ref(null);
+let scheduleData: Ref<Schedule[] | null> = ref(null)
 
 onMounted(async () => {
   scheduleData.value = Schedule.schedule
@@ -53,51 +53,65 @@ onMounted(async () => {
 <template>
   <div class="pa-5">
     <VRow>
-      <VCol cols="12" md="4" class="mb-4">
+      <VCol
+        cols="12"
+        md="4"
+        class="mb-4"
+      >
         <VCard height="300">
-          <v-calendar class="cal"
+          <v-calendar
+            class="cal"
             :value="selectedDate"
             @dayclick="(date : Date) => selectedDate = date.id"
           />
 
-          <PatientSearch v-model="isPatientSearchOpen"/>
+          <PatientSearch v-model="isPatientSearchOpen" />
         </VCard>
 
-        <VBtn @click="openPatientSearch" class="mr-3 reservationBtn">예약 일정 추가</VBtn>
-        <VBtn @click="clearSelectedDate" class="clearBtn">날짜 초기화</VBtn>
+        <VBtn
+          @click="openPatientSearch"
+          class="mr-3 reservationBtn"
+          >예약 일정 추가</VBtn
+        >
+        <VBtn
+          @click="clearSelectedDate"
+          class="clearBtn"
+          >날짜 초기화</VBtn
+        >
       </VCol>
 
       <VCol class="user-list-container">
-        <VCard
-          class="user_list scroll-container"
-        >
+        <VCard class="user_list scroll-container1">
           <VCardItem class="justify-center">
             <VCardTitle class="font-weight-semibold text-2xl text-uppercase">
-              {{ selectedDate??'전체' }} 예약 일정
+              {{ selectedDate ?? '전체' }} 예약 일정
             </VCardTitle>
           </VCardItem>
 
-          <VDivider class="ml-2 mr-2"/>
+          <VDivider class="ml-2 mr-2" />
 
           <VCardText class="pt-2 table-container">
             <table class="list_table">
               <thead>
-              <tr>
-                <th>환자ID</th>
-                <th>환자 이름</th>
-                <th>예약일자</th>
-                <th>예약시간</th>
-              </tr>
+                <tr>
+                  <th>환자ID</th>
+                  <th>환자 이름</th>
+                  <th>예약일자</th>
+                  <th>예약시간</th>
+                </tr>
               </thead>
               <tbody>
-              <tr v-for="(item, index) in scheduleData" :key="index">
-                <template v-if="selectedDate === null || item.date === selectedDate">
-                  <td>{{ item.id }}</td>
-                  <td>{{ item.name }}</td>
-                  <td>{{ item.date }}</td>
-                  <td>{{ item.hour }}시 {{ item.minute }}분</td>
-                </template>
-              </tr>
+                <tr
+                  v-for="(item, index) in scheduleData"
+                  :key="index"
+                >
+                  <template v-if="selectedDate === null || item.date === selectedDate">
+                    <td>{{ item.id }}</td>
+                    <td>{{ item.name }}</td>
+                    <td>{{ item.date }}</td>
+                    <td>{{ item.hour }}시 {{ item.minute }}분</td>
+                  </template>
+                </tr>
               </tbody>
             </table>
           </VCardText>
@@ -108,22 +122,22 @@ onMounted(async () => {
 </template>
 
 <style lang="scss">
-@use "@core/scss/pages/page-auth.scss";
+@use '@core/scss/pages/page-auth.scss';
 
 .cal {
-  width: 100%;
-  height: 100%;
+  block-size: 100%;
+  inline-size: 100%;
 }
 
 .user-list-container {
-  height: 700px;
+  block-size: 700px;
 }
 
 .list_table {
   border-collapse: separate; /* 셀 경계를 분리합니다. */
   border-spacing: 10px; /* 원하는 간격으로 설정합니다. */
-  inline-size: 100%;
   color: black;
+  inline-size: 100%;
 }
 
 /* 예시 스타일 */
@@ -137,14 +151,16 @@ onMounted(async () => {
   font-size: 15px;
 }
 
-.reservationBtn, .clearBtn {
-  margin-top: 10px;
-  width: 100%;
+.reservationBtn,
+.clearBtn {
+  inline-size: 100%;
+  margin-block-start: 10px;
 }
-.scroll-container {
+
+.scroll-container1 {
   padding: 10px; /* 패딩 설정 */
   border: 1px solid #ccc; /* 경계선 스타일 */
+  block-size: 100%;
   overflow-y: auto; /* 높이를 초과하면 y축 스크롤 바 표시 */
-  height: 100%;
 }
 </style>

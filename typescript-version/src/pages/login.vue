@@ -1,16 +1,13 @@
 <script setup lang="ts">
 import { useUserStore } from '@/store'
-import AuthProvider from '@/views/pages/authentication/AuthProvider.vue'
 import logo from '@images/logo.svg?raw'
 import authV1MaskDark from '@images/pages/auth-v1-mask-dark.png'
 import authV1MaskLight from '@images/pages/auth-v1-mask-light.png'
-import authV1Tree2 from '@images/pages/auth-v1-tree-2.png'
-import authV1Tree from '@images/pages/auth-v1-tree.png'
 import { useRouter } from 'vue-router'
 import { useTheme } from 'vuetify'
 import userInfo from '../exampleJson/userInfo.json'
-const loginStore = useUserStore();
-const router = useRouter();
+const loginStore = useUserStore()
+const router = useRouter()
 const form = ref({
   email: '',
   password: '',
@@ -23,41 +20,39 @@ const form = ref({
 //   })
 //   .catch(error => {
 //     // 오류 처리
-//     alert('에러발생') // 토큰 없으면 에러발생 아마 로그인창에서 에러발생 뜰거임 
+//     alert('에러발생') // 토큰 없으면 에러발생 아마 로그인창에서 에러발생 뜰거임
 //   });
-  
+
 import { reactive, toRefs } from 'vue'
 
 // 로그인 폼을 위한 인터페이스 정의
 interface LoginForm {
-  email: string;
-  password: string;
+  email: string
+  password: string
 }
 
 // API 응답 데이터의 인터페이스 정의
 interface LoginResponse {
-  token: string;
+  token: string
 }
 
 // 로그인 폼 데이터를 reactive 객체로 선언
 const loginForm = reactive<LoginForm>({
   email: '',
   password: '',
-});
+})
 interface UserInfo {
-  id: number;
-  name: string;
-  email: string;
-  password: string;
-  token: string;
-  job: Number;
+  id: number
+  name: string
+  email: string
+  password: string
+  token: string
+  job: Number
 }
-const users = userInfo;
+const users = userInfo
 // 더미 사용자 데이터를 정의합니다.
 
-
-
-// 실제 로그인 구현 
+// 실제 로그인 구현
 // const handleLogin = () => {
 //   // 더미 데이터와 입력된 데이터가 일치하는지 확인합니다.
 //   if (loginForm.email === DUMMY_USER.email && loginForm.password === DUMMY_USER.password) {
@@ -67,7 +62,7 @@ const users = userInfo;
 //       };
 //       // 예: 토큰을 상태 관리로 저장하거나, 로컬 스토리지에 저장할 수 있습니다.
 //       // 상태 관리:
-//       // import { reactive } from 'vue'; 
+//       // import { reactive } from 'vue';
 //       const token = reactive({ value: loginResponse.token });
 //       // 로컬 스토리지:
 //       sessionStorage.setItem('token', loginResponse.token);
@@ -83,33 +78,31 @@ const users = userInfo;
 //   }
 // }
 
-// 임시용 
+// 임시용
 const handleLogin = () => {
-  //예시 사용자 데이터 
-  const emailToCheck = loginForm.email.trim().toLowerCase();
-  const passwordToCheck = loginForm.password.trim();
-  const DUMMY_USER = users.find(user => 
-  user.email.trim().toLowerCase() == emailToCheck && 
-  user.password.trim() == passwordToCheck
-  );
+  //예시 사용자 데이터
+  const emailToCheck = loginForm.email.trim().toLowerCase()
+  const passwordToCheck = loginForm.password.trim()
+  const DUMMY_USER = users.find(
+    user => user.email.trim().toLowerCase() == emailToCheck && user.password.trim() == passwordToCheck,
+  )
   // 더미 데이터와 입력된 데이터가 일치하는지 확인합니다.
   if (loginForm.email === DUMMY_USER?.email && loginForm.password === DUMMY_USER.password) {
-      const loginResponse: LoginResponse = {
-        token: DUMMY_USER.token
-      };
-      // 예: 토큰을 상태 관리로 저장하거나, 세션 스토리지에 저장할 수 있습니다.
-      // 상태 관리:
-      loginStore.loginSuccess(DUMMY_USER);
-      const token = reactive({ value: loginResponse.token });
-      // 세션 스토리지:
-      sessionStorage.setItem('token', loginResponse.token);
-      sessionStorage.setItem('userInfo', JSON.stringify(DUMMY_USER));
-      alert(DUMMY_USER.name +'님 반갑습니다!');
-      router.push('/home');
+    const loginResponse: LoginResponse = {
+      token: DUMMY_USER.token,
     }
-  else{
-    alert('로그인 실패: 사용자 이름 또는 비밀번호가 올바르지 않습니다.');
+    // 예: 토큰을 상태 관리로 저장하거나, 세션 스토리지에 저장할 수 있습니다.
+    // 상태 관리:
+    loginStore.loginSuccess(DUMMY_USER)
+    const token = reactive({ value: loginResponse.token })
+    // 세션 스토리지:
+    sessionStorage.setItem('token', loginResponse.token)
+    sessionStorage.setItem('userInfo', JSON.stringify(DUMMY_USER))
+    alert(DUMMY_USER.name + '님 반갑습니다!')
+    router.push('/home')
   }
+  // 예: 토큰을 상태 관리로 저장하거나, 세션 스토리지에 저장할 수 있습니다.
+  // 상태 관리:
 }
 
 // 로그인 처리 함수
@@ -134,13 +127,11 @@ const handleLogin = () => {
 // };
 
 // toRefs를 사용하여 반응형 객체의 각 property를 ref로 변환하여 템플릿에서 사용 가능하게 함
-const { email, password } = toRefs(loginForm);
+const { email, password } = toRefs(loginForm)
 
 const vuetifyTheme = useTheme()
 const authThemeMask = computed(() => {
-  return vuetifyTheme.global.name.value === 'light'
-    ? authV1MaskLight
-    : authV1MaskDark
+  return vuetifyTheme.global.name.value === 'light' ? authV1MaskLight : authV1MaskDark
 })
 
 const isPasswordVisible = ref(false)
@@ -159,18 +150,12 @@ const isPasswordVisible = ref(false)
           </div>
         </template>
 
-        <VCardTitle class="font-weight-semibold text-2xl text-uppercase">
-          EMR SYSTEM
-        </VCardTitle>
+        <VCardTitle class="font-weight-semibold text-2xl text-uppercase"> EMR SYSTEM </VCardTitle>
       </VCardItem>
 
       <VCardText class="pt-2">
-        <h5 class="text-h5 font-weight-semibold mb-1">
-          Welcome to Our EMR! 👋🏻
-        </h5>
-        <p class="mb-0">
-          Please sign-in to your account and start the adventure
-        </p>
+        <h5 class="text-h5 font-weight-semibold mb-1">Welcome to Our EMR! 👋🏻</h5>
+        <p class="mb-0">Please sign-in to your account and start the adventure</p>
       </VCardText>
 
       <VCardText>
@@ -179,7 +164,7 @@ const isPasswordVisible = ref(false)
             <!-- email -->
             <VCol cols="12">
               <VTextField
-                v-model="loginForm.email" 
+                v-model="loginForm.email"
                 label="Email"
                 type="email"
               />
@@ -241,5 +226,5 @@ const isPasswordVisible = ref(false)
 </template>
 
 <style lang="scss">
-@use "@core/scss/pages/page-auth.scss";
+@use '@core/scss/pages/page-auth.scss';
 </style>

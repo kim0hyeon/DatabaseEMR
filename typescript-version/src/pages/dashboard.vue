@@ -9,8 +9,8 @@ import AnalyticsTransactions from '@/views/dashboard/AnalyticsTransactions.vue';
 import AnalyticsUserTable from '@/views/dashboard/AnalyticsUserTable.vue';
 import AnalyticsWeeklyOverview from '@/views/dashboard/AnalyticsWeeklyOverview.vue';
 import CardStatisticsVertical from '@core/components/cards/CardStatisticsVertical.vue';
-import jsQR from 'jsqr'
-
+import jsQR from 'jsqr';
+import { watch } from 'vue';
 const totalProfit = {
   title: 'Total Profit',
   color: 'secondary',
@@ -34,22 +34,46 @@ const newProject = {
 const video = ref<HTMLVideoElement | null>(null);
 let canvas: HTMLCanvasElement;
 let ctx: CanvasRenderingContext2D;
-let animationFramedId: number | null = null;
-
+let animationFrameId: number | null = null;
+let stream: MediaStream | null = null;
+const showVideo = ref(false);
 const startScanning = () => {
-  navigator.mediaDevices.getUserMedia({ video: {facingMode: "enviroment"} }).then(function(stream) {
+  showVideo.value = !showVideo.value;
+  console.log(showVideo.value)
+  if(showVideo.value){
+  navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" } }).then(function (s) {
     if (video.value) {
+      stream = s;
       video.value.srcObject = stream;
       video.value.setAttribute('playsinline', 'true');
       video.value.play();
       tick();
     }
-  })
+    
+  })}
+  else{
+    stopScanning();
+  };
+}
+
+const stopScanning = () => {
+  if (stream) {
+    console.log(showVideo)
+    const tracks = stream.getTracks();
+    tracks.forEach(track => track.stop());
+    stream = null;
+    video.value.srcObject = null;
+    video.value.removeAttribute('src');
+    video.value.removeAttribute('playsinline');
+  }
+
+  cancelAnimationFrame(animationFrameId!);
+  animationFrameId = null;
 }
 
 function tick() {
   if (video.value && video.value.readyState === video.value.HAVE_ENOUGH_DATA) {
-    if (!canvas){
+    if (!canvas) {
       canvas = document.createElement('canvas');
       ctx = canvas.getContext('2d')!;
     }
@@ -63,19 +87,30 @@ function tick() {
     });
 
     if (code) {
+      showVideo.value = false
       console.log('Found QR code', code.data);
       window.open(code.data, '_blank');
+      stopScanning();
     }
   }
-  requestAnimationFrame(tick);
+  animationFrameId = requestAnimationFrame(tick);
 }
+
+watch(
+  () => showVideo.value,
+  (newP, oldP) => {
+    console.log(`showVideo changed from ${oldP} to ${newP}`);
+  }
+);
+
 </script>
 
 <template>
   <!-- QR 버튼 -->
-  <VBtn @click="startScanning">Start Scanning</VBtn>
-  <video ref="video"></video>
-
+  <VBtn @click="startScanning">SCAN</VBtn>
+  <div v-show="showVideo">
+      <video ref="video"></video>
+    </div>
   <!-- 기존 코드 -->
   <VRow class="match-height">
     <VCol

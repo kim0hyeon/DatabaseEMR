@@ -34,6 +34,13 @@
             "age": 28,
             "gender": "남성",
             "diagnosis": "스트레스"
+        },
+        {
+            "id": 6,
+            "name": "홍길동",
+            "age": 30,
+            "gender": "남성",
+            "diagnosis": "감기"
         }
     ]
 }

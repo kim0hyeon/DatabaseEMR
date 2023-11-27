@@ -14,25 +14,54 @@ import PatientData from '../../exampleJson/patient.json'
 import { IdStore } from '@/store'
 import { watch } from 'vue'
 import { useRoute } from 'vue-router'
+interface Patient {
+  id: number;
+  name: string;
+  age: number;
+  gender: string;
+  diagnosis: string;
+}
 const store = IdStore()
-var patient = PatientData.patients
+// var patient = PatientData.patients
 const vuetifyTheme = useTheme()
 const route = useRoute()
 const getID = (id) => {
   store.setID(id)
   console.log(store.id)
 }
+const patients = reactive<Patient[]>(PatientData.patients)
+patients.value = PatientData.patients;
+const searchTerm: Ref<string> = ref('')
+const searchResults = reactive<Patient[]>([])
+const selectedPatient = ref<Patient | null>(null)
+const searchPatient = (event: Event) => {
+  searchTerm.value = (event.target as HTMLInputElement).value;
+  if (searchTerm.value) {
+    console.log(searchTerm.value)
+    searchResults.splice(
+      0,
+      searchResults.length,
+      ...patients.filter((patient) => patient.name.includes(searchTerm.value))
+      );
+      patients.value = searchResults;
+      console.log(patients);
+    } else {
+      searchResults.splice(0, searchResults.length);
+      patients.value = PatientData.patients;
+    }
+  }
+
 watch(() => {
   return route.path;
 },(newP,oldP) => {
 console.log(`ID changed from ${oldP} to ${newP}`);
-patient = PatientData.patients;
+patients.value = PatientData.patients;
 getRoutePath();});
 var str = route.path;
 var pathway = "dashboard"
 const getRoutePath = () => {
   str = route.path
-  pathway = route['name'];
+  pathway = route.name
 }
 
 </script>
@@ -40,7 +69,7 @@ const getRoutePath = () => {
 <template>
   <VerticalNavLayout>
     <!-- 실험용 용 -->
-    <!-- {{ pathway }} -->
+    {{ pathway }}
     {{ store.id }}
     <!-- 👉 navbar -->
     <template #navbar="{ toggleVerticalOverlayNavActive }">
@@ -177,19 +206,13 @@ const getRoutePath = () => {
               heading: '환자 리스트',
             }"
           />
-         <div class="patList1">
-          <!-- <div class="patList2" v-for="item in patient" :key="item.id" >
-            <router-link class="patItem" :to="{name:'cost-detail',params :{id: item.id}}" >{{ item.name }} </router-link>&nbsp;{{ item.gender }}
-          </div> -->
-          <div class="patList2" v-for="item in patient" :key="item.id" >
+          <!-- 환자 리스트 -->
+          <div class="patList1">
+           <!-- 환자 검색 -->
+          <input class="patinput" @input="searchPatient" placeholder="환자입력">
+          <div class="patList2" v-for="item in patients.value" :key="item.id" >
             <router-link @click="getID(item.id)" class="patItem" :to="pathway" >{{ item.name }} </router-link>&nbsp;{{ item.gender }}
           </div>
-            <!-- <VerticalNavLink 
-              :item="{
-                title: item.name,
-                icon: 'mdi-alpha-t-box-outline',
-              }"
-            /> -->
         </div>
           
           <!-- <VTable>
@@ -252,6 +275,13 @@ const getRoutePath = () => {
   line-height: 1.3125rem;
   padding-block: 0.3rem;
   padding-inline: 1rem;
+}
+
+.patinput {
+  padding: 3px;
+  border: 1px solid #645b50;
+  border-radius: 5px;
+  color: #645b50;
 }
 
 .meta-key {

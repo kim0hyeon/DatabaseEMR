@@ -37,10 +37,10 @@
         },
         {
             "id": 6,
-            "name": "홍길동",
-            "age": 30,
-            "gender": "남성",
-            "diagnosis": "감기"
+            "name": "홍순필",
+            "age": 15,
+            "gender": "야성",
+            "diagnosis": "족저근막염"
         }
     ]
 }

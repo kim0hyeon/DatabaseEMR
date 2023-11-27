@@ -35,7 +35,6 @@ const router = createRouter({
           component: () => import('../pages/cards.vue'),
         },
         { path: '/cost', component: CostView, name: 'cost' },
-        // { path: '/cost/:id', component: CostView, name: 'cost-detail' },
         {
           path: 'form-layouts',
           component: () => import('../pages/form-layouts.vue'),

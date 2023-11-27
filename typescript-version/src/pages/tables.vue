@@ -15,7 +15,6 @@ interface Patient {
   gender: string;
   diagnosis: string;
 }
-var isEmptyInfo = false;
 const route = useRoute();
 interface PatientsData {
   patients: Patient[];
@@ -28,7 +27,6 @@ const patientInfo = ref<Patient | undefined>(undefined);
 const getUserInfoByID = () => {
   // Update the value of patientInfo
   patientInfo.value = patientsData.patients.find(patient => patient.id === Number(store.id));
-  isEmptyInfo = true;
   console.log(store.id);
 }
 watch(() => {
@@ -46,16 +44,16 @@ getUserInfoByID();
       {{ patientInfo }}
       <!-- {{ data }} -->
       <VCard :title="patientInfo?.name">
-        <DemoSimpleTableBasics />
+        <DemoSimpleTableBasics v-if="patientInfo?.name"/>
       </VCard>
     </VCol>
 
     <VCol cols="12">
       <VCard title="약제비">
-        <VCardText>
+        <VCardTex>
           use <code>theme</code> prop to switch table to the dark theme.
-        </VCardText>
-        <DemoSimpleTableTheme />
+        </VCardTex>
+        <DemoSimpleTableTheme v-if="patientInfo?.name"/>
       </VCard>
     </VCol>
 
@@ -64,7 +62,7 @@ getUserInfoByID();
         <VCardText>
           You can show a dense version of the table by using the <code>density</code> prop.
         </VCardText>
-        <DemoSimpleTableDensity />
+        <DemoSimpleTableDensity v-if="patientInfo?.name" />
       </VCard>
       <VBtn class="mt-5 offset-md-11"> 출력 </VBtn>
     </VCol>

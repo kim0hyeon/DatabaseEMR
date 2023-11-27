@@ -47,7 +47,7 @@ const searchPatient = (event: Event) => {
       console.log(patients);
     } else {
       searchResults.splice(0, searchResults.length);
-      patients.value = PatientData.patients;
+      patients.value = PatientData.patients; // 입력창 비워지면  초기화 
     }
   }
 
@@ -55,12 +55,12 @@ watch(() => {
   return route.path;
 },(newP,oldP) => {
 console.log(`ID changed from ${oldP} to ${newP}`);
-patients.value = PatientData.patients;
+patients.value = PatientData.patients; // 페이지 바뀌면 초기화 
 getRoutePath();});
-var str = route.path;
-var pathway = "dashboard"
+// var str = route.path;
+var pathway = route.name// default 값이 dashboard
 const getRoutePath = () => {
-  str = route.path
+  // str = route.path
   pathway = route.name
 }
 
@@ -82,21 +82,7 @@ const getRoutePath = () => {
           <VIcon icon="mdi-menu" />
         </IconBtn>
 
-        <!-- 👉 Search -->
-          <div
-            class="d-flex align-center cursor-pointer"
-            style="user-select: none;"
-          >
-          <!-- 👉 Search Trigger button -->
-          <IconBtn>
-            <VIcon icon="mdi-magnify" />
-          </IconBtn>
 
-          <span class="d-none d-md-flex align-center text-disabled">
-            <span class="me-3">Search</span>
-            <span class="meta-key">&#8984;K</span>
-          </span>
-        </div>
 
         <VSpacer />
 

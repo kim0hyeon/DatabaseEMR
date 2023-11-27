@@ -89,7 +89,7 @@ function updatePath(pathKey: string, newPath: string){
                 <VCard class="px-2 py-2">
                   <div class="letter-spacing">
                     <img src="../assets/icons/picture.png" class="large-icon-size">
-                    <h2>사진 및 영상</h2>
+                    <h2>사진</h2>
                   </div>
                   <VFileInput></VFileInput>
                   <div>

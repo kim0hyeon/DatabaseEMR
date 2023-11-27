@@ -5,7 +5,7 @@ import CostView from '../pages/tables.vue'
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes:  [
-    { path: '/', redirect: '/dashboard' },
+    { path: '/', redirect: '/login' },
     {
       path: '/',
       component: () => import('../layouts/default.vue'),

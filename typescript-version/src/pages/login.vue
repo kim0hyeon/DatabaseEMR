@@ -92,7 +92,7 @@ const isPasswordVisible = ref(false)
               <VBtn
                 block
                 type="submit"
-                to="/"
+                to="/dashboard"
               >
                 Login
               </VBtn>

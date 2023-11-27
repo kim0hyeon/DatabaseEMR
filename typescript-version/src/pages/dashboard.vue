@@ -9,6 +9,7 @@ import AnalyticsTransactions from '@/views/dashboard/AnalyticsTransactions.vue';
 import AnalyticsUserTable from '@/views/dashboard/AnalyticsUserTable.vue';
 import AnalyticsWeeklyOverview from '@/views/dashboard/AnalyticsWeeklyOverview.vue';
 import CardStatisticsVertical from '@core/components/cards/CardStatisticsVertical.vue';
+import jsQR from 'jsqr'
 
 const totalProfit = {
   title: 'Total Profit',
@@ -27,9 +28,55 @@ const newProject = {
   change: -18,
   subtitle: 'Yearly Project',
 }
+
+
+// QR 코드 인식
+const video = ref<HTMLVideoElement | null>(null);
+let canvas: HTMLCanvasElement;
+let ctx: CanvasRenderingContext2D;
+let animationFramedId: number | null = null;
+
+const startScanning = () => {
+  navigator.mediaDevices.getUserMedia({ video: {facingMode: "enviroment"} }).then(function(stream) {
+    if (video.value) {
+      video.value.srcObject = stream;
+      video.value.setAttribute('playsinline', 'true');
+      video.value.play();
+      tick();
+    }
+  })
+}
+
+function tick() {
+  if (video.value && video.value.readyState === video.value.HAVE_ENOUGH_DATA) {
+    if (!canvas){
+      canvas = document.createElement('canvas');
+      ctx = canvas.getContext('2d')!;
+    }
+    canvas.width = video.value.videoWidth;
+    canvas.height = video.value.videoHeight;
+    ctx.drawImage(video.value, 0, 0, canvas.width, canvas.height);
+
+    let imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+    let code = jsQR(imageData.data, imageData.width, imageData.height, {
+      inversionAttempts: 'dontInvert',
+    });
+
+    if (code) {
+      console.log('Found QR code', code.data);
+      window.open(code.data, '_blank');
+    }
+  }
+  requestAnimationFrame(tick);
+}
 </script>
 
 <template>
+  <!-- QR 버튼 -->
+  <VBtn @click="startScanning">Start Scanning</VBtn>
+  <video ref="video"></video>
+
+  <!-- 기존 코드 -->
   <VRow class="match-height">
     <VCol
       cols="12"

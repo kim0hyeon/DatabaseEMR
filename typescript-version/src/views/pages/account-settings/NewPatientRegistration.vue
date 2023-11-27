@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import avatar1 from '@images/avatars/avatar-1.png';
+import axios from 'axios'
 
 const accountData = {
   avatarImg: avatar1,
@@ -72,6 +73,22 @@ watch(() => isOpen.value, (newVal) => {
     emit('update:modelValue', newVal)
   }
 })
+
+// 백엔드로 환자 정보 전송
+const submitForm = async () => {
+  try {
+    const response = await axios.post('http://your-server.com/api/patient', accountDataLocal.value);
+    if (response.status === 200) {
+      console.log('Data submitted successfully');
+      closeModal();
+    } else {
+      console.log('Failed to submit data');
+    }
+  } catch (error) {
+    console.error(error);
+  }
+}
+
 </script>
 
 <template>

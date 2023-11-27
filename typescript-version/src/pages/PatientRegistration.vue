@@ -4,6 +4,7 @@ import avatar1 from "@images/avatars/avatar-1.png";
 import { Ref } from "vue";
 import { useRoute } from 'vue-router';
 import PatientData from './PatientData.json';
+import axios from 'axios';
 
 const route = useRoute()
 
@@ -76,6 +77,21 @@ const selectPatient = (patient: Patient | null) => {
   selectedPatient.value = patient
   searchResults.splice(0, searchResults.length);
 }
+
+// 백엔드로 환자 정보 전송
+const submitForm = async () => {
+  try {
+    const response = await axios.post('http://your-server.com/api/patient', accountDataLocal.value);
+    if (response.status === 200) {
+      console.log('Data submitted successfully');
+      closeModal();
+    } else {
+      console.log('Failed to submit data');
+    }
+  } catch (error) {
+    console.error(error);
+  }
+}
 </script>
 
 <template>
@@ -118,7 +134,7 @@ const selectPatient = (patient: Patient | null) => {
     <template v-slot:title>
       <div class="d-flex align-center justify-space-between">
         기존 환자 접수
-        <VBtn color="primary">접수</VBtn>
+        <VBtn color="primary" @click="submitForm">접수</VBtn>
       </div>
     </template>
     <VDivider class="mb-1"/>

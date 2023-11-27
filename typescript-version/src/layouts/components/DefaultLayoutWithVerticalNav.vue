@@ -2,8 +2,6 @@
 import { useTheme } from 'vuetify'
 
 import VerticalNavSectionTitle from '@/@layouts/components/VerticalNavSectionTitle.vue'
-import upgradeBannerDark from '@images/pro/upgrade-banner-dark.png'
-import upgradeBannerLight from '@images/pro/upgrade-banner-light.png'
 import VerticalNavLayout from '@layouts/components/VerticalNavLayout.vue'
 import VerticalNavLink from '@layouts/components/VerticalNavLink.vue'
 
@@ -13,14 +11,17 @@ import NavbarThemeSwitcher from '@/layouts/components/NavbarThemeSwitcher.vue'
 import UserProfile from '@/layouts/components/UserProfile.vue'
 import PatientData from '../../exampleJson/patient.json'
 // Banner
+import { IdStore } from '@/store'
 import { watch } from 'vue'
 import { useRoute } from 'vue-router'
+const store = IdStore()
 var patient = PatientData.patients
 const vuetifyTheme = useTheme()
 const route = useRoute()
-const upgradeBanner = computed(() => {
-  return vuetifyTheme.global.name.value === 'light' ? upgradeBannerLight : upgradeBannerDark
-})
+const getID = (id) => {
+  store.setID(id)
+  console.log(store.id)
+}
 watch(() => {
   return route.path;
 },(newP,oldP) => {
@@ -38,7 +39,9 @@ const getRoutePath = () => {
 
 <template>
   <VerticalNavLayout>
-    <!-- {{ pathway }} -->
+    <!-- 실험용 용 -->
+    {{ pathway }}
+    {{ store.id }}
     <!-- 👉 navbar -->
     <template #navbar="{ toggleVerticalOverlayNavActive }">
       <div class="d-flex h-100 align-center">
@@ -175,8 +178,11 @@ const getRoutePath = () => {
             }"
           />
          <div class="patList1">
-          <div class="patList2" v-for="item in patient" :key="item.id" >
+          <!-- <div class="patList2" v-for="item in patient" :key="item.id" >
             <router-link class="patItem" :to="{name:'cost-detail',params :{id: item.id}}" >{{ item.name }} </router-link>&nbsp;{{ item.gender }}
+          </div> -->
+          <div class="patList2" v-for="item in patient" :key="item.id" >
+            <router-link @click="getID(item.id)" class="patItem" :to="pathway" >{{ item.name }} </router-link>&nbsp;{{ item.gender }}
           </div>
             <!-- <VerticalNavLink 
               :item="{

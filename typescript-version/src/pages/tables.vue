@@ -1,11 +1,13 @@
 <script setup lang="ts">
+import { IdStore } from '@/store';
 import DemoSimpleTableBasics from '@/views/pages/tables/DemoSimpleTableBasics.vue';
 import DemoSimpleTableDensity from '@/views/pages/tables/DemoSimpleTableDensity.vue';
 import DemoSimpleTableTheme from '@/views/pages/tables/DemoSimpleTableTheme.vue';
 import { ref, watch } from 'vue';
 import { useRoute } from 'vue-router';
-
 import patientData from '../exampleJson/patient.json';
+const store = IdStore();
+
 interface Patient {
   id: number;
   name: string;
@@ -25,12 +27,12 @@ const patientInfo = ref<Patient | undefined>(undefined);
 
 const getUserInfoByID = () => {
   // Update the value of patientInfo
-  patientInfo.value = patientsData.patients.find(patient => patient.id === Number(route.params.id));
+  patientInfo.value = patientsData.patients.find(patient => patient.id === Number(store.id));
   isEmptyInfo = true;
-  console.log(isEmptyInfo);
+  console.log(store.id);
 }
 watch(() => {
-  return route.params.id; 
+  return store.id; 
 },(newId,oldId) => {
 console.log(`ID changed from ${oldId} to ${newId}`);
 getUserInfoByID();});

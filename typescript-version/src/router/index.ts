@@ -1,7 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import ChartView from '../pages/chart.vue'
 import LoginView from '../pages/login.vue'
-import CostView2 from '../pages/table2.vue'
 import CostView from '../pages/tables.vue'
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -12,15 +11,15 @@ const router = createRouter({
       component: () => import('../layouts/default.vue'),
       children: [
         {
-          path: 'dashboard',
+          path: 'dashboard',name: 'dashboard',
           component: () => import('../pages/dashboard.vue'),
         },
         {
-          path: 'patient-registration',
+          path: 'patient-registration',name: 'patient-registration',
           component: () => import('../pages/PatientRegistration.vue'),
         },
         {
-          path: 'examination',
+          path: 'examination',name: 'examination',
           component: () => import('../pages/examination.vue'),
         },
         {
@@ -35,21 +34,20 @@ const router = createRouter({
           path: 'cards',
           component: () => import('../pages/cards.vue'),
         },
-        { path: '/cost', component: CostView2, name: 'cost' },
-        { path: '/cost/:id', component: CostView, name: 'cost-detail' },
+        { path: '/cost', component: CostView, name: 'cost' },
+        // { path: '/cost/:id', component: CostView, name: 'cost-detail' },
         {
           path: 'form-layouts',
           component: () => import('../pages/form-layouts.vue'),
         },
         
         {path: '/chart',component: ChartView,name: 'chart'},
-        {path: '/chart/:id',component: ChartView,name: 'chart-detail'},
         {
-          path: 'physiotherapy',
+          path: 'physiotherapy',name: 'physiotherapy',
           component : () => import('../pages/physiotherapy.vue'),
         },
         {
-          path : 'statistics',
+          path : 'statistics',name : 'statistics',
           component : () => import('../pages/statistics.vue'),
         }
       ],
@@ -59,7 +57,7 @@ const router = createRouter({
       component: () => import('../layouts/blank.vue'),
       children: [
         {
-          path: 'register',
+          path: 'register',name: 'register',
           component: () => import('../pages/register.vue'),
         },
         {path: '/login',component: LoginView,name: 'login'},

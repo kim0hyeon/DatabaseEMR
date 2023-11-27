@@ -29,7 +29,7 @@ console.log(`ID changed from ${oldP} to ${newP}`);
 patient = PatientData.patients;
 getRoutePath();});
 var str = route.path;
-var pathway = null;
+var pathway = "dashboard"
 const getRoutePath = () => {
   str = route.path
   pathway = route['name'];
@@ -40,7 +40,7 @@ const getRoutePath = () => {
 <template>
   <VerticalNavLayout>
     <!-- 실험용 용 -->
-    {{ pathway }}
+    <!-- {{ pathway }} -->
     {{ store.id }}
     <!-- 👉 navbar -->
     <template #navbar="{ toggleVerticalOverlayNavActive }">

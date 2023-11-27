@@ -20,6 +20,17 @@
     </VCol>
   </VRow>
 
+  <VCard>
+    <VBdage></VBdage>
+    <IconBtn></IconBtn>
+    <VPagination></VPagination>
+    <VTabs></VTabs>
+    <VRadioGroup></VRadioGroup>
+    <VFileInput></VFileInput>
+    <VTextarea></VTextarea>
+    <VSwitch></VSwitch>
+  </VCard>
+
 </template>
 
 <style lang="scss">

@@ -41,7 +41,7 @@ const startScanning = () => {
   showVideo.value = !showVideo.value;
   console.log(showVideo.value)
   if(showVideo.value){
-  navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" } }).then(function (s) {
+  navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment"  } }).then(function (s) {
     if (video.value) {
       stream = s;
       video.value.srcObject = stream;
@@ -58,7 +58,7 @@ const startScanning = () => {
 
 const stopScanning = () => {
   if (stream) {
-    console.log(showVideo)
+    //초기화 과정 
     const tracks = stream.getTracks();
     tracks.forEach(track => track.stop());
     stream = null;
@@ -77,8 +77,9 @@ function tick() {
       canvas = document.createElement('canvas');
       ctx = canvas.getContext('2d')!;
     }
-    canvas.width = video.value.videoWidth;
-    canvas.height = video.value.videoHeight;
+    // 인식 범위 절반으로 줄임 
+    canvas.width = video.value.videoWidth/2;
+    canvas.height = video.value.videoHeight/2;
     ctx.drawImage(video.value, 0, 0, canvas.width, canvas.height);
 
     let imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);

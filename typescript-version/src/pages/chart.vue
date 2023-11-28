@@ -1,6 +1,5 @@
 <script setup lang="ts">
-import {ref} from 'vue';
-import {reactive} from 'vue';
+import { reactive } from 'vue';
 
 // 저장된 이미지 경로를 계속 변경하려고 만듦
 interface ImgPath{
@@ -26,41 +25,41 @@ function updatePath(pathKey: string, newPath: string){
               <h2 class="letter-spacing">내원이력</h2>
               <VCard class="visit-history-box">
                 <h4 class="letter-spacing">이름</h4>
-                <div style="padding: 10px">
+                <div style="padding: 10px;">
                   <img src="../assets/icons/calendar.png" class="small-icon-size">
                   <p>오늘 날짜</p>
                 </div>
-                <div style="padding: 10px">
+                <div style="padding: 10px;">
                   <img src="../assets/icons/record.png" class="small-icon-size">
                 <p>간단한 진료 목적 ex.재진찰</p>
                 </div>
               </VCard>
               <VCard class="visit-history-box">
                 <h4 class="letter-spacing">이름</h4>
-                <div style="padding: 10px">
+                <div style="padding: 10px;">
                   <img src="../assets/icons/calendar.png" class="small-icon-size">
                   <p>과거 날짜</p>
                 </div>
-                <div style="padding: 10px">
+                <div style="padding: 10px;">
                   <img src="../assets/icons/record.png" class="small-icon-size">
                 <p>과거 방문 목적</p>
                 </div>
-                <div style="padding: 10px">
+                <div style="padding: 10px;">
                   <img src="../assets/icons/diagnosis.png" class="small-icon-size">
                   <p>병명</p>
                 </div>
               </VCard>
               <VCard>
                 <h4 class="letter-spacing">이름</h4>
-                <div style="padding: 10px">
+                <div style="padding: 10px;">
                   <img src="../assets/icons/calendar.png" class="small-icon-size">
                   <p>과거 날짜</p>
                 </div>
-                <div style="padding: 10px">
+                <div style="padding: 10px;">
                   <img src="../assets/icons/prescription.png" class="small-icon-size">
                   <p>처방or치료내용</p>
                 </div>
-                <div style="padding: 10px">
+                <div style="padding: 10px;">
                   <img src="../assets/icons/medicine.png" class="small-icon-size">
                   <p>배포약</p>
                 </div>
@@ -80,9 +79,9 @@ function updatePath(pathKey: string, newPath: string){
                     outline
                     rows="10"
                     auto-grow
-                    style="margin-bottom:5px;"
+                    style="margin-bottom: 5px;"
                     ></VTextarea>
-                    <VBtn style="font-size: 15px; border-radius: 13px" >저장</VBtn>
+                    <VBtn style=" border-radius: 13px;font-size: 15px;" >저장</VBtn>
                   </VCard>
               </VCol>
               <VCol cols="3">
@@ -109,9 +108,9 @@ function updatePath(pathKey: string, newPath: string){
                 outline
                 rows="10"
                 auto-grow
-                style="margin-bottom:5px;"
+                style="margin-bottom: 5px;"
               ></VTextArea>
-              <VBtn style="font-size: 15px; border-radius: 13px">저장</VBtn>
+              <VBtn style=" border-radius: 13px;font-size: 15px;">저장</VBtn>
             </VCard>
           </VCol>
         </VRow>
@@ -123,28 +122,32 @@ function updatePath(pathKey: string, newPath: string){
 
 <style lang="scss">
 @use "@core/scss/pages/page-auth.scss";
-.visit-history-box{
-  margin-bottom: 10px;
+
+.visit-history-box {
+  margin-block-end: 10px;
 }
-.letter-spacing{
+
+.letter-spacing {
   padding: 10px;
 }
-.large-icon-size{
-  width: auto;
-  height: 30px;
-  float: left;
-  margin-right: 10px;
 
+.large-icon-size {
+  block-size: 30px;
+  float: inline-start;
+  inline-size: auto;
+  margin-inline-end: 10px;
 }
-.small-icon-size{
-  width: auto;
-  height: 24px;
-  float: left;
-  margin-right: 10px;
+
+.small-icon-size {
+  block-size: 24px;
+  float: inline-start;
+  inline-size: auto;
+  margin-inline-end: 10px;
 }
-.upload-img{
+
+.upload-img {
   padding: 20px;
-  width: 100%;
-  height: auto;
+  block-size: auto;
+  inline-size: 100%;
 }
 </style>

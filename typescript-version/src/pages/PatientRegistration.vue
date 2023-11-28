@@ -1,10 +1,10 @@
 <script lang="ts" setup>
 import NewPatientRegistration from '@/views/pages/account-settings/NewPatientRegistration.vue';
 import avatar1 from "@images/avatars/avatar-1.png";
+import axios from 'axios';
 import { Ref } from "vue";
 import { useRoute } from 'vue-router';
 import PatientData from './PatientData.json';
-import axios from 'axios';
 
 const route = useRoute()
 
@@ -54,7 +54,6 @@ interface Patient {
   admitted: boolean
   record: string[]
 }
-
 const patients = reactive<Patient[]>(PatientData.patients)
 const searchTerm: Ref<string> = ref('')
 const searchResults = reactive<Patient[]>([])
@@ -108,8 +107,8 @@ const submitForm = async () => {
         class="d-flex align-center cursor-pointer"
         style="user-select: none;"
       >
-        <input type="text" v-model="searchTerm" placeholder="환자 검색" @input="search">
-
+        <!-- <input type="text" v-model="searchTerm" placeholder="환자 검색" @input="search"> -->
+        <VTextField  type="text" v-model="searchTerm" label="환자 검색" @input="search" />
         <div class="search-results" v-if="searchResults.length">
           <div v-for="result in searchResults" :key="result.id" @click="selectPatient(result)">
             <VCard class="mt-1 title-text">

@@ -195,7 +195,7 @@ const getRoutePath = () => {
           <!-- 환자 리스트 -->
           <div class="patList1">
            <!-- 환자 검색 -->
-          <input class="patinput" @input="searchPatient" placeholder="환자입력">
+          <VTextField class="patinput" @input="searchPatient" label="환자입력" />
           <div class="patList2" v-for="item in patients.value" :key="item.id" >
             <router-link @click="getID(item.id)" class="patItem" :to="pathway" >{{ item.name }} </router-link>&nbsp;{{ item.gender }}
           </div>
@@ -249,14 +249,15 @@ const getRoutePath = () => {
 
 .patList2 {
   align-content: center;
+  color: #5b84d4;
   margin-block-start: 30px;
 }
 
 .patItem {
-  border: thin solid rgba(var(--v-border-color), var(--v-border-opacity));
+  border: thin solid rgba(#3d67ba, var(--v-border-opacity));
   border-radius: 6px;
   block-size: 1.5625rem;
-  color: black;
+  color: #5b84d4; // 글자는 좀 주 배경보다 연한 파랑으로
   font-size: 24px;
   line-height: 1.3125rem;
   padding-block: 0.3rem;
@@ -264,10 +265,7 @@ const getRoutePath = () => {
 }
 
 .patinput {
-  padding: 3px;
-  border: 1px solid #645b50;
-  border-radius: 5px;
-  color: #645b50;
+  color: #3d67ba;
 }
 
 .meta-key {

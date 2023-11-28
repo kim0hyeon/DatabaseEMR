@@ -49,6 +49,7 @@ interface Patient {
   address: string
   phone: string
   emergencyPhone: string
+  firstVisit: string
   lastVisit: string
   diagnosis: string
   admitted: boolean
@@ -59,15 +60,67 @@ const patients = reactive<Patient[]>(PatientData.patients)
 const searchTerm: Ref<string> = ref('')
 const searchResults = reactive<Patient[]>([])
 const selectedPatient = ref<Patient | null>(null)
+const searchCondition: Ref<string> =  ref('선택 안함')
 
 const search = (event: Event) => {
   searchTerm.value = (event.target as HTMLInputElement).value;
   if (searchTerm.value) {
-    searchResults.splice(
-      0,
-      searchResults.length,
-      ...patients.filter((patient) => patient.name.includes(searchTerm.value))
-    );
+    // 검색 조건을 선택 안했을 때
+    if (searchCondition.value == '선택 안함') {
+      // 검색어가 숫자로만 구성 -> id에서만 검색
+      if (/^\d+$/.test(searchTerm.value)) {
+        searchResults.splice(
+            0,
+            searchResults.length,
+            ...patients.filter((patient) =>
+                patient.id.toString().includes(searchTerm.value)
+            )
+        );
+      }
+      // 그렇지 않은 경우 이름이나 전화번호로 검색
+      else {
+        searchResults.splice(
+            0,
+            searchResults.length,
+            ...patients.filter((patient) =>
+                patient.name.includes(searchTerm.value) ||
+                patient.phone.includes(searchTerm.value)
+            )
+        );
+      }
+      // 검색 조건 선택했을 때
+    } else {
+      // '환자 ID' 선택
+      if (searchCondition.value === '환자 ID') {
+        searchResults.splice(
+            0,
+            searchResults.length,
+            ...patients.filter((patient) =>
+                patient.id.toString().includes(searchTerm.value)
+            )
+        );
+      }
+      // '전화번호' 선택
+      else if (searchCondition.value === '전화번호') {
+        searchResults.splice(
+            0,
+            searchResults.length,
+            ...patients.filter((patient) =>
+                patient.phone.includes(searchTerm.value)
+            )
+        );
+      }
+      // '이름' 선택
+      else if (searchCondition.value === '이름') {
+        searchResults.splice(
+            0,
+            searchResults.length,
+            ...patients.filter((patient) =>
+                patient.name.includes(searchTerm.value)
+            )
+        );
+      }
+    }
   } else {
     searchResults.splice(0, searchResults.length);
   }
@@ -81,10 +134,9 @@ const selectPatient = (patient: Patient | null) => {
 // 백엔드로 환자 정보 전송
 const submitForm = async () => {
   try {
-    const response = await axios.post('http://your-server.com/api/patient', accountDataLocal.value);
+    const response = await axios.put('http://your-server.com/api/patient/{{ patient_id }}', accountDataLocal.value);
     if (response.status === 200) {
       console.log('Data submitted successfully');
-      closeModal();
     } else {
       console.log('Failed to submit data');
     }
@@ -112,10 +164,28 @@ const submitForm = async () => {
 
         <div class="search-results" v-if="searchResults.length">
           <div v-for="result in searchResults" :key="result.id" @click="selectPatient(result)">
-            <VCard class="mt-1 title-text">
-              <p>{{ result.name }}</p>
+            <!-- 환자 선택 시 검색창 초기화 -->
+            <VCard class="mt-1" id="autoSearch" @click="searchTerm=''">
+              <VRow class="mb-0">
+                <VCol cols="12" md="3">
+                  <VCardText>ID: {{ result.id }}</VCardText>
+                </VCol>
+
+                <VCol cols="12" md="3">
+                  <VCardText>이름: {{ result.name }}</VCardText>
+                </VCol>
+
+                <VCol cols="12" md="6">
+                  <VCardText>주민등록번호: {{ result.firstRRN }} - {{ result.lastRRN }}</VCardText>
+                </VCol>
+              </VRow>
+              <VCardText class="mt-0">전화번호: {{ result.phone }}</VCardText>
             </VCard>
           </div>
+        </div>
+        <div class="search-condition ml-2 ">
+          <VSelect label="검색 조건" v-model="searchCondition"
+                   :items="['선택 안함','환자 ID', '이름', '전화번호']" />
         </div>
       </div>
     </div>
@@ -169,25 +239,25 @@ const submitForm = async () => {
       </VCol>
       <VCol cols="12" md="10">
         <VRow>
-          <VCol cols="12" md="3">
+          <VCol cols="12" md="4">
             <VCardText>
               이름 : {{ selectedPatient?.name }}(환자ID : {{ selectedPatient?.id }})
             </VCardText>
           </VCol>
 
-          <VCol cols="12" md="2">
+          <VCol cols="12" md="4">
             <VCardText>
               성별 : {{ selectedPatient?.gender }}
             </VCardText>
           </VCol>
 
-          <VCol cols="12" md="2">
+          <VCol cols="12" md="4">
             <VCardText>
               나이 : {{ selectedPatient?.age }}
             </VCardText>
           </VCol>
 
-          <VCol cols="12" md="5">
+          <VCol cols="12" md="4">
             <VCardText>
               주민등록번호 : {{ selectedPatient?.firstRRN }} - {{ selectedPatient?.lastRRN }}
             </VCardText>
@@ -207,7 +277,19 @@ const submitForm = async () => {
 
           <VCol cols="12" md="4">
             <VCardText>
+              최초 방문일 : {{ selectedPatient?.firstVisit }}
+            </VCardText>
+          </VCol>
+
+          <VCol cols="12" md="4">
+            <VCardText>
               최근 방문일 : {{ selectedPatient?.lastVisit }}
+            </VCardText>
+          </VCol>
+
+          <VCol cols="12" md="4">
+            <VCardText>
+              약관 동의 여부 : {{ selectedPatient?.admitted ? '동의' : '비동의' }}
             </VCardText>
           </VCol>
 
@@ -220,12 +302,6 @@ const submitForm = async () => {
           <VCol cols="12" md="2">
             <VCardText>
               증상 : {{ selectedPatient?.diagnosis }}
-            </VCardText>
-          </VCol>
-
-          <VCol cols="12" md="5">
-            <VCardText>
-              약관 동의 여부 : {{ selectedPatient?.admitted ? '동의' : '비동의' }}
             </VCardText>
           </VCol>
         </VRow>
@@ -314,4 +390,12 @@ const submitForm = async () => {
   overflow-y: auto;
 }
 
+/* 검색어 자동완성 창 폭 조절 */
+#autoSearch {
+  width: 550px;
+}
+
+.search-condition {
+  width: 125px;
+}
 </style>

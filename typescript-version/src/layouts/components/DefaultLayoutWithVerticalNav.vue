@@ -70,7 +70,6 @@ const getRoutePath = () => {
   <VerticalNavLayout>
     <!-- 실험용 용 -->
     {{ pathway }}
-    {{ store.id }}
     <!-- 👉 navbar -->
     <template #navbar="{ toggleVerticalOverlayNavActive }">
       <div class="d-flex h-100 align-center">

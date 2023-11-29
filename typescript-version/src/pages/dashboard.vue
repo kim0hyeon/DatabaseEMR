@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { useUserStore } from '@/store';
 import AnalyticsAward from '@/views/dashboard/AnalyticsAward.vue';
 import AnalyticsBarCharts from '@/views/dashboard/AnalyticsBarCharts.vue';
 import AnalyticsDepositWithdraw from '@/views/dashboard/AnalyticsDepositWithdraw.vue';
@@ -11,6 +12,9 @@ import AnalyticsWeeklyOverview from '@/views/dashboard/AnalyticsWeeklyOverview.v
 import CardStatisticsVertical from '@core/components/cards/CardStatisticsVertical.vue';
 import jsQR from 'jsqr';
 import { watch } from 'vue';
+import { useRouter } from 'vue-router';
+const loginStore = useUserStore();
+const router =  useRouter();
 const totalProfit = {
   title: 'Total Profit',
   color: 'secondary',
@@ -97,16 +101,20 @@ function tick() {
   animationFrameId = requestAnimationFrame(tick);
 }
 
+
 watch(
   () => showVideo.value,
   (newP, oldP) => {
     console.log(`showVideo changed from ${oldP} to ${newP}`);
   }
 );
+const foo = sessionStorage.getItem('token');
 
+const foo1 = loginStore.$state.userInfo?.name;
 </script>
-
 <template>
+  {{ foo }}
+  {{ foo1 }}
   <!-- QR 버튼 -->
   <VBtn @click="startScanning">SCAN</VBtn>
   <div v-show="showVideo">

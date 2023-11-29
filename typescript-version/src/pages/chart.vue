@@ -1,16 +1,15 @@
 <script setup lang="ts">
-import { reactive } from 'vue';
 
 // 저장된 이미지 경로를 계속 변경하려고 만듦
 interface ImgPath{
   [key: string]: string;
 }
-const imgpath: ImgPath = reactive({
-  path1: '../assets/icons/noimg.png',
-});
-function updatePath(pathKey: string, newPath: string){
-  imgpath[pathKey] = newPath;
-}
+// const imgpath: ImgPath = reactive({
+//   path1: '../assets/icons/noimg.png',
+// });
+// function updatePath(pathKey: string, newPath: string){
+//   imgpath[pathKey] = newPath;
+// }
 
 </script>
 
@@ -91,9 +90,9 @@ function updatePath(pathKey: string, newPath: string){
                     <h2>사진</h2>
                   </div>
                   <VFileInput></VFileInput>
-                  <div>
+                  <!-- <div>
                     <img :src='imgpath.path1' class="upload-img">
-                  </div>
+                  </div> -->
                 </VCard>
               </VCol>
             </VRow>

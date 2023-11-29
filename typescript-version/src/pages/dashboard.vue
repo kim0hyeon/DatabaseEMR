@@ -111,10 +111,12 @@ watch(
 const foo = sessionStorage.getItem('token');
 
 const foo1 = loginStore.$state.userInfo?.name;
+const foo2 = loginStore.$state.userInfo?.job;
 </script>
 <template>
   {{ foo }}
   {{ foo1 }}
+  {{ foo2 }}
   <!-- QR 버튼 -->
   <VBtn @click="startScanning">SCAN</VBtn>
   <div v-show="showVideo">

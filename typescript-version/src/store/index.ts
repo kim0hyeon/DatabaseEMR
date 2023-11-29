@@ -1,25 +1,7 @@
-// // store/index.js
-// import { createStore } from 'vuex';
 
-// export default createStore({
-//   state: {
-//     data: null,
-//   },
-//   mutations: {
-//     setData(state, payload) {
-//       state.data = payload;
-//     },
-//   },
-//   actions: {
-//     updateData({ commit }, payload) {
-//       commit('setData', payload);
-//     },
-//   },
-// });
-
-// store/index.js
-// import { api } from "api"; // api 모듈 임포트
 import { defineStore } from 'pinia';
+import userInfo from '../exampleJson/userInfo.json';
+//환자아이디 
 export const IdStore = defineStore('id', {
   state: () => ({
     id: 0
@@ -38,16 +20,14 @@ export const IdStore = defineStore('id', {
 
 // 사용자 타입 예시 (백엔드에 따라 수정해야 함)
 export interface UserInfo {
-  id: Number;
-  email: string;
+  id: number;
   name: string;
-  // 추가적으로 필요한 필드가 있다면 여기에 정의합니다.
+  email: string;
+  password: string;
+  token: string;
+  job: Number;
 }
-const user: UserInfo = {
-  id: 1,
-  email: 'gildong@naver.com',
-  name:'홍길동'
-}
+const user = userInfo;
 
 export const useUserStore = defineStore('userInfo', {
   state: () => ({
@@ -58,28 +38,44 @@ export const useUserStore = defineStore('userInfo', {
     loginSuccess(payload) {
       this.isLogin = true
       this.userInfo = payload
-      // console.log(this.userInfo.name);
     },
     logout() {
       this.isLogin = false
       this.userInfo = null
       sessionStorage.removeItem('token')
+      sessionStorage.removeItem('userInfo');
     },
+    // 실제 필용한 getAccountInfo()
+    // getAccountInfo() {
+    //   return new Promise((resolve, reject) => {
+    //     const token = sessionStorage.getItem('token');
+    //     // axios를 사용하여 서버에서 계정 정보를 가져옵니다.
+    //     axios.get('/userinfo', {
+    //       headers: {
+    //         'X-AUTH-TOKEN': token
+    //       }
+    //     })
+    //     .then(response => {
+    //       this.loginSuccess(response.data.data);
+    //       resolve(response); // 성공 시 resolve를 호출합니다.
+    //     })
+    //     .catch(error => {
+    //       console.error(error);
+    //       reject(error); // 에러 발생 시 reject를 호출합니다.
+    //     });
+    //   });
+    // }
+
+    // 임시로 필요한 함수 
     getAccountInfo() {
-      const token = sessionStorage.getItem('token')
-      // axios
-      //   .get('/userinfo', {
-      //     headers: {
-      //       'X-AUTH-TOKEN': token
-      //     }
-      //   })
-      //   .then(response => {
-      //     this.loginSuccess(response.data.data)
-      //   })
-      //   .catch(error => {
-      //     console.error(error)
-      //   })
-      this.loginSuccess(user);
+      if(sessionStorage.getItem('token')){
+        const token = sessionStorage.getItem('token')
+        console.log('Check Token ');
+        const storedUserInfo = JSON.parse(sessionStorage.getItem('userInfo'));
+        this.loginSuccess(storedUserInfo);
+      }else{
+        console.log('Token Out');
+      }
     }
   }
 })

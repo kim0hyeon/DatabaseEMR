@@ -9,11 +9,14 @@ import VerticalNavLink from '@layouts/components/VerticalNavLink.vue'
 import Footer from '@/layouts/components/Footer.vue'
 import NavbarThemeSwitcher from '@/layouts/components/NavbarThemeSwitcher.vue'
 import UserProfile from '@/layouts/components/UserProfile.vue'
-import PatientData from '../../exampleJson/patient.json'
-// Banner
 import { IdStore } from '@/store'
 import { watch } from 'vue'
 import { useRoute } from 'vue-router'
+import PatientData from '../../exampleJson/patient.json'
+// Banner
+const props = defineProps({
+  modelValue: Boolean
+})
 interface Patient {
   id: number;
   name: string;
@@ -37,14 +40,14 @@ const selectedPatient = ref<Patient | null>(null)
 const searchPatient = (event: Event) => {
   searchTerm.value = (event.target as HTMLInputElement).value;
   if (searchTerm.value) {
-    console.log(searchTerm.value)
+    // console.log(searchTerm.value)
     searchResults.splice(
       0,
       searchResults.length,
       ...patients.filter((patient) => patient.name.includes(searchTerm.value))
       );
       patients.value = searchResults;
-      console.log(patients);
+      // console.log(patients);
     } else {
       searchResults.splice(0, searchResults.length);
       patients.value = PatientData.patients; // 입력창 비워지면  초기화 
@@ -68,8 +71,6 @@ const getRoutePath = () => {
 
 <template>
   <VerticalNavLayout>
-    <!-- 실험용 용 -->
-    {{ pathway }}
     <!-- 👉 navbar -->
     <template #navbar="{ toggleVerticalOverlayNavActive }">
       <div class="d-flex h-100 align-center">
@@ -168,20 +169,7 @@ const getRoutePath = () => {
             }"
           />
           <div style="height: 50px;"></div>
-          <VerticalNavLink
-            :item="{
-              title: '로그인',
-              icon: 'mdi-login',
-              to: '/login',
-            }"
-          />
-          <VerticalNavLink
-          :item="{
-            title: '회원가입',
-              icon: 'mdi-file-sign',
-              to: '/register',
-            }"
-          />
+
         </div>
         
         <div id="nav-group-2">

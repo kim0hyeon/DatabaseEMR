@@ -4,7 +4,17 @@ import avatar1 from '@images/avatars/avatar-1.png';
 import { useRouter } from 'vue-router';
 const router = useRouter();
 const loginStore = useUserStore();
-const userName = (loginStore.$state.isLogin)? loginStore.$state.userInfo?.name : null;
+const userInfo = loginStore.$state?.userInfo;
+const userName = (userInfo)? loginStore.$state.userInfo?.name : null;
+const userJob = ref('')
+
+if(userInfo){
+  if(userInfo.job == 10210) userJob.value = 'admin';
+  if(userInfo.job == 10310) userJob.value = 'doctor';
+  if(userInfo.job == 10410) userJob.value = 'nurse';
+  if(userInfo.job == 10510) userJob.value = 'therapist';
+  if(userInfo.job == 10610) userJob.value = 'radiographer';
+}
 const logout = () => {  
   loginStore.logout();
   router.push('/login');
@@ -59,7 +69,7 @@ const logout = () => {
             <VListItemTitle class="font-weight-semibold">
               {{ userName }}
             </VListItemTitle>
-            <VListItemSubtitle>Admin</VListItemSubtitle>
+            <VListItemSubtitle>{{ userJob }}</VListItemSubtitle>
           </VListItem>
           <VDivider class="my-2" />
 
@@ -77,7 +87,7 @@ const logout = () => {
           </VListItem>
 
           <!-- 👉 Settings -->
-          <VListItem link>
+          <VListItem link to="admin">
             <template #prepend>
               <VIcon
                 class="me-2"

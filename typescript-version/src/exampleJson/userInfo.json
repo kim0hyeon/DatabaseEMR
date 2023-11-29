@@ -1,0 +1,42 @@
+[
+    {
+        "id": 1,
+        "name": "김철수",
+        "email": "1",
+        "password": "1",
+        "token": "abcde12345",
+        "job": 10210
+    },
+    {
+        "id": 2,
+        "name": "이영희",
+        "email": "2",
+        "password": "2",
+        "token": "fghij67890",
+        "job": 10310
+    },
+    {
+        "id": 3,
+        "name": "박민지",
+        "email": "3",
+        "password": "3",
+        "token": "klmno13579",
+        "job": 10410
+    },
+    {
+        "id": 4,
+        "name": "홍길동",
+        "email": "4",
+        "password": "4",
+        "token": "pqrst24680",
+        "job": 10510
+    },
+    {
+        "id": 5,
+        "name": "정수빈",
+        "email": "5",
+        "password": "5",
+        "token": "uvwxyz11223",
+        "job": 10610
+    }
+]

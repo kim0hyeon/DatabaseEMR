@@ -8,6 +8,7 @@ import authV1Tree2 from '@images/pages/auth-v1-tree-2.png'
 import authV1Tree from '@images/pages/auth-v1-tree.png'
 import { useRouter } from 'vue-router'
 import { useTheme } from 'vuetify'
+import userInfo from '../exampleJson/userInfo.json'
 const loginStore = useUserStore();
 const router = useRouter();
 const form = ref({
@@ -43,46 +44,74 @@ const loginForm = reactive<LoginForm>({
   email: '',
   password: '',
 });
-interface User {
+interface UserInfo {
   id: number;
   name: string;
   email: string;
   password: string;
-  token: string
+  token: string;
+  job: Number;
 }
-
+const users = userInfo;
 // 더미 사용자 데이터를 정의합니다.
-const DUMMY_USER: User = {
-  id: 1,
-  name: '홍길동',
-  email: '1',
-  password: '1',
-  token: 'dummy_token' // 더미 토큰
-};
+
+
+
+// 실제 로그인 구현 
+// const handleLogin = () => {
+//   // 더미 데이터와 입력된 데이터가 일치하는지 확인합니다.
+//   if (loginForm.email === DUMMY_USER.email && loginForm.password === DUMMY_USER.password) {
+//     loginStore.getAccountInfo().then(()=>{
+//         const loginResponse: LoginResponse = {
+//         token: DUMMY_USER.token
+//       };
+//       // 예: 토큰을 상태 관리로 저장하거나, 로컬 스토리지에 저장할 수 있습니다.
+//       // 상태 관리:
+//       // import { reactive } from 'vue'; 
+//       const token = reactive({ value: loginResponse.token });
+//       // 로컬 스토리지:
+//       sessionStorage.setItem('token', loginResponse.token);
+//       alert('로그인 성공!');
+//       router.push('/dashboard');
+//     }).catch((error)=>{
+//       // 로그인은 성공했지만 계정 정보 조회에 실패했을 경우의 처리 로직을 추가합니다.
+//       console.error('계정 정보를 가져오는데 실패했습니다.', error);
+//       // 필요한 경우 에러에 따른 추가적인 처리를 여기에 작성합니다.
+//     });
+//   }else{
+//     alert('로그인 실패: 사용자 이름 또는 비밀번호가 올바르지 않습니다.');
+//   }
+// }
+
+// 임시용 
 const handleLogin = () => {
+  //예시 사용자 데이터 
+  const emailToCheck = loginForm.email.trim().toLowerCase();
+  const passwordToCheck = loginForm.password.trim();
+  const DUMMY_USER = users.find(user => 
+  user.email.trim().toLowerCase() == emailToCheck && 
+  user.password.trim() == passwordToCheck
+  );
   // 더미 데이터와 입력된 데이터가 일치하는지 확인합니다.
-  if (loginForm.email === DUMMY_USER.email && loginForm.password === DUMMY_USER.password) {
-    alert('로그인 성공!');
-    loginStore.getAccountInfo();
-    router.push('/dashboard');
-
-    // 토큰을 사용하는 로직을 추가합니다.
-    const loginResponse: LoginResponse = {
-      token: DUMMY_USER.token
-    };
-
-    // 예: 토큰을 상태 관리로 저장하거나, 로컬 스토리지에 저장할 수 있습니다.
-    // 상태 관리:
-    // import { reactive } from 'vue';
-    const token = reactive({ value: loginResponse.token });
-
-    // 로컬 스토리지:
-    sessionStorage.setItem('token', loginResponse.token);
-
-  } else {
+  if (loginForm.email === DUMMY_USER?.email && loginForm.password === DUMMY_USER.password) {
+      const loginResponse: LoginResponse = {
+        token: DUMMY_USER.token
+      };
+      // 예: 토큰을 상태 관리로 저장하거나, 세션 스토리지에 저장할 수 있습니다.
+      // 상태 관리:
+      loginStore.loginSuccess(DUMMY_USER);
+      const token = reactive({ value: loginResponse.token });
+      // 세션 스토리지:
+      sessionStorage.setItem('token', loginResponse.token);
+      sessionStorage.setItem('userInfo', JSON.stringify(DUMMY_USER));
+      alert(DUMMY_USER.name +'님 반갑습니다!');
+      router.push('/dashboard');
+    }
+  else{
     alert('로그인 실패: 사용자 이름 또는 비밀번호가 올바르지 않습니다.');
   }
-};
+}
+
 // 로그인 처리 함수
 // const handleLogin = async () => {
 //   try {

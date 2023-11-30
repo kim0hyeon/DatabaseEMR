@@ -30,44 +30,44 @@
     </form>
     </VCard>
     <!-- USER LIST  -->
-    <VCard
-    class="user_list"
-    >
-      <VCardItem class="justify-center">
+      <VCard
+      class="user_list scroll-container"
+      >
+        <VCardItem class="justify-center">
 
-        <VCardTitle class="font-weight-semibold text-2xl text-uppercase">
-          USER LIST
-        </VCardTitle>
-      </VCardItem>
+          <VCardTitle class="font-weight-semibold text-2xl text-uppercase">
+            USER LIST
+          </VCardTitle>
+        </VCardItem>
 
-      <VCardText class="pt-2">
-        <table>
-          <thead>
-            <tr>
-              <th>ID</th>
-              <th>Name</th>
-              <th>Email</th>
-              <th>Pw</th>
-              <th>Job</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr v-for="item in userInfo1" :key="item.id">
-              <td>{{ item.id }}</td>
-              <td>{{ item.name }}</td>
-              <td>{{ item.email }}</td>
-              <td>{{ item.password }}</td>
-              <td>{{ item.job }}</td>
-              <td>
-                <button @click="editUser(item)">Edit</button> <!-- 수정 버튼 -->
-                <button @click="deleteUser(item)">Delete</button> <!-- 삭제 버튼 -->
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </VCardText>
-    </VCard>
-  </div>
+        <VCardText class="pt-2">
+          <table class="list_table">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Pw</th>
+                <th>Job</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="item in userInfo1" :key="item.id">
+                <td>{{ item.id }}</td>
+                <td>{{ item.name }}</td>
+                <td>{{ item.email }}</td>
+                <td>{{ item.password }}</td>
+                <td>{{ item.job }}</td>
+                <td>
+                  <VBtn class="edit" @click="editUser(item)">Edit</VBtn> <!-- 수정 버튼 -->
+                  <VBtn class="delete" @click="deleteUser(item)">Delete</VBtn> <!-- 삭제 버튼 -->
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </VCardText>
+      </VCard>
+    </div>
 </template>
 
 <script lang="ts" setup>
@@ -127,13 +127,13 @@ const deleteUser = (item) => {
 
 .auth-card {
   margin: 20px;
-  block-size: 66.66vh;
+  block-size: 77.77vh;
   inline-size: 30%;
 }
 
 .user_list {
   margin: 20px;
-  block-size: 66.66vh;
+  block-size: 77.77vh;
   inline-size: 60%;
 }
 
@@ -143,5 +143,39 @@ const deleteUser = (item) => {
 
 div {
   margin-block-start: 20px;
+  text-align: end;
+}
+
+input {
+  padding: 6px; /* 입력 텍스트와 테두리 간의 여백 */
+
+  /* 테두리 스타일 및 색상 설정 */
+  border: 2px solid grey; /* 예시: 파란색 테두리 */
+  border-radius: 5px; /* 테두리 모서리의 둥근 정도 */
+  padding-inline: 8px;
+}
+
+.list_table {
+  border-collapse: separate; /* 셀 경계를 분리합니다. */
+  border-spacing: 10px; /* 원하는 간격으로 설정합니다. */
+  inline-size: 100%;
+}
+
+/* 예시 스타일 */
+.list_table th,
+.list_table td {
+  padding: 10px; /* 셀 안의 내용과 경계 사이의 여백을 조절합니다. */
+}
+
+.edit,
+.delete {
+  margin: 3px;
+}
+
+.scroll-container {
+  padding: 10px; /* 패딩 설정 */
+  border: 1px solid #ccc; /* 경계선 스타일 */
+  margin: 20px; /* 컨테이너 마진 */
+  overflow-y: auto; /* 높이를 초과하면 y축 스크롤 바 표시 */
 }
 </style>

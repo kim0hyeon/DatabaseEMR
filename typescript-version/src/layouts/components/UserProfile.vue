@@ -19,6 +19,7 @@ const logout = () => {
   loginStore.logout();
   router.push('/login');
 }
+
 </script>
 
 <template>

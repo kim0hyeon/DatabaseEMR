@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import { useTheme } from 'vuetify'
-
+import { useUserStore } from "@/store";
 import VerticalNavSectionTitle from '@/@layouts/components/VerticalNavSectionTitle.vue'
 import VerticalNavLayout from '@layouts/components/VerticalNavLayout.vue'
 import VerticalNavLink from '@layouts/components/VerticalNavLink.vue'
@@ -67,6 +67,7 @@ const getRoutePath = () => {
   pathway = route.name
 }
 
+const userInfo = useUserStore().$state.userInfo
 </script>
 
 <template>
@@ -168,8 +169,15 @@ const getRoutePath = () => {
               to: '/statistics',
             }"
           />
-          <div style="height: 50px;"></div>
-
+          <div style="height: 250px;"/>
+          <VerticalNavSectionTitle :item="{heading: '관리자 메뉴'}"/>
+          <VerticalNavLink v-if="userInfo.job == 10210"
+            :item="{
+              title: '이용자 관리',
+              icon: 'mdi-account-cog',
+              to: '/admin'
+            }"
+           />
         </div>
         
         <div id="nav-group-2">

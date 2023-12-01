@@ -77,7 +77,7 @@ watch(() => isOpen.value, (newVal) => {
 // 백엔드로 환자 정보 전송
 const submitForm = async () => {
   try {
-    const response = await axios.post('http://your-server.com/api/patient', accountDataLocal.value);
+    const response = await axios.post('http://yunsseong.uk/api/patient', accountDataLocal.value);
     if (response.status === 200) {
       console.log('Data submitted successfully');
       closeModal();

@@ -298,7 +298,7 @@ const submitForm = async () => {
             </VCardText>
           </VCol>
 
-          <VCol cols="12" md="2">
+          <VCol cols="12" md="6">
             <VCardText>
               증상 : {{ selectedPatient?.diagnosis }}
             </VCardText>

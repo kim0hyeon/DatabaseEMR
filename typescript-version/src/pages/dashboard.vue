@@ -184,7 +184,6 @@ console.log(`오늘은 ${dayName}입니다.`);
         {{minutes}}<span class="timefont">분</span>
          <span class="seconds">{{ seconds }}초</span> 
       </p>
-      <p>실시간반영 예시</p>
       <p class="man-font">{{sir}} 선생님,</p>
       <p class="welcome-font">오늘 하루도 화이팅하세요</p>
 

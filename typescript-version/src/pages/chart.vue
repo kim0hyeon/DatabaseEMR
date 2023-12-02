@@ -1,15 +1,42 @@
 <script setup lang="ts">
 
-// 저장된 이미지 경로를 계속 변경하려고 만듦
-interface ImgPath{
-  [key: string]: string;
+// Components
+import PatientData from '../exampleJson/patient.json'
+import { defineComponent, ref, onMounted, reactive } from 'vue';
+import { Store } from 'pinia';
+import { IdStore } from '@/store/index';
+import axios from 'axios';
+
+// 사용자 타입 예시 (백엔드에 따라 수정해야 함)
+interface Patient {
+  id: number;
+  name: string;
+  age: number;
+  gender: string;
+  diagnosis: string;
 }
-// const imgpath: ImgPath = reactive({
-//   path1: '../assets/icons/noimg.png',
-// });
-// function updatePath(pathKey: string, newPath: string){
-//   imgpath[pathKey] = newPath;
-// }
+
+const patients = reactive<Patient[]>(PatientData.patients)
+console.log(patients);
+console.log(IdStore().id);
+console.log(patients[IdStore().id]);
+
+let patientId: { id: number; name: string; age: number; gender: string; diagnosis: string; } | undefined;
+patientId = patients[0]; // 변수 선언
+
+
+function clickPatient(event: MouseEvent) {
+  patientId = patients.find(patient => patient.id === IdStore().id);
+
+  if (patientId == null) {
+    patientId = patients.find(patient => patient.id === 1);
+  } else {
+    console.log(patientId);
+  }
+}
+
+document.documentElement.addEventListener('click', clickPatient);
+
 
 </script>
 
@@ -23,10 +50,10 @@ interface ImgPath{
             <VCard class="px-1 py-1">
               <h2 class="letter-spacing">내원이력</h2>
               <VCard class="visit-history-box">
-                <h4 class="letter-spacing">이름</h4>
+                <h4 class="letter-spacing">{{ patientId.name }}</h4>
                 <div style="padding: 10px;">
                   <img src="../assets/icons/calendar.png" class="small-icon-size">
-                  <p>오늘 날짜</p>
+                  <p>현재 날짜{{ patientId.age }}</p>
                 </div>
                 <div style="padding: 10px;">
                   <img src="../assets/icons/record.png" class="small-icon-size">
@@ -34,10 +61,10 @@ interface ImgPath{
                 </div>
               </VCard>
               <VCard class="visit-history-box">
-                <h4 class="letter-spacing">이름</h4>
+                <h4 class="letter-spacing">{{ patients[IdStore().id].name }}</h4>
                 <div style="padding: 10px;">
                   <img src="../assets/icons/calendar.png" class="small-icon-size">
-                  <p>과거 날짜</p>
+                  <p></p>
                 </div>
                 <div style="padding: 10px;">
                   <img src="../assets/icons/record.png" class="small-icon-size">
@@ -49,10 +76,10 @@ interface ImgPath{
                 </div>
               </VCard>
               <VCard>
-                <h4 class="letter-spacing">이름</h4>
+                <h4 class="letter-spacing">{{ patients[IdStore().id].name }}</h4>
                 <div style="padding: 10px;">
                   <img src="../assets/icons/calendar.png" class="small-icon-size">
-                  <p>과거 날짜</p>
+                  <p></p>
                 </div>
                 <div style="padding: 10px;">
                   <img src="../assets/icons/prescription.png" class="small-icon-size">

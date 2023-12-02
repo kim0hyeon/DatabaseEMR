@@ -50,7 +50,7 @@ document.documentElement.addEventListener('click', clickPatient);
             <VCard class="px-1 py-1">
               <h2 class="letter-spacing">내원이력</h2>
               <VCard class="visit-history-box">
-                <h4 class="letter-spacing">{{ patientId.name }}</h4>
+                 <h4 class="letter-spacing">{{ patientId.name }}</h4> <!--클릭해도 여기가 안바껴 미치겠음 -->
                 <div style="padding: 10px;">
                   <img src="../assets/icons/calendar.png" class="small-icon-size">
                   <p>현재 날짜{{ patientId.age }}</p>

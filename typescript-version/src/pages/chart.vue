@@ -234,7 +234,7 @@ getUserInfoByID()
 
 .scroll-container {
   padding: 10px; /* 패딩 설정 */
-  block-size: 60vh;
+  block-size: 95vh;
   overflow-y: auto; /* 높이를 초과하면 y축 스크롤 바 표시 */
 }
 </style>

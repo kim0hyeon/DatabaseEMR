@@ -228,7 +228,7 @@ const userInfo = useUserStore().$state.userInfo
     </template>
 
     <!-- 👉 Pages -->
-    <slot />
+    <slot class="main"/>
 
     <!-- 👉 Footer -->
     <template #footer>

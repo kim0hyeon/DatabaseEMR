@@ -77,6 +77,24 @@
             "patient_id": 6,
             "diagnosis_id": 113,
             "date": "2024-01-28"
+        },
+        {
+            "id": 14,
+            "patient_id": 1,
+            "diagnosis_id": 106,
+            "date": "2023-06-25"
+        },
+        {
+            "id": 15,
+            "patient_id": 1,
+            "diagnosis_id": 106,
+            "date": "2023-06-25"
+        },
+        {
+            "id": 16,
+            "patient_id": 1,
+            "diagnosis_id": 106,
+            "date": "2023-06-25"
         }
     ]
 }

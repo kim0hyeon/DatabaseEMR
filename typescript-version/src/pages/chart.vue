@@ -1,13 +1,11 @@
 <script setup lang="ts">
 
 // Components
-import PatientData from '../exampleJson/patient.json'
-import { defineComponent, ref, onMounted, reactive } from 'vue';
-import { Store } from 'pinia';
+import PatientRecord from '@/exampleJson/patient_record.json';
 import { IdStore } from '@/store/index';
-import axios from 'axios';
-
+import { ref } from 'vue';
 // 사용자 타입 예시 (백엔드에 따라 수정해야 함)
+const store = IdStore();
 interface Patient {
   id: number;
   name: string;
@@ -15,27 +13,57 @@ interface Patient {
   gender: string;
   diagnosis: string;
 }
-
-const patients = reactive<Patient[]>(PatientData.patients)
-console.log(patients);
-console.log(IdStore().id);
-console.log(patients[IdStore().id]);
-
-let patientId: { id: number; name: string; age: number; gender: string; diagnosis: string; } | undefined;
-patientId = patients[0]; // 변수 선언
-
-
-function clickPatient(event: MouseEvent) {
-  patientId = patients.find(patient => patient.id === IdStore().id);
-
-  if (patientId == null) {
-    patientId = patients.find(patient => patient.id === 1);
-  } else {
-    console.log(patientId);
-  }
+interface PatientRecord {
+    id: number;
+    patient_id: number;
+    diagnosis_id: number;
+    date: string;
 }
+// const patients = reactive<Patient[]>(PatientData.patients)
+// console.log(patients);
+// console.log(IdStore().id);
+// console.log(patients[IdStore().id]);
 
-document.documentElement.addEventListener('click', clickPatient);
+// let patientId: { id: number; name: string; age: number; gender: string; diagnosis: string; } | undefined;
+// patientId = patients[0]; // 변수 선언
+
+
+// function clickPatient(event: MouseEvent) {
+//   patientId = patients.find(patient => patient.id === IdStore().id);
+
+//   if (patientId == null) {
+//     patientId = patients.find(patient => patient.id === 1);
+//   } else {
+//     console.log(patientId);
+//   }
+// }
+
+// document.documentElement.addEventListener('click', clickPatient);
+
+interface PatientRecordsData {
+    patient_records: PatientRecord[];
+}
+const patientRecord: PatientRecordsData =  PatientRecord;
+
+const patientInfoRec = ref<PatientRecord | undefined>(undefined);
+
+const getUserInfoByID = () => {
+  // Update the value of patientInfo
+  patientInfoRec.value = patientRecord.patient_records.filter(patient => patient.patient_id === Number(store.id));
+  
+  //가까운 시기로 정렬
+  patientInfoRec.value.sort((a,b)=>{
+    return new Date(b.diagnosis_id) - new Date(a.diagnosis_id);
+  })
+  // console.log(store.id);
+  // console.log(patientInfoRec)
+}
+watch(() => {
+  return store.id; 
+},(newId,oldId) => {
+// console.log(`ID changed from ${oldId} to ${newId}`);
+getUserInfoByID();});
+getUserInfoByID();
 
 
 </script>
@@ -48,20 +76,19 @@ document.documentElement.addEventListener('click', clickPatient);
         <VRow>
           <VCol cols="3">
             <VCard class="px-1 py-1">
-              <h2 class="letter-spacing">내원이력</h2>
-              <VCard class="visit-history-box">
-                 <h4 class="letter-spacing">{{ patientId.name }}</h4> <!--클릭해도 여기가 안바껴 미치겠음 -->
-                <div style="padding: 10px;">
-                  <img src="../assets/icons/calendar.png" class="small-icon-size">
-                  <p>현재 날짜{{ patientId.age }}</p>
-                </div>
+              <h2 class="letter-spacing">내원이력  (이름) </h2> <!--나중에 백에서 join해서 쓰면 됌 -->
+              <p>(나중에 이름은 백에서 조인해서 쓰면 될듯)</p>
+              <VCard v-for="patient_rec in patientInfoRec" :key="patient_rec.id" class="visit-history-box">
+                 <h4 class="letter-spacing">진료아이디: {{ patient_rec?.id }}</h4> 
+                 <h4 class="letter-spacing">진료날짜: {{ patient_rec?.date }}</h4> 
+                 <h4 class="letter-spacing">병 아이디: {{ patient_rec?.diagnosis_id }}</h4> 
                 <div style="padding: 10px;">
                   <img src="../assets/icons/record.png" class="small-icon-size">
                 <p>간단한 진료 목적 ex.재진찰</p>
                 </div>
               </VCard>
-              <VCard class="visit-history-box">
-                <h4 class="letter-spacing">{{ patients[IdStore().id].name }}</h4>
+              <!-- <VCard class="visit-history-box">
+                <h4 class="letter-spacing">{{ patientInfoRec?.date }}</h4>
                 <div style="padding: 10px;">
                   <img src="../assets/icons/calendar.png" class="small-icon-size">
                   <p></p>
@@ -76,7 +103,7 @@ document.documentElement.addEventListener('click', clickPatient);
                 </div>
               </VCard>
               <VCard>
-                <h4 class="letter-spacing">{{ patients[IdStore().id].name }}</h4>
+                <h4 class="letter-spacing">{{ patientInfoRec?.diagnosis_id }}</h4>
                 <div style="padding: 10px;">
                   <img src="../assets/icons/calendar.png" class="small-icon-size">
                   <p></p>
@@ -89,7 +116,7 @@ document.documentElement.addEventListener('click', clickPatient);
                   <img src="../assets/icons/medicine.png" class="small-icon-size">
                   <p>배포약</p>
                 </div>
-              </VCard>
+              </VCard> -->
             </VCard>
           </VCol>
           <VCol cols="9">

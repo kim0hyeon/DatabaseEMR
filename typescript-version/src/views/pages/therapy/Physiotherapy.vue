@@ -35,6 +35,17 @@ function clickPatient(event: MouseEvent) {
     console.log(patientId);
   }
 }
+
+const Cards = reactive<number[]>([])
+function addCard(){
+    Cards.push(Cards.length+1);
+    console.log(Cards);
+};
+function subCard(){
+    Cards.pop();
+    console.log(Cards)
+}
+
 </script>
 <template>
   <VRow>
@@ -105,6 +116,21 @@ function clickPatient(event: MouseEvent) {
                 <img src="../../../assets/icons/prescription.png" class="large-icon-size">
                 <h2>물리치료</h2>
               </div>
+              <div>
+                <!-- 버튼 -->
+                <VRow>
+                    <VCol>
+                        <VBtn @click="addCard" style="margin-bottom: 10px;">치료 추가</VBtn>
+                    </VCol>
+                    <VCol>
+                        <VBtn @click="subCard" style="margin-bottom: 10px;">치료 삭제</VBtn>
+                    </VCol>
+                </VRow>
+                <VCard v-for="(i,index) in Cards" :key="index" class="therapy-card">
+                    <VCardTitle>카드제목 {{ index }}</VCardTitle>
+                    <VCardText>카드의 내용을 작성하세요.</VCardText>
+                </VCard>
+              </div>
               <VTextarea
                 label="치료 후기 입력"
                 outline
@@ -150,5 +176,10 @@ function clickPatient(event: MouseEvent) {
   padding: 20px;
   block-size: auto;
   inline-size: 100%;
+}
+
+.therapy-card{
+    margin-top: 10px;
+    margin-bottom: 10px;
 }
 </style>

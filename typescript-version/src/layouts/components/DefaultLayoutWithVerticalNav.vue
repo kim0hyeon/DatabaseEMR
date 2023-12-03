@@ -1,18 +1,18 @@
 <script lang="ts" setup>
-import { useTheme } from 'vuetify'
+import VerticalNavSectionTitle from '@/@layouts/components/VerticalNavSectionTitle.vue';
 import { useUserStore } from "@/store";
-import VerticalNavSectionTitle from '@/@layouts/components/VerticalNavSectionTitle.vue'
-import VerticalNavLayout from '@layouts/components/VerticalNavLayout.vue'
-import VerticalNavLink from '@layouts/components/VerticalNavLink.vue'
+import VerticalNavLayout from '@layouts/components/VerticalNavLayout.vue';
+import VerticalNavLink from '@layouts/components/VerticalNavLink.vue';
+import { useTheme } from 'vuetify';
 
 // Components
-import Footer from '@/layouts/components/Footer.vue'
-import NavbarThemeSwitcher from '@/layouts/components/NavbarThemeSwitcher.vue'
-import UserProfile from '@/layouts/components/UserProfile.vue'
-import { IdStore } from '@/store'
-import { watch } from 'vue'
-import { useRoute } from 'vue-router'
-import PatientData from '../../exampleJson/patient.json'
+import Footer from '@/layouts/components/Footer.vue';
+import NavbarThemeSwitcher from '@/layouts/components/NavbarThemeSwitcher.vue';
+import UserProfile from '@/layouts/components/UserProfile.vue';
+import { IdStore } from '@/store';
+import { watch } from 'vue';
+import { useRoute } from 'vue-router';
+import PatientData from '../../exampleJson/patient.json';
 // Banner
 const props = defineProps({
   modelValue: Boolean

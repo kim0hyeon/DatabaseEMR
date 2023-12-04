@@ -1,67 +1,71 @@
 <script lang="ts" setup>
-import VerticalNavSectionTitle from '@/@layouts/components/VerticalNavSectionTitle.vue';
-import { useUserStore } from "@/store";
-import VerticalNavLayout from '@layouts/components/VerticalNavLayout.vue';
-import VerticalNavLink from '@layouts/components/VerticalNavLink.vue';
-import { useTheme } from 'vuetify';
+import VerticalNavSectionTitle from '@/@layouts/components/VerticalNavSectionTitle.vue'
+import { useUserStore } from '@/store'
+import VerticalNavLayout from '@layouts/components/VerticalNavLayout.vue'
+import VerticalNavLink from '@layouts/components/VerticalNavLink.vue'
+import { useTheme } from 'vuetify'
 
 // Components
-import Footer from '@/layouts/components/Footer.vue';
-import NavbarThemeSwitcher from '@/layouts/components/NavbarThemeSwitcher.vue';
-import UserProfile from '@/layouts/components/UserProfile.vue';
-import { IdStore } from '@/store';
-import { watch } from 'vue';
-import { useRoute } from 'vue-router';
-import PatientData from '../../exampleJson/patient.json';
+import Footer from '@/layouts/components/Footer.vue'
+import NavbarThemeSwitcher from '@/layouts/components/NavbarThemeSwitcher.vue'
+import UserProfile from '@/layouts/components/UserProfile.vue'
+import { IdStore } from '@/store'
+import { watch } from 'vue'
+import { useRoute } from 'vue-router'
+import PatientData from '../../exampleJson/patient.json'
 // Banner
 const props = defineProps({
-  modelValue: Boolean
+  modelValue: Boolean,
 })
 interface Patient {
-  id: number;
-  name: string;
-  age: number;
-  gender: string;
-  diagnosis: string;
+  id: number
+  name: string
+  age: number
+  gender: string
+  diagnosis: string
 }
 const store = IdStore()
 // var patient = PatientData.patients
 const vuetifyTheme = useTheme()
 const route = useRoute()
-const getID = (id) => {
+const getID = id => {
   store.setID(id)
   console.log(store.id)
 }
 const patients = reactive<Patient[]>(PatientData.patients)
-patients.value = PatientData.patients;
+patients.value = PatientData.patients
 const searchTerm: Ref<string> = ref('')
 const searchResults = reactive<Patient[]>([])
 const selectedPatient = ref<Patient | null>(null)
 const searchPatient = (event: Event) => {
-  searchTerm.value = (event.target as HTMLInputElement).value;
+  searchTerm.value = (event.target as HTMLInputElement).value
   if (searchTerm.value) {
     // console.log(searchTerm.value)
     searchResults.splice(
       0,
       searchResults.length,
-      ...patients.filter((patient) => patient.name.includes(searchTerm.value))
-      );
-      patients.value = searchResults;
-      // console.log(patients);
-    } else {
-      searchResults.splice(0, searchResults.length);
-      patients.value = PatientData.patients; // 입력창 비워지면  초기화 
-    }
+      ...patients.filter(patient => patient.name.includes(searchTerm.value)),
+    )
+    patients.value = searchResults
+    // console.log(patients);
+  } else {
+    searchResults.splice(0, searchResults.length)
+    patients.value = PatientData.patients // 입력창 비워지면  초기화
   }
+}
 
-watch(() => {
-  return route.path;
-},(newP,oldP) => {
-console.log(`ID changed from ${oldP} to ${newP}`);
-patients.value = PatientData.patients; // 페이지 바뀌면 초기화 
-getRoutePath();});
+watch(
+  () => {
+    return route.path
+  },
+  (newP, oldP) => {
+    console.log(`ID changed from ${oldP} to ${newP}`)
+    patients.value = PatientData.patients // 페이지 바뀌면 초기화
+    getRoutePath()
+  },
+)
 // var str = route.path;
-var pathway = route.name// default 값이 dashboard
+var pathway = route.name // default 값이 dashboard
 const getRoutePath = () => {
   // str = route.path
   pathway = route.name
@@ -82,8 +86,6 @@ const userInfo = useUserStore().$state.userInfo
         >
           <VIcon icon="mdi-menu" />
         </IconBtn>
-
-
 
         <VSpacer />
 
@@ -127,7 +129,7 @@ const userInfo = useUserStore().$state.userInfo
               title: '접수',
               icon: 'mdi-account-plus-outline',
               // icon: 'mdi-account-cog-outline',
-              to: '/patient-registration'
+              to: '/patient-registration',
             }"
           />
 
@@ -136,7 +138,7 @@ const userInfo = useUserStore().$state.userInfo
               title: '차트',
               icon: 'mdi-chart-bar',
               // icon: 'mdi-login',
-              to: '/chart'
+              to: '/chart',
             }"
           />
           <VerticalNavLink
@@ -169,17 +171,18 @@ const userInfo = useUserStore().$state.userInfo
               to: '/statistics',
             }"
           />
-          <div style="height: 250px;"/>
-          <VerticalNavSectionTitle :item="{heading: '관리자 메뉴'}"/>
-          <VerticalNavLink v-if="userInfo.job == 10210"
+          <div style="height: 250px" />
+          <VerticalNavSectionTitle :item="{ heading: '관리자 메뉴' }" />
+          <VerticalNavLink
+            v-if="userInfo.job == 10210"
             :item="{
               title: '이용자 관리',
               icon: 'mdi-account-cog',
-              to: '/admin'
+              to: '/admin',
             }"
-           />
+          />
         </div>
-        
+
         <div id="nav-group-2">
           <!-- 👉 User Interface -->
           <VerticalNavSectionTitle
@@ -189,13 +192,29 @@ const userInfo = useUserStore().$state.userInfo
           />
           <!-- 환자 리스트 -->
           <div class="patList1">
-           <!-- 환자 검색 -->
-          <VTextField class="patinput" @input="searchPatient" label="환자입력" />
-          <div class="patList2" v-for="item in patients.value" :key="item.id" >
-            <router-link @click="getID(item.id)" class="patItem" :to="pathway" >{{ item.name }} </router-link>&nbsp;{{ item.gender }}
+            <!-- 환자 검색 -->
+            <VTextField
+              class="patinput"
+              @input="searchPatient"
+              label="환자입력"
+            />
+            <div
+              class="patList2"
+              :style="{
+                opacity: item.id === store.id ? 1.0 : 0.3,
+              }"
+              v-for="item in patients.value"
+              :key="item.id"
+            >
+              <router-link
+                @click="getID(item.id)"
+                active-class="patItem"
+                :to="pathway"
+                >{{ item.name }} </router-link
+              >&nbsp;{{ item.gender }}
+            </div>
           </div>
-        </div>
-          
+
           <!-- <VTable>
     <thead>
       <tr>
@@ -228,7 +247,7 @@ const userInfo = useUserStore().$state.userInfo
     </template>
 
     <!-- 👉 Pages -->
-    <slot class="main"/>
+    <slot class="main" />
 
     <!-- 👉 Footer -->
     <template #footer>
@@ -252,11 +271,19 @@ const userInfo = useUserStore().$state.userInfo
   border: thin solid rgba(#3d67ba, var(--v-border-opacity));
   border-radius: 6px;
   block-size: 1.5625rem;
-  color: #5b84d4; // 글자는 좀 주 배경보다 연한 파랑으로
+  color: #3e64b0; // 글자는 좀 주 배경보다 연한 파랑으로
   font-size: 24px;
   line-height: 1.3125rem;
   padding-block: 0.3rem;
   padding-inline: 1rem;
+}
+
+.patItem.active::before {
+  color: red;
+}
+
+.patItem.active::after {
+  color: blue;
 }
 
 .patinput {

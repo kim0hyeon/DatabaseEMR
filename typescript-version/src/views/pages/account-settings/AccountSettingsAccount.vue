@@ -1,8 +1,8 @@
 <script lang="ts" setup>
-import CTView from '@/views/pages/medi-imagings/ct.vue';
-import MriView from '@/views/pages/medi-imagings/mri.vue';
-import XRAYView from '@/views/pages/medi-imagings/x-ray.vue';
-import { useRoute } from 'vue-router';
+import CTView from '@/views/pages/medi-imagings/ct.vue'
+import MriView from '@/views/pages/medi-imagings/mri.vue'
+import XRAYView from '@/views/pages/medi-imagings/x-ray.vue'
+import { useRoute } from 'vue-router'
 
 const route = useRoute()
 
@@ -42,12 +42,12 @@ const tabs = [
     >
       <!-- Account -->
       <VWindowItem value="MRI">
-        <XRAYView />
+        <MriView />
       </VWindowItem>
 
       <!-- Security -->
       <VWindowItem value="X-RAY">
-        <MriView/>
+        <XRAYView />
       </VWindowItem>
 
       <!-- Notification -->

@@ -1,96 +1,171 @@
 <script lang="ts" setup>
-import avatar1 from '@images/avatars/avatar-1.png';
-import avatar4 from '@images/avatars/avatar-4.png';
-import avatar8 from '@images/avatars/avatar-8.png';
+const navigationTab = ref('ITEM ONE')
+const navigationTab2 = ref('ITEM ONE')
+const tabItems = ['ITEM ONE', 'ITEM TWO', 'ITEM THREE']
+const tabContent =
+  'Although cards can support multiple actions, UI controls, and an overflow menu, use restraint and remember that cards...'
 
-const solidCardData = [
-  {
-    cardBg: '#16B1FF',
-    title: 'Twitter Card',
-    icon: 'mdi-twitter',
-    text: '"Turns out semicolon-less style is easier and safer in TS because most gotcha edge cases are type invalid as well."',
-    avatarImg: avatar4,
-    avatarName: 'Mary Vaughn',
-    likes: '1.2k',
-    share: '80',
-  },
-  {
-    cardBg: '#3B5998',
-    title: 'Facebook Card',
-    icon: 'mdi-facebook',
-    text: 'You\'ve read about the importance of being courageous, rebellious and imaginative. These are all vital ingredients.',
-    avatarImg: avatar1,
-    avatarName: 'Eugene Clarke',
-    likes: '3.2k',
-    share: '49',
-  },
-  {
-    cardBg: '#007BB6',
-    title: 'Linkedin Card',
-    icon: 'mdi-linkedin',
-    text: 'With the Internet spreading like wildfire and reaching every part of our daily life, more and more traffic is directed.',
-    avatarImg: avatar8,
-    avatarName: 'Anne Burke1',
-    likes: '1.2k',
-    share: '80',
-  },
-]
+import { ref } from 'vue'
+
+interface Photo {
+  url: string
+  name: string
+}
+
+const photos = ref<Photo[]>([])
+const selectedPhoto = ref('')
+function handleFilesUpload(event: Event) {
+  const target = event.target as HTMLInputElement
+  const files = target.files
+
+  if (files) {
+    Array.from(files).forEach(file => {
+      const reader = new FileReader()
+      reader.onload = e => {
+        if (e.target?.result) {
+          const url = e.target.result.toString()
+          // 최근 업로드가 위로오도록 unshift사용
+          photos.value.unshift({ url, name: file.name })
+          selectedPhoto.value = e.target.result.toString()
+        }
+      }
+      reader.readAsDataURL(file)
+    })
+  }
+}
+
+function removePhoto(index: number) {
+  photos.value.splice(index, 1)
+}
+function selectImage(image: Photo) {
+  selectedPhoto.value = image.url
+}
 </script>
+<style scoped>
+.scroll-container {
+  padding: 10px; /* 패딩 설정 */
+  border: 1px solid #ccc; /* 경계선 스타일 */
+  margin: 20px; /* 컨테이너 마진 */
+  overflow-y: auto; /* 높이를 초과하면 y축 스크롤 바 표시 */
+}
+
+.sm-image {
+  max-block-size: 50px;
+  max-inline-size: 50px;
+}
+
+.sel-photo {
+  block-size: 600px; /* 이미지의 최대 높이를 조절하세요 */
+  cursor: pointer;
+  inline-size: 600px;
+}
+
+.photo {
+  position: relative;
+  margin: auto;
+}
+
+.noimage {
+  block-size: 600px; /* 이미지의 최대 높이를 조절하세요 */
+  color: #555;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: bold;
+  inline-size: 600px;
+  inset-block-start: 50%;
+  inset-inline-start: 50%;
+  transform: translate(41%, 45%);
+}
+
+.custom-file-upload {
+  position: relative;
+  display: inline-block;
+  margin: 5px;
+  cursor: pointer;
+}
+
+.custom-file-upload input[type='file'] {
+  display: none;
+}
+
+.custom-file-upload span {
+  border-radius: 5px;
+  background-color: #3498db;
+  color: #fff;
+  padding-block: 8px;
+  padding-inline: 12px;
+}
+
+.photo_list {
+  inline-size: 300px;
+}
+
+.name {
+  overflow: hidden;
+  font-size: 18px;
+  margin-block-start: 10px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.photo-vcard {
+  margin-block-start: 30px;
+}
+</style>
 
 <template>
+  <div></div>
   <VRow>
-    <VCol
-      v-for="data in solidCardData"
-      :key="data.icon"
-      cols="12"
-      md="6"
-      lg="4"
-    >
-      <VCard :color="data.cardBg">
-        <VCardItem>
-          <template #prepend>
-            <VIcon
-              size="1.9rem"
-              color="white"
-              :icon="data.icon"
+    <Vcol>
+      <VCard class="photo-vcard">
+        <div class="photo">
+          <div v-if="photos.length > 0">
+            <img
+              class="sel-photo"
+              :src="selectedPhoto"
             />
-          </template>
-          <VCardTitle class="text-white">
-            {{ data.title }}
-          </VCardTitle>
-        </VCardItem>
-
-        <VCardText>
-          <p class="clamp-text text-white mb-0">
-            {{ data.text }}
-          </p>
-        </VCardText>
-
-        <VCardText class="d-flex justify-space-between align-center flex-wrap">
-          <div class="text-no-wrap">
-            <VAvatar
-              size="34"
-              :image="data.avatarImg"
-            />
-            <span class="text-white ms-2">{{ data.avatarName }}</span>
           </div>
-
-          <div class="d-flex align-center">
-            <IconBtn
-              icon="mdi-heart"
-              color="white"
-              class="me-1"
-            />
-            <span class="text-subtitle-2 text-white me-4">{{ data.likes }}</span>
-
-            <IconBtn
-              icon="mdi-share-variant"
-              color="white"
-              class="me-1"
-            />
-            <span class="text-subtitle-2 text-white">{{ data.share }}</span>
+          <div
+            class="noimage"
+            v-else
+          >
+            <h1>사진없음</h1>
           </div>
-        </VCardText>
+        </div>
+      </VCard>
+    </Vcol>
+    <VCol>
+      <VCard class="photo_list scroll-container">
+        <label
+          for="fileInput"
+          class="custom-file-upload"
+        >
+          <span>파일 선택</span>
+          <input
+            type="file"
+            id="fileInput"
+            @change="handleFilesUpload"
+          />
+        </label>
+        <VBtn class="ma-2">제출</VBtn>
+        <div v-if="photos.length > 0">
+          <div
+            v-for="(photo, index) in photos"
+            :key="photo.name"
+          >
+            <VDivider class="ma-3" />
+            <img
+              :src="photo.url"
+              :alt="photo.name"
+              class="sm-image"
+            />
+            <p class="name">{{ photo.name }}</p>
+
+            <button @click="selectImage(photo)">(overview)</button>
+            &nbsp;
+            <button @click="removePhoto(index)">(remove)</button>
+          </div>
+        </div>
       </VCard>
     </VCol>
   </VRow>

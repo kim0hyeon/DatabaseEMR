@@ -159,9 +159,9 @@ switch (dayOfWeek.value) {
 console.log(`오늘은 ${dayName}입니다.`)
 </script>
 <template>
-  {{ foo }}
+  <!-- {{ foo }}
   {{ foo1 }}
-  {{ foo2 }}
+  {{ foo2 }} -->
   <!-- QR 버튼 -->
   <VBtn @click="startScanning">SCAN</VBtn>
   <div v-show="showVideo">

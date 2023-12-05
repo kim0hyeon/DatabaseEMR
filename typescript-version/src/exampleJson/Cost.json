@@ -1,0 +1,56 @@
+{
+  "inspectionCost": [
+    {
+      "id": 1,
+      "name": "MRI",
+      "cost": 10000
+    },
+    {
+      "id": 2,
+      "name": "CT",
+      "cost": 20000
+    },
+    {
+      "id": 3,
+      "name": "XRAY",
+      "cost": 30000
+    },
+    {
+      "id": 4,
+      "name": "Blood",
+      "cost": 40000
+    },
+    {
+      "id": 5,
+      "name": "Physical",
+      "cost": 50000
+    }
+  ],
+  "medicineCost": [
+    {
+      "id": 1,
+      "name": "밥약",
+      "cost": 1000
+    },
+    {
+      "id": 2,
+      "name": "술약",
+      "cost": 2000
+    },
+    {
+      "id": 3,
+      "name": "보약",
+      "cost": 3000
+    },
+    {
+      "id": 4,
+      "name": "기약",
+      "cost": 4000
+    },
+    {
+      "id": 5,
+      "name": "좌약",
+      "cost": 5000
+    }
+  ]
+}

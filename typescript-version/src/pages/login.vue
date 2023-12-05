@@ -105,7 +105,7 @@ const handleLogin = () => {
       sessionStorage.setItem('token', loginResponse.token);
       sessionStorage.setItem('userInfo', JSON.stringify(DUMMY_USER));
       alert(DUMMY_USER.name +'님 반갑습니다!');
-      router.push('/dashboard');
+      router.push('/home');
     }
   else{
     alert('로그인 실패: 사용자 이름 또는 비밀번호가 올바르지 않습니다.');
@@ -233,45 +233,10 @@ const isPasswordVisible = ref(false)
                 Create an account
               </RouterLink>
             </VCol>
-
-            <VCol
-              cols="12"
-              class="d-flex align-center"
-            >
-              <VDivider />
-              <span class="mx-4">or</span>
-              <VDivider />
-            </VCol>
-
-            <!-- auth providers -->
-            <VCol
-              cols="12"
-              class="text-center"
-            >
-              <AuthProvider />
-            </VCol>
           </VRow>
         </VForm>
       </VCardText>
     </VCard>
-
-    <VImg
-      class="auth-footer-start-tree d-none d-md-block"
-      :src="authV1Tree"
-      :width="250"
-    />
-
-    <VImg
-      :src="authV1Tree2"
-      class="auth-footer-end-tree d-none d-md-block"
-      :width="350"
-    />
-
-    <!-- bg img -->
-    <VImg
-      class="auth-footer-mask d-none d-md-block"
-      :src="authThemeMask"
-    />
   </div>
 </template>
 

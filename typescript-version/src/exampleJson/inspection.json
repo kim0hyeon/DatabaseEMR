@@ -1,0 +1,10 @@
+{
+  "inspection": [
+    {
+      "patientId": 1,
+      "patientName": "홍길동",
+      "inspectionName": ["MRI", "CT", "XRAY"],
+      "medicineName": ["밥약", "술약", "보약"]
+    }
+  ]
+}

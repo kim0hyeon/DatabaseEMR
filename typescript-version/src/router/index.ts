@@ -2,12 +2,12 @@ import { useUserStore } from '@/store';
 import { createRouter, createWebHistory } from 'vue-router';
 import ChartView from '../pages/chart.vue';
 import LoginView from '../pages/login.vue';
-import CostView from '../pages/tables.vue';
+import CostView from '../pages/cost.vue';
 const basicRoute = ref('');
 // const loginStore = useUserStore(); 왠지 모르겠는데 이거하면 주석없애면 로드 안됌 
 basicRoute.value = '/login'
 if(sessionStorage.getItem('token')){
-  basicRoute.value = '/dashboard'
+  basicRoute.value = '/home'
 }
 // console.log(basicRoute.value)
 const router = createRouter({
@@ -19,8 +19,8 @@ const router = createRouter({
       component: () => import('../layouts/default.vue'),
       children: [
         {
-          path: 'dashboard',name: 'dashboard',
-          component: () => import('../pages/dashboard.vue'),
+          path: 'home',name: 'home',
+          component: () => import('../pages/home.vue'),
           meta: {
             requiresAuth: true, // 인증이 필요한 경로일 경우 설정
             jobAuth: [1,1,1,1] // [의사,간호사,물리치료사,방사선사]

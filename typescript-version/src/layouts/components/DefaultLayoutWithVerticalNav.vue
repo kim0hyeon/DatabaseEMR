@@ -121,7 +121,7 @@ const userInfo = useUserStore().$state.userInfo
             :item="{
               title: '홈',
               icon: 'mdi-home-outline',
-              to: '/dashboard',
+              to: '/home',
             }"
           />
           <VerticalNavLink
@@ -216,34 +216,6 @@ const userInfo = useUserStore().$state.userInfo
                 >{{ item.name }} </router-link>&nbsp;{{ item.gender }}
             </div>
           </div>
-
-          <!-- <VTable>
-    <thead>
-      <tr>
-        <th class="text-uppercase">
-          name
-        </th>
-        <th class="text-uppercase text-center">
-          gender
-        </th>
-      </tr>
-    </thead>
-
-    <tbody>
-        <tr
-        v-for="item in patient"
-        :key="item.id"
-      >
-        <td>
-          {{ item.name }}
-        </td>
-        <td class="text-center">
-          {{ item.gender }}
-        </td>
-
-    </tr>
-  </tbody>
-  </VTable> -->
         </div>
       </div>
     </template>

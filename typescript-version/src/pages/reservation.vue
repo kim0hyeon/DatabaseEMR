@@ -52,21 +52,22 @@ onMounted(async () => {
 
 <template>
   <div class="pa-5">
-    <v-row>
-      <v-col cols="12" md="4" class="mb-4">
-        <v-card height="300">
+    <VRow>
+      <VCol cols="12" md="4" class="mb-4">
+        <VCard height="300">
           <v-calendar class="cal"
             :value="selectedDate"
             @dayclick="(date : Date) => selectedDate = date.id"
           />
 
           <PatientSearch v-model="isPatientSearchOpen"/>
-        </v-card>
+        </VCard>
 
         <VBtn @click="openPatientSearch" class="mr-3 reservationBtn">예약 일정 추가</VBtn>
         <VBtn @click="clearSelectedDate" class="clearBtn">날짜 초기화</VBtn>
-      </v-col>
-      <VCol>
+      </VCol>
+
+      <VCol class="user-list-container">
         <VCard
           class="user_list scroll-container"
         >
@@ -103,7 +104,7 @@ onMounted(async () => {
           </VCardText>
         </VCard>
       </VCol>
-    </v-row>
+    </VRow>
   </div>
 </template>
 
@@ -115,8 +116,8 @@ onMounted(async () => {
   height: 100%;
 }
 
-.table-container {
-  height: 500px;
+.user-list-container {
+  height: 700px;
 }
 
 .list_table {
@@ -145,5 +146,6 @@ onMounted(async () => {
   padding: 10px; /* 패딩 설정 */
   border: 1px solid #ccc; /* 경계선 스타일 */
   overflow-y: auto; /* 높이를 초과하면 y축 스크롤 바 표시 */
+  height: 100%;
 }
 </style>

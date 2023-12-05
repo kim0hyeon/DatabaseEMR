@@ -128,12 +128,7 @@ const userInfo = useUserStore().$state.userInfo
             :item="{
               title: '접수',
               icon: 'mdi-account-plus-outline',
-<<<<<<< HEAD
               to: '/patient-registration'
-=======
-              // icon: 'mdi-account-cog-outline',
-              to: '/patient-registration',
->>>>>>> a63069ff5a9e031b97b731aaaaebd0f95c31cedd
             }"
           />
 
@@ -141,12 +136,7 @@ const userInfo = useUserStore().$state.userInfo
             :item="{
               title: '차트',
               icon: 'mdi-chart-bar',
-<<<<<<< HEAD
               to: '/chart'
-=======
-              // icon: 'mdi-login',
-              to: '/chart',
->>>>>>> a63069ff5a9e031b97b731aaaaebd0f95c31cedd
             }"
           />
           <VerticalNavLink
@@ -177,7 +167,6 @@ const userInfo = useUserStore().$state.userInfo
               to: '/statistics',
             }"
           />
-<<<<<<< HEAD
           <VerticalNavLink
             :item="{
               title: '예약',
@@ -185,15 +174,10 @@ const userInfo = useUserStore().$state.userInfo
               to: '/reservation'
           }"
           />
-          <div style="height: 215px;"/>
-          <VerticalNavSectionTitle :item="{heading: '관리자 메뉴'}"/>
-          <VerticalNavLink v-if="userInfo.job == 10210"
-=======
           <div style="height: 250px" />
           <VerticalNavSectionTitle :item="{ heading: '관리자 메뉴' }" />
           <VerticalNavLink
             v-if="userInfo.job == 10210"
->>>>>>> a63069ff5a9e031b97b731aaaaebd0f95c31cedd
             :item="{
               title: '이용자 관리',
               icon: 'mdi-account-cog',
@@ -202,10 +186,7 @@ const userInfo = useUserStore().$state.userInfo
           />
         </div>
 
-<<<<<<< HEAD
         <!-- 환자 리스트 -->
-=======
->>>>>>> a63069ff5a9e031b97b731aaaaebd0f95c31cedd
         <div id="nav-group-2">
           <VerticalNavSectionTitle
             :item="{
@@ -232,8 +213,7 @@ const userInfo = useUserStore().$state.userInfo
                 @click="getID(item.id)"
                 active-class="patItem"
                 :to="pathway"
-                >{{ item.name }} </router-link
-              >&nbsp;{{ item.gender }}
+                >{{ item.name }} </router-link>&nbsp;{{ item.gender }}
             </div>
           </div>
 

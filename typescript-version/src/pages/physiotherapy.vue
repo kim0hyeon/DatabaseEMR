@@ -1,44 +1,43 @@
 <script setup lang="ts">
-import { useRoute } from 'vue-router';
-import Physiotherapy from '@/views/pages/therapy/Physiotherapy.vue';
-import Rehabilitation from '@/views/pages/therapy/Rehabilitation.vue';
+import { useRoute } from 'vue-router'
+import Physiotherapy from '@/views/pages/therapy/Physiotherapy.vue'
+import Rehabilitation from '@/views/pages/therapy/Rehabilitation.vue'
 
 // Components 일단 환자 정보를 불러와야 하기 때문에 사용함
 import PatientData from '../exampleJson/patient.json'
-import { defineComponent, ref, onMounted, reactive } from 'vue';
-import { Store } from 'pinia';
-import { IdStore } from '@/store/index';
-import axios from 'axios';
+import { defineComponent, ref, onMounted, reactive } from 'vue'
+import { Store } from 'pinia'
+import { IdStore } from '@/store/index'
+import axios from 'axios'
 
 // 사용자 타입 예시 (백엔드에 따라 수정해야 함)
 interface Patient {
-  id: number;
-  name: string;
-  age: number;
-  gender: string;
-  diagnosis: string;
+  id: number
+  name: string
+  age: number
+  gender: string
+  diagnosis: string
 }
 
 const patients = reactive<Patient[]>(PatientData.patients)
-console.log(patients);
-console.log(IdStore().id);
-console.log(patients[IdStore().id]);
+console.log(patients)
+console.log(IdStore().id)
+console.log(patients[IdStore().id])
 
-let patientId: { id: number; name: string; age: number; gender: string; diagnosis: string; } | undefined;
-patientId = patients[0]; // 변수 선언
-
+let patientId: { id: number; name: string; age: number; gender: string; diagnosis: string } | undefined
+patientId = patients[0] // 변수 선언
 
 function clickPatient(event: MouseEvent) {
-  patientId = patients.find(patient => patient.id === IdStore().id);
+  patientId = patients.find(patient => patient.id === IdStore().id)
 
   if (patientId == null) {
-    patientId = patients.find(patient => patient.id === 1);
+    patientId = patients.find(patient => patient.id === 1)
   } else {
-    console.log(patientId);
+    console.log(patientId)
   }
 }
 
-document.documentElement.addEventListener('click', clickPatient);
+document.documentElement.addEventListener('click', clickPatient)
 
 const route = useRoute()
 
@@ -60,7 +59,6 @@ const tabs = [
         v-for="item in tabs"
         :key="item.icon"
         :value="item.tab"
-        style="margin-right: 300px;"
       >
         <VIcon
           size="20"
@@ -84,12 +82,10 @@ const tabs = [
       <VWindowItem value="blood">
         <Rehabilitation />
       </VWindowItem>
-
     </VWindow>
   </div>
-
 </template>
 
 <style lang="scss">
-@use "@core/scss/pages/page-auth.scss";
+@use '@core/scss/pages/page-auth.scss';
 </style>

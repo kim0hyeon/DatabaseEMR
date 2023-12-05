@@ -24,7 +24,7 @@
     "chart.js": "^4.1.2",
     "jsqr": "^1.4.0",
     "jwt-decode": "^3.1.2",
-    "pinia": "^2.0.36",
+    "pinia": "^2.1.7",
     "prismjs": "^1.29.0",
     "quasar": "^2.14.1",
     "roboto-fontface": "^0.10.0",

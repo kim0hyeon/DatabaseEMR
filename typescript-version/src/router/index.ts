@@ -167,7 +167,7 @@ router.beforeEach((to, from, next) => {
       to.matched.some(record => jobAuth = record.meta.jobAuth)
       if(jobAuth[0]) next();
       else {
-        console.log('Not allowed for doctor')
+        alert('Not allowed for doctor')
         next('/dashboard');
       }
     }
@@ -177,7 +177,7 @@ router.beforeEach((to, from, next) => {
       to.matched.some(record => jobAuth = record.meta.jobAuth)
       if(jobAuth[1]) next();
       else {
-        console.log('Not allowed for nurse')
+        alert('Not allowed for nurse')
         next('/dashboard');
       }
     }
@@ -187,7 +187,7 @@ router.beforeEach((to, from, next) => {
       to.matched.some(record => jobAuth = record.meta.jobAuth)
       if(jobAuth[2]) next();
       else {
-        console.log('Not allowed for therapist')
+        alert('Not allowed for therapist')
         next('/dashboard');
       }
       
@@ -198,7 +198,7 @@ router.beforeEach((to, from, next) => {
       to.matched.some(record => jobAuth = record.meta.jobAuth)
       if(jobAuth[3]) next();
       else {
-        console.log('Not allowed for radiographer')
+        alert('Not allowed for radiographer')
         next('/dashboard');
       }
       

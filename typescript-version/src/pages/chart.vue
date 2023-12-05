@@ -50,7 +50,7 @@ const getUserInfoByID = () => {
   patientInfoRec.value = patientRecord.patient_records.filter(patient => patient.patient_id === Number(store.id))
 
   //가까운 시기로 정렬
-  patientInfoRec.value.sort((a, b) => {
+  patientInfoRec.value?.sort((a, b) => {
     return new Date(b.diagnosis_id) - new Date(a.diagnosis_id)
   })
   // console.log(store.id);
@@ -69,30 +69,37 @@ getUserInfoByID()
 </script>
 
 <template>
-  <VCard class="base">
     <VRow>
-      <VCol cols="3">
-        <div class="scroll-container pat_list">
-          <VCard class="px-1 py-1">
-            <h2 class="letter-spacing">내원이력 (이름)</h2>
-            <!--나중에 백에서 join해서 쓰면 됌 -->
-            <p>(나중에 이름은 백에서 조인해서 쓰면 될듯)</p>
-            <VCard
-              v-for="patient_rec in patientInfoRec"
-              :key="patient_rec.id"
-              class="visit-history-box"
-            >
-              <h4 class="letter-spacing">진료아이디: {{ patient_rec?.id }}</h4>
-              <h4 class="letter-spacing">진료날짜: {{ patient_rec?.date }}</h4>
-              <h4 class="letter-spacing">병 아이디: {{ patient_rec?.diagnosis_id }}</h4>
-              <div style="padding: 10px">
-                <img
-                  src="../assets/icons/record.png"
-                  class="small-icon-size"
-                />
-                <p>간단한 진료 목적 ex.재진찰</p>
-              </div>
-            </VCard>
+      <VCol cols="12" md="3">
+          <VCard class="history-box-container">
+            <VCardItem class="justify-center mb-0">
+              <h2 class="title">
+                내원 이력
+              </h2>
+              <!--나중에 백에서 join해서 쓰면 됌 -->
+              <p>나중에 이름은 백에서 조인해서 쓰면 될듯</p>
+            </VCardItem>
+
+            <div class="scroll-container">
+              <VSheet
+                v-for="patient_rec in patientInfoRec"
+                :key="patient_rec.id"
+                class="visit-history-box"
+              >
+                <div class="border ma-0">
+                  <h4 class="letter-spacing">진료아이디: {{ patient_rec?.id }}</h4>
+                  <h4 class="letter-spacing">진료날짜: {{ patient_rec?.date }}</h4>
+                  <h4 class="letter-spacing">병 아이디: {{ patient_rec?.diagnosis_id }}</h4>
+                  <div style="padding: 10px">
+                    <img
+                      src="../assets/icons/record.png"
+                      class="small-icon-size"
+                    />
+                    <p>간단한 진료 목적 ex.재진찰</p>
+                  </div>
+                </div>
+              </VSheet>
+            </div>
             <!-- <VCard class="visit-history-box">
                   <h4 class="letter-spacing">{{ patientInfoRec?.date }}</h4>
                   <div style="padding: 10px;">
@@ -124,13 +131,9 @@ getUserInfoByID()
                   </div>
                 </VCard> -->
           </VCard>
-        </div>
       </VCol>
-      <VCol cols="9">
+      <VCol cols="12" md="6">
         <div class="pat_chart">
-          <VCol>
-            <VRow>
-              <VCol cols="9">
                 <VCard class="pat_chart px-2 py-2">
                   <div class="letter-spacing">
                     <img
@@ -148,7 +151,8 @@ getUserInfoByID()
                   ></VTextarea>
                   <VBtn style="border-radius: 13px; font-size: 15px">저장</VBtn>
                 </VCard>
-                <VCard class="pat_chart px-2 py-2">
+
+                <VCard class="pat_chart px-2 py-2 mt-3">
                   <div class="letter-spacing">
                     <img
                       src="../assets/icons/prescription.png"
@@ -165,39 +169,31 @@ getUserInfoByID()
                   ></VTextarea>
                   <VBtn style="border-radius: 13px; font-size: 15px">저장</VBtn>
                 </VCard>
-              </VCol>
-              <VCol cols="3">
-                <VCard class="pat_chart px-2 py-2">
-                  <div class="letter-spacing">
-                    <img
-                      src="../assets/icons/picture.png"
-                      class="large-icon-size"
-                    />
-                    <h2>사진</h2>
-                  </div>
-                  <VFileInput></VFileInput>
-                  <!-- <div>
-                  <img :src='imgpath.path1' class="upload-img">
-                </div> -->
-                </VCard>
-              </VCol>
-            </VRow>
-          </VCol>
         </div>
       </VCol>
+      <VCol cols="12" md="3">
+        <VCard class="image px-2 py-2">
+          <div class="letter-spacing">
+            <img
+              src="../assets/icons/picture.png"
+              class="large-icon-size"
+            />
+            <h2>사진</h2>
+          </div>
+          <VFileInput style="height: 375px;"></VFileInput>
+          <!-- <div>
+          <img :src='imgpath.path1' class="upload-img">
+        </div> -->
+        </VCard>
+      </VCol>
     </VRow>
-  </VCard>
 </template>
 
 <style lang="scss">
 @use '@core/scss/pages/page-auth.scss';
 
-.base {
-  margin: 10px;
-}
-
 .visit-history-box {
-  margin-block-end: 10px;
+  border-bottom:1px black solid;
 }
 
 .letter-spacing {
@@ -224,17 +220,17 @@ getUserInfoByID()
   inline-size: 100%;
 }
 
-.pat_list {
-  margin: 20px; /* 컨테이너 마진 */
-}
-
-.pat_chart {
-  margin: 10px; /* 컨테이너 마진 */
-}
-
 .scroll-container {
-  padding: 10px; /* 패딩 설정 */
-  block-size: 95vh;
+  max-block-size: 78vh;
   overflow-y: auto; /* 높이를 초과하면 y축 스크롤 바 표시 */
+  border:none;
+}
+
+.title {
+  text-align: center;
+}
+
+.image {
+  height: 300px;
 }
 </style>

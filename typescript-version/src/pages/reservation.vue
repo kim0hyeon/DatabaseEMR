@@ -72,7 +72,6 @@ onMounted(async () => {
           class="user_list scroll-container"
         >
           <VCardItem class="justify-center">
-
             <VCardTitle class="font-weight-semibold text-2xl text-uppercase">
               {{ selectedDate??'전체' }} 예약 일정
             </VCardTitle>

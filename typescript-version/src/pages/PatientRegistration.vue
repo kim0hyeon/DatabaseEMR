@@ -209,58 +209,70 @@ const submitForm = async () => {
 
     <!-- 환자 기본 정보 -->
     <VRow>
-      <VCol cols="12" md="2">
-        <!-- 환자 사진 -->
-        <VCardText class="d-flex avatar-container">
-          <VAvatar
-            rounded="lg"
-            class="me-6 cursor-pointer avatar"
-            :image="accountDataLocal.avatarImg"
-            @click="refInputEl?.click()"
-          />
-
-          <!-- 사진 클릭 시 사진 업로드 -->
-          <form class="d-flex flex-column justify-center gap-5">
-            <div class="d-flex flex-wrap gap-2">
-
-              <input
-                ref="refInputEl"
-                type="file"
-                name="file"
-                accept=".jpeg,.png,.jpg,GIF"
-                hidden
-                @input="changeAvatar"
-              >
-            </div>
-          </form>
-        </VCardText>
-      </VCol>
-      <VCol cols="12" md="10">
+      <VCol cols="12">
         <VRow>
-          <VCol cols="12" md="4">
-            <VCardText>
-              이름 : {{ selectedPatient?.name }}(환자ID : {{ selectedPatient?.id }})
+          <VCol cols="12" md="2">
+            <!-- 환자 사진 -->
+            <VCardText class="d-flex avatar-container">
+              <VAvatar
+                rounded="lg"
+                class="me-6 cursor-pointer avatar"
+                :image="accountDataLocal.avatarImg"
+                @click="refInputEl?.click()"
+              />
+
+              <!-- 사진 클릭 시 사진 업로드 -->
+              <form class="d-flex flex-column justify-center gap-5">
+                <div class="d-flex flex-wrap gap-2">
+
+                  <input
+                    ref="refInputEl"
+                    type="file"
+                    name="file"
+                    accept=".jpeg,.png,.jpg,GIF"
+                    hidden
+                    @input="changeAvatar"
+                  >
+                </div>
+              </form>
             </VCardText>
           </VCol>
+          <VCol cols="12" md="10">
+            <VRow>
+              <VCol cols="12" md="4">
+                <VCardText>
+                  이름 : {{ selectedPatient?.name }}(환자ID : {{ selectedPatient?.id }})
+                </VCardText>
+              </VCol>
 
-          <VCol cols="12" md="4">
-            <VCardText>
-              성별 : {{ selectedPatient?.gender }}
-            </VCardText>
+              <VCol cols="12" md="4">
+                <VCardText>
+                  성별 : {{ selectedPatient?.gender }}
+                </VCardText>
+              </VCol>
+
+              <VCol cols="12" md="4">
+                <VCardText>
+                  나이 : {{ selectedPatient?.age }}
+                </VCardText>
+              </VCol>
+            </VRow>
+            <VRow>
+              <VCol cols="12" md="6">
+                <VCardText>
+                  주민등록번호 : {{ selectedPatient?.firstRRN }} - {{ selectedPatient?.lastRRN }}
+                </VCardText>
+              </VCol>
+
+              <VCol cols="12" md="6">
+                <VCardText>
+                  주소 : {{ selectedPatient?.address }}
+                </VCardText>
+              </VCol>
+            </VRow>
           </VCol>
-
-          <VCol cols="12" md="4">
-            <VCardText>
-              나이 : {{ selectedPatient?.age }}
-            </VCardText>
-          </VCol>
-
-          <VCol cols="12" md="4">
-            <VCardText>
-              주민등록번호 : {{ selectedPatient?.firstRRN }} - {{ selectedPatient?.lastRRN }}
-            </VCardText>
-          </VCol>
-
+        </VRow>
+        <VRow class="ml-3">
           <VCol cols="12" md="4">
             <VCardText>
               연락처 : {{ selectedPatient?.phone }}
@@ -270,6 +282,12 @@ const submitForm = async () => {
           <VCol cols="12" md="4">
             <VCardText>
               비상 연락처 : {{ selectedPatient?.emergencyPhone }}
+            </VCardText>
+          </VCol>
+
+          <VCol cols="12" md="4">
+            <VCardText>
+              약관 동의 여부 : {{ selectedPatient?.admitted ? '동의' : '비동의' }}
             </VCardText>
           </VCol>
 
@@ -286,18 +304,6 @@ const submitForm = async () => {
           </VCol>
 
           <VCol cols="12" md="4">
-            <VCardText>
-              약관 동의 여부 : {{ selectedPatient?.admitted ? '동의' : '비동의' }}
-            </VCardText>
-          </VCol>
-
-          <VCol cols="12" md="5">
-            <VCardText>
-              주소 : {{ selectedPatient?.address }}
-            </VCardText>
-          </VCol>
-
-          <VCol cols="12" md="6">
             <VCardText>
               증상 : {{ selectedPatient?.diagnosis }}
             </VCardText>
@@ -365,8 +371,8 @@ const submitForm = async () => {
 }
 
 .avatar {
-  block-size: 100%;
-  inline-size: 150px;
+  block-size: 105%;
+  inline-size: 110%;
   inset-block-start: 50%;
   inset-inline-start: 50%;
   transform: translate(-15%, -50%);

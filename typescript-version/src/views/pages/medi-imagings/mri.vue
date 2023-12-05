@@ -24,6 +24,7 @@ function handleFilesUpload(event: Event) {
       reader.onload = e => {
         if (e.target?.result) {
           const url = e.target.result.toString()
+          // 최근 업로드가 위로오도록 unshift사용
           photos.value.unshift({ url, name: file.name })
           selectedPhoto.value = e.target.result.toString()
         }
@@ -136,13 +137,13 @@ function selectImage(image: Photo) {
     <VCol>
       <VCard class="photo_list scroll-container">
         <label
-          for="fileInput"
+          for="mri_image"
           class="custom-file-upload"
         >
           <span>파일 선택</span>
           <input
             type="file"
-            id="fileInput"
+            id="mri_image"
             @change="handleFilesUpload"
           />
         </label>

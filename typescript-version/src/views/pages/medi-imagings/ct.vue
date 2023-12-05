@@ -137,13 +137,13 @@ function selectImage(image: Photo) {
     <VCol>
       <VCard class="photo_list scroll-container">
         <label
-          for="fileInput"
+          for="ct_image"
           class="custom-file-upload"
         >
           <span>파일 선택</span>
           <input
             type="file"
-            id="fileInput"
+            id="ct_image"
             @change="handleFilesUpload"
           />
         </label>

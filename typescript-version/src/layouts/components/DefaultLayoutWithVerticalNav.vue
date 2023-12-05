@@ -108,8 +108,8 @@ const userInfo = useUserStore().$state.userInfo
 
     <template #vertical-nav-content>
       <div id="nav-container">
+        <!-- 메뉴 -->
         <div id="nav-group-1">
-          <!-- 👉 User Interface -->
           <VerticalNavSectionTitle
             :item="{
               heading: '메뉴',
@@ -126,7 +126,6 @@ const userInfo = useUserStore().$state.userInfo
             :item="{
               title: '접수',
               icon: 'mdi-account-plus-outline',
-              // icon: 'mdi-account-cog-outline',
               to: '/patient-registration'
             }"
           />
@@ -135,7 +134,6 @@ const userInfo = useUserStore().$state.userInfo
             :item="{
               title: '차트',
               icon: 'mdi-chart-bar',
-              // icon: 'mdi-login',
               to: '/chart'
             }"
           />
@@ -150,8 +148,6 @@ const userInfo = useUserStore().$state.userInfo
             :item="{
               title: '청구',
               icon: 'mdi-credit-card-outline',
-              // icon: 'mdi-information-outline',
-              // to: '/no-existence',
               to: '/cost',
             }"
           />
@@ -169,7 +165,14 @@ const userInfo = useUserStore().$state.userInfo
               to: '/statistics',
             }"
           />
-          <div style="height: 250px;"/>
+          <VerticalNavLink
+            :item="{
+              title: '예약',
+              icon: 'mdi-calendar-month-outline',
+              to: '/reservation'
+          }"
+          />
+          <div style="height: 215px;"/>
           <VerticalNavSectionTitle :item="{heading: '관리자 메뉴'}"/>
           <VerticalNavLink v-if="userInfo.job == 10210"
             :item="{
@@ -179,9 +182,9 @@ const userInfo = useUserStore().$state.userInfo
             }"
            />
         </div>
-        
+
+        <!-- 환자 리스트 -->
         <div id="nav-group-2">
-          <!-- 👉 User Interface -->
           <VerticalNavSectionTitle
             :item="{
               heading: '환자 리스트',

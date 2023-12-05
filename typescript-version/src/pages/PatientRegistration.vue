@@ -159,7 +159,6 @@ const submitForm = async () => {
         class="d-flex align-center cursor-pointer"
         style="user-select: none;"
       >
-        <!-- <input type="text" v-model="searchTerm" placeholder="환자 검색" @input="search"> -->
         <VTextField  type="text" v-model="searchTerm" label="환자 검색" @input="search" />
         <div class="search-results" v-if="searchResults.length">
           <div v-for="result in searchResults" :key="result.id" @click="selectPatient(result)">

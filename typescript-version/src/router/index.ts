@@ -89,7 +89,7 @@ const router = createRouter({
           jobAuth: [1,1,0,0] // 의사 간호사만 
         }},
         {
-          path: 'physiotherapy',name: 'physiotherapy',
+          path: '/physiotherapy',name: 'physiotherapy',
           component : () => import('../pages/physiotherapy.vue'),
           meta: {
             requiresAuth: true,  // 인증이 필요한 경로일 경우 설정
@@ -97,11 +97,19 @@ const router = createRouter({
           }
         },
         {
-          path : 'statistics',name : 'statistics',
+          path : '/statistics',name : 'statistics',
           component : () => import('../pages/statistics.vue'),
           meta: {
             requiresAuth: true , // 인증이 필요한 경로일 경우 설정
             jobAuth: [1,1,0,0] // 의사 간호사만 
+          }
+        },
+        {
+          path: '/reservation', name: 'reservation',
+          component : () => import('../pages/reservation.vue'),
+          meta: {
+            requiresAuth: true, // 인증이 필요한 경로일 경우 설정
+            jobAuth: [1,1,0,0] // 의사 간호사만
           }
         }
       ],

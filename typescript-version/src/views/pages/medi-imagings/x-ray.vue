@@ -1,12 +1,7 @@
 <script lang="ts" setup>
-const navigationTab = ref('ITEM ONE')
-const navigationTab2 = ref('ITEM ONE')
-const tabItems = ['ITEM ONE', 'ITEM TWO', 'ITEM THREE']
-const tabContent =
-  'Although cards can support multiple actions, UI controls, and an overflow menu, use restraint and remember that cards...'
-
+import { IdStore } from '@/store'
 import { ref } from 'vue'
-
+const store = IdStore()
 interface Photo {
   url: string
   name: string
@@ -136,6 +131,7 @@ function selectImage(image: Photo) {
     </Vcol>
     <VCol>
       <VCard class="photo_list scroll-container">
+        <h2 v-if="store.id != 0">ID가 &nbsp;{{ store.id }}인 이름</h2>
         <label
           for="xray_image"
           class="custom-file-upload"

@@ -167,7 +167,7 @@ getUserInfoByID()
                   </div>
                   <label
                     for="image"
-                    class="custom-file-upload chart"
+                    class="custom-file-upload1 chart"
                   >
                     <span>파일 선택</span>
                     <input
@@ -241,18 +241,18 @@ getUserInfoByID()
   max-block-size: 30vh;
 }
 
-.chart .custom-file-upload {
+.custom-file-upload1 {
   position: relative;
   display: inline-block;
   margin: 5px;
   cursor: pointer;
 }
 
-.chart .custom-file-upload input[type='file'] {
+.custom-file-upload1 input[type='file'] {
   display: none;
 }
 
-.chart .custom-file-upload span {
+.custom-file-upload1 span {
   border-radius: 5px;
   background-color: #3498db;
   color: #fff;

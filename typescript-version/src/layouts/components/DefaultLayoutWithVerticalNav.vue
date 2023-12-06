@@ -10,20 +10,20 @@ import Footer from '@/layouts/components/Footer.vue'
 import NavbarThemeSwitcher from '@/layouts/components/NavbarThemeSwitcher.vue'
 import UserProfile from '@/layouts/components/UserProfile.vue'
 import { IdStore } from '@/store'
+import axios from 'axios'
 import { watch } from 'vue'
 import { useRoute } from 'vue-router'
-import PatientData from '../../exampleJson/patient.json'
-// Banner
-const props = defineProps({
-  modelValue: Boolean,
-})
-interface Patient {
-  id: number
-  name: string
-  age: number
-  gender: string
-  diagnosis: string
+// 접수환자 리스트 ( 고정 )
+interface PatientInfo {
+  patient_id: {
+    patient_id: string
+    patient_name: string
+  }
+  patient_type: string
+  patient_reason_for_visit: string
+  date: string // 날짜 및 시간을 나타내는 문자열
 }
+
 const store = IdStore()
 // var patient = PatientData.patients
 const vuetifyTheme = useTheme()
@@ -32,11 +32,25 @@ const getID = id => {
   store.setID(id)
   console.log(store.id)
 }
-const patients = reactive<Patient[]>(PatientData.patients)
-patients.value = PatientData.patients
+
+let responseData = null
+const patients = reactive<PatientInfo[]>([])
+const getData = async () => {
+  try {
+    // Axios를 사용하여 백엔드로 GET 요청 보내기
+    const response = await axios.get('http://yunsseong.uk:8000/api/patient-registration/')
+
+    // 받아온 데이터를 responseData에 저장
+    responseData = response.data
+    patients.value = responseData
+  } catch (error) {
+    console.error('Error fetching data:', error)
+  }
+}
+
 const searchTerm: Ref<string> = ref('')
-const searchResults = reactive<Patient[]>([])
-const selectedPatient = ref<Patient | null>(null)
+const searchResults = reactive<PatientInfo[]>([])
+const selectedPatient = ref<PatientInfo | null>(null)
 const searchPatient = (event: Event) => {
   searchTerm.value = (event.target as HTMLInputElement).value
   if (searchTerm.value) {
@@ -44,13 +58,15 @@ const searchPatient = (event: Event) => {
     searchResults.splice(
       0,
       searchResults.length,
-      ...patients.filter(patient => patient.name.includes(searchTerm.value)),
+      ...patients.filter(patient => patient.patient_type.includes(searchTerm.value)),
     )
+    console.log(patients.value[0].patient_id.patient_name)
+    console.log(searchResults)
     patients.value = searchResults
     // console.log(patients);
   } else {
     searchResults.splice(0, searchResults.length)
-    patients.value = PatientData.patients // 입력창 비워지면  초기화
+    patients.value = responseData // 입력창 비워지면  초기화
   }
 }
 
@@ -60,7 +76,7 @@ watch(
   },
   (newP, oldP) => {
     console.log(`route changed from ${oldP} to ${newP}`)
-    patients.value = PatientData.patients // 페이지 바뀌면 초기화
+    patients.value = responseData // 페이지 바뀌면 초기화
     getRoutePath()
   },
 )
@@ -72,6 +88,7 @@ const getRoutePath = () => {
 }
 
 const userInfo = useUserStore().$state.userInfo
+onMounted(getData)
 </script>
 
 <template>
@@ -207,14 +224,14 @@ const userInfo = useUserStore().$state.userInfo
                 opacity: item.id === store.id ? 1.0 : 0.3,
               }"
               v-for="item in patients.value"
-              :key="item.id"
+              :key="item.patient_id.patient_name"
             >
               <router-link
                 @click="getID(item.id)"
                 active-class="patItem"
                 :to="pathway"
-                >{{ item.name }} </router-link
-              >&nbsp;{{ item.gender }}
+                >{{ item.patient_id.patient_name }} </router-link
+              >&nbsp;{{ item.patient_type }}
             </div>
           </div>
         </div>

@@ -211,9 +211,9 @@ watchEffect(() => {
           <template v-for="item in filteredInspectionData">
             <tr>
               <td>{{ item.patientName }}</td>
-              <td>{{ inspectionTotalCost }}</td>
-              <td>{{ medicineTotalCost }}</td>
-              <td>{{ totalCost }}</td>
+              <td>{{ inspectionTotalCost }}원</td>
+              <td>{{ medicineTotalCost }}원</td>
+              <td>{{ totalCost }}원</td>
             </tr>
           </template>
           </tbody>

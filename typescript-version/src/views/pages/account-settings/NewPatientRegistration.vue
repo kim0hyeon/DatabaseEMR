@@ -101,53 +101,6 @@ const submitForm = async () => {
             <!-- 왼쪽 화면 내용 -->
             <v-col cols="6">
               <VCard title="환자 신상 정보">
-                <VCardText class="d-flex">
-                  <!-- 👉 Avatar -->
-                  <VAvatar
-                    rounded="lg"
-                    size="100"
-                    class="me-6"
-                    :image="accountDataLocal.avatarImg"
-                  />
-
-                  <!-- 👉 Upload Photo -->
-                  <form class="d-flex flex-column justify-center gap-5">
-                    <div class="d-flex flex-wrap gap-2">
-                      <VBtn
-                        color="primary"
-                        @click="refInputEl?.click()"
-                      >
-                        <VIcon
-                          icon="mdi-cloud-upload-outline"
-                          class="d-sm-none"
-                        />
-                        <span class="d-none d-sm-block">사진 업로드</span>
-                      </VBtn>
-
-                      <input
-                        ref="refInputEl"
-                        type="file"
-                        name="file"
-                        accept=".jpeg,.png,.jpg,GIF"
-                        hidden
-                        @input="changeAvatar"
-                      >
-
-                      <VBtn
-                        type="reset"
-                        color="error"
-                        variant="tonal"
-                        @click="resetAvatar"
-                      >
-                        <span class="d-none d-sm-block">Reset</span>
-                        <VIcon
-                          icon="mdi-refresh"
-                          class="d-sm-none"
-                        />
-                      </VBtn>
-                    </div>
-                  </form>
-                </VCardText>
 
                 <VDivider />
 
@@ -238,30 +191,6 @@ const submitForm = async () => {
 
             <!-- 오른쪽 화면 내용 -->
             <v-col cols="6">
-              <VRow>
-                <VCol cols="12">
-                  <!-- 환자 유형 -->
-                  <VCard
-                    title="환자 유형"
-                  >
-                    <VCardText>
-                      <div>
-                        <VSelect
-                          v-model="accountDataLocal.patientType"
-                          label="환자 유형"
-                          :items="['선택안함','일반환자','중증환자','VIP']"
-                        />
-                      </div>
-                    </VCardText>
-                    <VCol>
-                      <VTextarea
-                        v-model="accountDataLocal.purpose"
-                        label="방문 사유"
-                      />
-                    </VCol>
-                  </VCard>
-                </VCol>
-              </VRow>
               <VRow>
                 <VCol cols="12">
                   <!-- 약관 동의 -->

@@ -153,10 +153,9 @@ getUserInfoByID()
                   <VBtn style="border-radius: 13px; font-size: 15px">저장</VBtn>
                 </VCard>
               </VCol>
-              <VCol cols="1"></VCol>
               <VCol
                 class="pa-0"
-                cols="3"
+                cols="4"
               >
                 <VCard class="pat_chart px-2 py-2">
                   <div class="letter-spacing">
@@ -168,7 +167,7 @@ getUserInfoByID()
                   </div>
                   <label
                     for="image"
-                    class="custom-file-upload"
+                    class="custom-file-upload chart"
                   >
                     <span>파일 선택</span>
                     <input
@@ -179,7 +178,7 @@ getUserInfoByID()
                   </label>
                   <VBtn
                     @click="clickedSendFile"
-                    class="ml-5 mb-1 mt-2"
+                    class="ml-4 mb-1"
                     >저장</VBtn
                   >
                   <div
@@ -242,23 +241,23 @@ getUserInfoByID()
   max-block-size: 30vh;
 }
 
-.custom-file-upload {
+.chart .custom-file-upload {
   position: relative;
   display: inline-block;
   margin: 5px;
   cursor: pointer;
 }
 
-.custom-file-upload input[type='file'] {
+.chart .custom-file-upload input[type='file'] {
   display: none;
 }
 
-.custom-file-upload span {
+.chart .custom-file-upload span {
   border-radius: 5px;
   background-color: #3498db;
   color: #fff;
-  padding-block: 8px;
-  padding-inline: 12px;
+  padding-block: 9px;
+  padding-inline: 11px;
 }
 
 .visit-history-box {
@@ -302,7 +301,6 @@ getUserInfoByID()
 }
 
 .scroll-container {
-  border: none;
   overflow-y: auto; /* 높이를 초과하면 y축 스크롤 바 표시 */
 }
 

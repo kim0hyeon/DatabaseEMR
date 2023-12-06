@@ -101,7 +101,8 @@ function selectImage(image: Photo) {
 }
 
 .photo_list {
-  inline-size: 300px;
+  inline-size: 250px;
+  max-block-size: 75vh;
 }
 
 .name {

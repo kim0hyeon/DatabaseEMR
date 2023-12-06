@@ -1,23 +1,9 @@
-<script lang='ts'>
+<script lang='ts' setup>
 import ModalBloodPressureTestVue from './ModalBloodPressureTest.vue'
 
-export default {
-  data() {
-    return {
-      openModal: false,
-    }
-  },
-  methods: {
-    clickAdd() {
-      this.openModal = true
-    },
-    clickReset() {
-      this.openModal = false
-    },
-  },
-  components: {
-    ModalBloodPressureTestVue,
-  },
+const isModalOpen = ref(false)
+const openModal = () => {
+  isModalOpen.value = true
 }
 </script>
 
@@ -31,7 +17,7 @@ export default {
     >
   </div>
   <div v-else>
-    <ModalBloodPressureTestVue />
+    <div v-if="openModal"></div>
     <VBtn
       class="mt-5 offset-md-11"
       @click="clickReset"

@@ -1,4 +1,5 @@
 <script setup lang="ts">
+<<<<<<< Updated upstream
 import { useRoute } from 'vue-router'
 import Physiotherapy from '@/views/pages/therapy/Physiotherapy.vue'
 import Rehabilitation from '@/views/pages/therapy/Rehabilitation.vue'
@@ -38,6 +39,14 @@ function clickPatient(event: MouseEvent) {
 }
 
 document.documentElement.addEventListener('click', clickPatient)
+=======
+import Physiotherapy from '@/views/pages/therapy/Physiotherapy.vue'
+import Rehabilitation from '@/views/pages/therapy/Rehabilitation.vue'
+import { useRoute } from 'vue-router'
+
+// Components 일단 환자 정보를 불러와야 하기 때문에 사용함
+import { ref } from 'vue'
+>>>>>>> Stashed changes
 
 const route = useRoute()
 
@@ -59,6 +68,10 @@ const tabs = [
         v-for="item in tabs"
         :key="item.icon"
         :value="item.tab"
+<<<<<<< Updated upstream
+=======
+        style="margin-right: 300px"
+>>>>>>> Stashed changes
       >
         <VIcon
           size="20"

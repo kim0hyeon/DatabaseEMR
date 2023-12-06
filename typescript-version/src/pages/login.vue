@@ -1,11 +1,8 @@
 <script setup lang="ts">
 import { useUserStore } from '@/store'
-import AuthProvider from '@/views/pages/authentication/AuthProvider.vue'
 import logo from '@images/logo.svg?raw'
 import authV1MaskDark from '@images/pages/auth-v1-mask-dark.png'
 import authV1MaskLight from '@images/pages/auth-v1-mask-light.png'
-import authV1Tree2 from '@images/pages/auth-v1-tree-2.png'
-import authV1Tree from '@images/pages/auth-v1-tree.png'
 import { useRouter } from 'vue-router'
 import { useTheme } from 'vuetify'
 import userInfo from '../exampleJson/userInfo.json'
@@ -91,23 +88,8 @@ const handleLogin = () => {
   )
   // 더미 데이터와 입력된 데이터가 일치하는지 확인합니다.
   if (loginForm.email === DUMMY_USER?.email && loginForm.password === DUMMY_USER.password) {
-<<<<<<< Updated upstream
-      const loginResponse: LoginResponse = {
-        token: DUMMY_USER.token
-      };
-      // 예: 토큰을 상태 관리로 저장하거나, 세션 스토리지에 저장할 수 있습니다.
-      // 상태 관리:
-      loginStore.loginSuccess(DUMMY_USER);
-      const token = reactive({ value: loginResponse.token });
-      // 세션 스토리지:
-      sessionStorage.setItem('token', loginResponse.token);
-      sessionStorage.setItem('userInfo', JSON.stringify(DUMMY_USER));
-      alert(DUMMY_USER.name +'님 반갑습니다!');
-      router.push('/home');
-=======
     const loginResponse: LoginResponse = {
       token: DUMMY_USER.token,
->>>>>>> Stashed changes
     }
     // 예: 토큰을 상태 관리로 저장하거나, 세션 스토리지에 저장할 수 있습니다.
     // 상태 관리:
@@ -117,10 +99,10 @@ const handleLogin = () => {
     sessionStorage.setItem('token', loginResponse.token)
     sessionStorage.setItem('userInfo', JSON.stringify(DUMMY_USER))
     alert(DUMMY_USER.name + '님 반갑습니다!')
-    router.push('/dashboard')
-  } else {
-    alert('로그인 실패: 사용자 이름 또는 비밀번호가 올바르지 않습니다.')
+    router.push('/home')
   }
+  // 예: 토큰을 상태 관리로 저장하거나, 세션 스토리지에 저장할 수 있습니다.
+  // 상태 관리:
 }
 
 // 로그인 처리 함수

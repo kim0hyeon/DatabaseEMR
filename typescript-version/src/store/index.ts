@@ -4,7 +4,7 @@ import userInfo from '../exampleJson/userInfo.json';
 //환자아이디 
 export const IdStore = defineStore('id', {
   state: () => ({
-    id: 0
+    id: String
   }),
   actions: {
     setID(id){

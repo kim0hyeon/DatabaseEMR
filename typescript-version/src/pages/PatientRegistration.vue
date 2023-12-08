@@ -4,7 +4,6 @@ import avatar1 from '@images/avatars/avatar-1.png'
 import axios from 'axios'
 import { Ref } from 'vue'
 import { useRoute } from 'vue-router'
-import PatientData from './PatientData.json'
 
 const route = useRoute()
 
@@ -21,17 +20,27 @@ const openModal = () => {
 }
 
 // 백엔드에서 환자 정보 받아오기
-let patientInformation = ref<Patient[]>([]);
+let patientInformation = ref<Patient[]>([])
 
 onMounted(async () => {
   try {
-    const response = await axios.get('http://yunsseong.uk:8000/api/patient/');
-    patientInformation.value = response.data;
+    const response = await axios.get('http://yunsseong.uk:8000/api/patient/')
+    patientInformation.value = response.data
     console.log('success')
   } catch (error) {
-    console.error(error);
+    console.error(error)
   }
-});
+})
+
+onMounted(async () => {
+  try {
+    const response = await axios.get('http://yunsseong.uk:8000/api/patient/')
+    patientInformation.value = response.data
+    console.log('success')
+  } catch (error) {
+    console.error(error)
+  }
+})
 
 // 환자 정보 검색
 
@@ -39,11 +48,11 @@ onMounted(async () => {
 interface Patient {
   patient_id: string
   patient_name: string
-  patient_gender: string,
-  patient_birthday: string,
-  patient_residence_number: string,
-  patient_phone_number: string,
-  patient_emergency_phone_number: string,
+  patient_gender: string
+  patient_birthday: string
+  patient_residence_number: string
+  patient_phone_number: string
+  patient_emergency_phone_number: string
   patient_address: string
 }
 
@@ -53,19 +62,19 @@ const selectedPatient = ref<Patient | null>(null)
 const searchCondition: Ref<string> = ref('선택 안함')
 
 const search = (event: Event) => {
-  searchTerm.value = (event.target as HTMLInputElement).value;
+  searchTerm.value = (event.target as HTMLInputElement).value
   if (searchTerm.value && Array.isArray(patientInformation.value)) {
     // 검색 조건을 선택 안했을 때
     if (searchCondition.value == '선택 안함') {
       // 검색어가 숫자로만 구성 -> id에서만 검색
       searchResults.splice(
-          0,
-          searchResults.length,
-          ...patientInformation.value.filter((patient) =>
-              patient.patient_name.includes(searchTerm.value) ||
-              patient.patient_phone_number.includes(searchTerm.value)
-          )
-      );
+        0,
+        searchResults.length,
+        ...patientInformation.value.filter(
+          patient =>
+            patient.patient_name.includes(searchTerm.value) || patient.patient_phone_number.includes(searchTerm.value),
+        ),
+      )
       // 검색 조건 선택했을 때
     } else {
       // '전화번호' 선택
@@ -102,7 +111,7 @@ const selectPatient = (patient: Patient | null) => {
 // 백엔드로 환자 정보 전송
 const submitForm = async () => {
   try {
-    const response = await axios.put('http://your-server.com/api/patient/{{ patientid }}', accountDataLocal.value);
+    const response = await axios.put('http://your-server.com/api/patient/{{ patientid }}', accountDataLocal.value)
     if (response.status === 200) {
       console.log('Data submitted successfully')
     } else {
@@ -142,11 +151,17 @@ const submitForm = async () => {
                   <VCardText>ID: {{ result.patient_id }}</VCardText>
                 </VCol>
 
-                <VCol cols="12" md="3">
+                <VCol
+                  cols="12"
+                  md="3"
+                >
                   <VCardText>이름: {{ result.patient_name }}</VCardText>
                 </VCol>
 
-                <VCol cols="12" md="5">
+                <VCol
+                  cols="12"
+                  md="5"
+                >
                   <VCardText>주민등록번호: {{ result.patient_residence_number }}</VCardText>
                 </VCol>
 
@@ -157,9 +172,12 @@ const submitForm = async () => {
             </VCard>
           </div>
         </div>
-        <div class="search-condition ml-2 ">
-          <VSelect label="검색 조건" v-model="searchCondition"
-                   :items="['선택 안함','이름', '전화번호']" />
+        <div class="search-condition ml-2">
+          <VSelect
+            label="검색 조건"
+            v-model="searchCondition"
+            :items="['선택 안함', '이름', '전화번호']"
+          />
         </div>
       </div>
     </div>
@@ -193,7 +211,10 @@ const submitForm = async () => {
         <VRow>
           <VCol cols="12" md="12">
             <VRow>
-              <VCol cols="12" md="8">
+              <VCol
+                cols="12"
+                md="8"
+              >
                 <VCardText>
                   이름 : {{ selectedPatient?.patient_name }} (환자ID : {{ selectedPatient?.patient_id }})
                 </VCardText>
@@ -293,7 +314,6 @@ const submitForm = async () => {
     <VCol cols="12" md="6">
       <VCard title="방문 사유" class="full-height">
         <VDivider/>
-
         <VCol>
           <div>
             <VTextarea label="방문 사유 기입"></VTextarea>

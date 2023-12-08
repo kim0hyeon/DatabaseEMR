@@ -1,107 +1,115 @@
 <template>
   <div class="auth-wrapper d-flex">
-    <VCard class="auth-card pa-4 pt-7">
-      <form
-        class="user_form"
-        @submit.prevent="handleSubmit"
-      >
-        <h2>새 사용자 생성</h2>
-        <div>
-          <VTextField
-            type="text"
-            label="userlabel"
-            v-model="user.id"
-          />
-        </div>
-        <div>
-          <VTextField
-            type="text"
-            label="userName"
-            v-model="user.name"
-          />
-        </div>
-        <div>
-          <VTextField
-            type="email"
-            label="userEmail"
-            v-model="user.email"
-          />
-        </div>
-        <div>
-          <VTextField
-            type="password"
-            label="userPassword"
-            v-model="user.password"
-          />
-        </div>
-        <div>
-          <VTextField
-            type="text"
-            label="userToken"
-            v-model="user.token"
-          />
-        </div>
-        <div>
-          <VTextField
-            type="text"
-            label="userJob"
-            v-model="user.job"
-          />
-        </div>
-        <div>
-          <input
-            type="submit"
-            value="생성"
-          />
-        </div>
-      </form>
-    </VCard>
-    <!-- USER LIST  -->
-    <VCard class="user_list scroll-container">
-      <VCardItem class="justify-center">
-        <VCardTitle class="font-weight-semibold text-2xl text-uppercase"> USER LIST </VCardTitle>
-      </VCardItem>
+    <VRow>
+      <VCol cols="12" md="4">
+        <VCard class="auth-card">
+          <form
+              class="user_form"
+              @submit.prevent="handleSubmit"
+          >
+            <h2>새 사용자 생성</h2>
+            <div>
+              <VTextField
+                  type="text"
+                  label="userlabel"
+                  v-model="user.id"
+              />
+            </div>
+            <div>
+              <VTextField
+                  type="text"
+                  label="userName"
+                  v-model="user.name"
+              />
+            </div>
+            <div>
+              <VTextField
+                  type="email"
+                  label="userEmail"
+                  v-model="user.email"
+              />
+            </div>
+            <div>
+              <VTextField
+                  type="password"
+                  label="userPassword"
+                  v-model="user.password"
+              />
+            </div>
+            <div>
+              <VTextField
+                  type="text"
+                  label="userToken"
+                  v-model="user.token"
+              />
+            </div>
+            <div>
+              <VTextField
+                  type="text"
+                  label="userJob"
+                  v-model="user.job"
+              />
+            </div>
+            <div>
+              <VBtn>생성</VBtn>
+            </div>
+          </form>
+        </VCard>
+      </VCol>
 
-      <VCardText class="pt-2">
-        <table class="list_table">
-          <thead>
-            <tr>
-              <th>ID</th>
-              <th>Name</th>
-              <th>Email</th>
-              <th>Pw</th>
-              <th>Job</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr
-              v-for="item in userInfo1"
-              :key="item.id"
-            >
-              <td>{{ item.id }}</td>
-              <td>{{ item.name }}</td>
-              <td>{{ item.email }}</td>
-              <td>{{ item.password }}</td>
-              <td>{{ item.job }}</td>
-              <td>
-                <VBtn
-                  class="edit"
-                  @click="editUser(item)"
-                  >Edit</VBtn
-                >
-                <!-- 수정 버튼 -->
-                <VBtn
-                  class="delete"
-                  @click="deleteUser(item)"
-                  >Delete</VBtn
-                >
-                <!-- 삭제 버튼 -->
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </VCardText>
-    </VCard>
+      <VCol cols="12" md="8">
+        <!-- USER LIST  -->
+        <VCard class="user_list scroll-container">
+          <VCardItem class="justify-center">
+            <VCardTitle class="font-weight-semibold text-2xl text-uppercase"> USER LIST </VCardTitle>
+          </VCardItem>
+
+          <VDivider/>
+
+          <VCardText>
+            <table class="list_table">
+              <thead>
+              <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Pw</th>
+                <th>Job</th>
+              </tr>
+              </thead>
+              <tbody>
+              <tr
+                  v-for="item in userInfo1"
+                  :key="item.id"
+              >
+                <td>{{ item.id }}</td>
+                <td>{{ item.name }}</td>
+                <td>{{ item.email }}</td>
+                <td>{{ item.password }}</td>
+                <td>{{ item.job }}</td>
+                <td>
+                  <VRow class="mb-4">
+                    <VBtn
+                        class="edit"
+                        @click="editUser(item)"
+                    >수정</VBtn
+                    >
+                    <!-- 수정 버튼 -->
+                    <VBtn
+                        class="delete"
+                        @click="deleteUser(item)"
+                    >삭제</VBtn
+                    >
+                  </VRow>
+                  <!-- 삭제 버튼 -->
+                </td>
+              </tr>
+              </tbody>
+            </table>
+          </VCardText>
+        </VCard>
+      </VCol>
+    </VRow>
   </div>
 </template>
 
@@ -162,9 +170,7 @@ const deleteUser = item => {
 
 .auth-card {
   align-content: center;
-  margin: 20px;
   block-size: 77.77vh;
-  inline-size: 30%;
 }
 
 .auth-card div {
@@ -172,9 +178,7 @@ const deleteUser = item => {
 }
 
 .user_list {
-  margin: 20px;
   block-size: 77.77vh;
-  inline-size: 60%;
 }
 
 .user_form {
@@ -205,6 +209,7 @@ input {
 .list_table th,
 .list_table td {
   padding: 10px; /* 셀 안의 내용과 경계 사이의 여백을 조절합니다. */
+  text-align: center;
 }
 
 .edit,
@@ -215,7 +220,6 @@ input {
 .scroll-container {
   padding: 10px; /* 패딩 설정 */
   border: 1px solid #ccc; /* 경계선 스타일 */
-  margin: 20px; /* 컨테이너 마진 */
   overflow-y: auto; /* 높이를 초과하면 y축 스크롤 바 표시 */
 }
 </style>

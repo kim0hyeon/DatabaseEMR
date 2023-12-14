@@ -144,28 +144,28 @@ export default defineComponent({
             <td style="width: 90%">
               <canvas
                 ref="chart1"
-                height="45"
+                height="60"
               ></canvas>
             </td>
-            <td>
-              <h4>표준범위</h4>
-              <div>dd</div>
-              <div>dd</div>
-              <div>dd</div>
+            <td class="standard-range">
+              <h4>표준점수</h4>
+              <div>62.0 - 83.8</div>
+              <div>31.3 - 38.3</div>
+              <div>8.8 - 17.5</div>
             </td>
           </tr>
           <tr>
             <td>
               <canvas
                 ref="chart2"
-                height="45"
+                height="60"
               ></canvas>
             </td>
-            <td style="text-align: center">
-              <h4>표준범위</h4>
-              <div>dd</div>
-              <div>dd</div>
-              <div>dd</div>
+            <td class="standard-range">
+              <h4>표준점수</h4>
+              <div>18.5 - 23.0</div>
+              <div>10.0 - 20.0</div>
+              <div>0.80 - 0.90</div>
             </td>
           </tr>
           <tr class="table-content">
@@ -175,13 +175,13 @@ export default defineComponent({
                 height="120"
               ></canvas>
             </td>
-            <td style="text-align: center">
-              <h4>표준범위</h4>
-              <div>dd</div>
-              <div>dd</div>
-              <div>dd</div>
-              <div>dd</div>
-              <div>dd</div>
+            <td class="standard-range">
+              <h4>표준점수</h4>
+              <div>85 - 115</div>
+              <div>85 - 115</div>
+              <div>90 - 110</div>
+              <div>90 - 110</div>
+              <div>90 - 110</div>
             </td>
           </tr>
         </table>
@@ -204,5 +204,8 @@ export default defineComponent({
 }
 .table-content {
   padding: 20px;
+}
+.standard-range {
+  text-align: center;
 }
 </style>

@@ -90,143 +90,161 @@ getUserInfoByID()
 </script>
 
 <template>
-  <VRow>
-    <VCol
-      class="pa-0"
-      cols="3"
-    >
-      <div class="pat_list">
-        <VCard class="pa-4">
-          <h2 class="letter-spacing">(이름)홍길동</h2>
-          <p>(나중에 이름은 백에서 조인해서 쓰면 될듯)</p>
-          <h3 class="ml-2 mb-4"><b>내원이력</b></h3>
-          <div class="scroll-container history">
-            <VCard class="px-1 py-1">
-              <VCard
-                v-for="patient_rec in patientInfoRec"
-                :key="patient_rec.id"
-                class="visit-history-box ma-1"
-              >
-                <h4 class="letter-spacing">진료아이디: {{ patient_rec?.id }}</h4>
-                <h4 class="letter-spacing">진료날짜: {{ patient_rec?.date }}</h4>
-                <h4 class="letter-spacing">병 아이디: {{ patient_rec?.diagnosis_id }}</h4>
-                <div style="padding: 10px">
-                  <img
-                    src="../assets/icons/record.png"
-                    class="small-icon-size"
-                  />
-                  <p>간단한 진료 목적 ex.재진찰</p>
-                </div>
+  <VCard>
+    <VRow>
+      <VCol
+        class="pa-0"
+        cols="3"
+      >
+        <div class="pat_list">
+          <VCard class="pa-4">
+            <h2 class="letter-spacing">(이름)홍길동</h2>
+            <p>(나중에 이름은 백에서 조인해서 쓰면 될듯)</p>
+            <h3 class="ml-2 mb-4"><b>내원이력</b></h3>
+            <div class="scroll-container history">
+              <VCard class="px-1 py-1">
+                <VCard
+                  v-for="patient_rec in patientInfoRec"
+                  :key="patient_rec.id"
+                  class="visit-history-box ma-1"
+                >
+                  <h4 class="letter-spacing">진료아이디: {{ patient_rec?.id }}</h4>
+                  <h4 class="letter-spacing">진료날짜: {{ patient_rec?.date }}</h4>
+                  <h4 class="letter-spacing">병 아이디: {{ patient_rec?.diagnosis_id }}</h4>
+                  <div style="padding: 10px">
+                    <img
+                      src="../assets/icons/record.png"
+                      class="small-icon-size"
+                    />
+                    <p>간단한 진료 목적 ex.재진찰</p>
+                  </div>
+                </VCard>
               </VCard>
-            </VCard>
-          </div>
-        </VCard>
-      </div>
-    </VCol>
-    <VCol
-      class="pa-0 ma-0"
-      cols="9"
-    >
-      <div class="pat_chart">
-        <VCol>
-          <VCard class="pa-5">
-            <VRow>
-              <VCol
-                class="pa-0"
-                cols="8"
-              >
-                <VCard class="pat_chart px-2 py-2">
-                  <div class="letter-spacing">
-                    <img
-                      src="../assets/icons/stethoscope.png"
-                      class="large-icon-size"
-                    />
-                    <h2>진료기록</h2>
-                  </div>
-                  <VTextarea
-                    label="여기에 입력하세요"
-                    outline
-                    rows="10"
-                    auto-grow
-                    style="margin-bottom: 5px"
-                  ></VTextarea>
-                  <VBtn style="border-radius: 13px; font-size: 15px">저장</VBtn>
-                </VCard>
-              </VCol>
-              <VCol
-                class="pa-0"
-                cols="4"
-              >
-                <VCard class="pat_chart px-2 py-2">
-                  <div class="letter-spacing">
-                    <img
-                      src="../assets/icons/picture.png"
-                      class="large-icon-size"
-                    />
-                    <h2>사진</h2>
-                  </div>
-                  <label
-                    for="image"
-                    class="custom-file-upload1 chart"
-                  >
-                    <span>파일 선택</span>
-                    <input
-                      type="file"
-                      id="image"
-                      @change="handleFilesUpload"
-                    />
-                  </label>
-                  <VBtn
-                    @click="clickedSendFile"
-                    class="ml-4 mb-1"
-                    >저장</VBtn
-                  >
-                  <div
-                    class="scroll-container photo_list"
-                    v-if="photos.length > 0"
-                  >
-                    <div
-                      v-for="(photo, index) in photos"
-                      :key="photo.name"
-                    >
-                      <VDivider class="ma-3" />
-                      <img
-                        :src="photo.url"
-                        :alt="photo.name"
-                        class="sm-image"
-                      />
-                      <p class="name">{{ photo.name }}</p>
-
-                      <button @click="selectImage(photo)">(overview)</button>
-                      &nbsp;
-                      <button @click="removePhoto(index)">(remove)</button>
-                    </div>
-                  </div>
-                </VCard>
-              </VCol>
-              <VCard class="pat_chart2 pa-2 ma-2">
+            </div>
+          </VCard>
+        </div>
+      </VCol>
+      <VCol
+        class="pa-0 ma-0"
+        cols="9"
+      >
+        <div
+          class="pat_chart"
+          style="padding-top: 15px; padding-right: 15px; padding-bottom: 15px"
+        >
+          <VRow>
+            <VCol
+              class="pa-0"
+              cols="8"
+            >
+              <VCard class="pat_chart px-2 py-2">
                 <div class="letter-spacing">
                   <img
-                    src="../assets/icons/prescription.png"
+                    src="../assets/icons/stethoscope.png"
                     class="large-icon-size"
                   />
-                  <h2>진단 및 처방</h2>
+                  <h2>진료</h2>
                 </div>
                 <VTextarea
-                  label="여기에 입력하세요"
+                  label="진료기록"
                   outline
-                  rows="10"
+                  rows="5"
                   auto-grow
                   style="margin-bottom: 5px"
                 ></VTextarea>
                 <VBtn style="border-radius: 13px; font-size: 15px">저장</VBtn>
               </VCard>
-            </VRow>
-          </VCard>
-        </VCol>
-      </div>
-    </VCol>
-  </VRow>
+            </VCol>
+            <VCol
+              class="pa-0"
+              cols="4"
+            >
+              <VCard class="pat_chart px-2 py-2">
+                <div class="letter-spacing">
+                  <img
+                    src="../assets/icons/picture.png"
+                    class="large-icon-size"
+                  />
+                  <h2>사진</h2>
+                </div>
+                <label
+                  for="image"
+                  class="custom-file-upload1 chart"
+                >
+                  <span>파일 선택</span>
+                  <input
+                    type="file"
+                    id="image"
+                    @change="handleFilesUpload"
+                  />
+                </label>
+                <VBtn
+                  @click="clickedSendFile"
+                  class="ml-4 mb-1"
+                  >저장</VBtn
+                >
+                <div
+                  class="scroll-container photo_list"
+                  v-if="photos.length > 0"
+                >
+                  <div
+                    v-for="(photo, index) in photos"
+                    :key="photo.name"
+                  >
+                    <VDivider class="ma-3" />
+                    <img
+                      :src="photo.url"
+                      :alt="photo.name"
+                      class="sm-image"
+                    />
+                    <p class="name">{{ photo.name }}</p>
+
+                    <button @click="selectImage(photo)">(overview)</button>
+                    &nbsp;
+                    <button @click="removePhoto(index)">(remove)</button>
+                  </div>
+                </div>
+              </VCard>
+            </VCol>
+            <VCard class="pat_chart2 pa-2 ma-2">
+              <div class="letter-spacing">
+                <img
+                  src="../assets/icons/prescription.png"
+                  class="large-icon-size"
+                />
+                <h2>진단</h2>
+              </div>
+              <VTextarea
+                label="진단기록"
+                outline
+                rows="3"
+                auto-grow
+                style="margin-bottom: 5px"
+              ></VTextarea>
+              <VBtn style="border-radius: 13px; font-size: 15px">저장</VBtn>
+            </VCard>
+            <VCard class="pat_chart2 pa-2 ma-2">
+              <div class="letter-spacing">
+                <img
+                  src="../assets/icons/prescription.png"
+                  class="large-icon-size"
+                />
+                <h2>처방</h2>
+              </div>
+              <VTextarea
+                label="처방기록"
+                outline
+                rows="3"
+                auto-grow
+                style="margin-bottom: 5px"
+              ></VTextarea>
+              <VBtn style="border-radius: 13px; font-size: 15px">저장</VBtn>
+            </VCard>
+          </VRow>
+        </div>
+      </VCol>
+    </VRow>
+  </VCard>
 </template>
 
 <style lang="scss">

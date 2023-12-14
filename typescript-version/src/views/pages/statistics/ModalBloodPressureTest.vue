@@ -53,6 +53,7 @@ watch(
       </v-radio-group>
       <button type="submit">제출</button>
     </form>
+    on total
   </VCard>
 </template>
 <style lang='scss'>

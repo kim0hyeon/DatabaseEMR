@@ -1,6 +1,7 @@
 <script setup lang="ts">
 // Components
 import PatientRecord from '@/exampleJson/patient_record.json'
+import MedicalRecord from '@/pages/MedicalRecord.vue'
 import { IdStore } from '@/store/index'
 import { ref } from 'vue'
 // 사용자 타입 예시 (백엔드에 따라 수정해야 함)
@@ -104,9 +105,19 @@ function addPrescriptionCard() {
 function subPrescriptionCard() {
   PrescriptionCards.pop()
 }
+
+// 모달창 구현
+const isModalOpen = ref(false)
+const openModal = () => {
+  console.log('before:',isModalOpen.value)
+  isModalOpen.value = true
+  console.log('after:',isModalOpen.value)
+}
 </script>
 
 <template>
+  <MedicalRecord v-model="isModalOpen"/>
+  <VBtn @click="openModal">상세정보</VBtn>
   <VRow>
     <VCol
       class="pa-0"

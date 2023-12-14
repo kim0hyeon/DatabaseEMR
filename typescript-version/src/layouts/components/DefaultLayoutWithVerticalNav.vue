@@ -15,13 +15,8 @@ import { watch } from 'vue'
 import { useRoute } from 'vue-router'
 // 접수환자 리스트 ( 고정 )
 interface PatientInfo {
-  patient_id: {
     patient_id: string
     patient_name: string
-  }
-  patient_type: string
-  patient_reason_for_visit: string
-  date: string // 날짜 및 시간을 나타내는 문자열
 }
 
 const store = IdStore()
@@ -34,18 +29,20 @@ const getID = (id) => {
 }
 
 let responseData = null
-const patients = reactive<PatientInfo[]>([])
-const getData = async () => {
+const patients = ref<PatientInfo[]>([])
+
+onMounted( async () => {
   try {
     // Axios를 사용하여 백엔드로 GET 요청 보내기
-    const response = await axios.get('http://yunsseong.uk:8000/api/patient-registration/')
+    const response = await axios.get('http://yunsseong.uk:8000/api/list/')
 
     // 받아온 데이터를 responseData에 저장
     patients.value = response.data
+    console.log(patients.value)
   } catch (error) {
     console.error('Error fetching data:', error)
   }
-}
+})
 
 const searchTerm: Ref<string> = ref('')
 const searchResults = reactive<PatientInfo[]>([])
@@ -57,9 +54,9 @@ const searchPatient = (event: Event) => {
     searchResults.splice(
       0,
       searchResults.length,
-      ...patients.filter(patient => patient.patient_type.includes(searchTerm.value)),
+      ...patients.value.filter(patient => patient.patient_name.includes(searchTerm.value)),
     )
-    console.log(patients.value[0].patient_id.patient_name)
+    console.log(patients.value[0].patient_name)
     console.log(searchResults)
     patients.value = searchResults
     // console.log(patients);
@@ -87,7 +84,6 @@ const getRoutePath = () => {
 }
 
 const userInfo = useUserStore().$state.userInfo
-onMounted(getData)
 </script>
 
 <template>
@@ -222,15 +218,15 @@ onMounted(getData)
               :style="{
                 opacity: item.id === store.id ? 1.0 : 0.3,
               }"
-              v-for="item in patients.value"
-              :key="item.patient_id.patient_name"
+              v-for="item in patients"
+              :key="item.patient_name"
             >
               <router-link
                 @click="getID(item.id)"
                 active-class="patItem"
                 :to="pathway"
-                >{{ item.patient_id.patient_name }} </router-link
-              >&nbsp;{{ item.patient_type }}
+                >{{ item.patient_name }} </router-link
+              >
             </div>
           </div>
         </div>

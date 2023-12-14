@@ -11,7 +11,7 @@ interface Patient {
   patient_id: string
   patient_name: string
   patient_gender: string
-  patient_birthday: string
+  patient_birth: string
   patient_residence_number: string
   patient_phone_number: string
   patient_emergency_phone_number: string
@@ -257,7 +257,7 @@ const selectPatient = (patient: Patient | null) => {
 
               <VCol cols="12" md="4">
                 <VCardText>
-                  생년월일 : {{ selectedPatient?.patient_birthday }}
+                  생년월일 : {{ selectedPatient?.patient_birth }}
                 </VCardText>
               </VCol>
 

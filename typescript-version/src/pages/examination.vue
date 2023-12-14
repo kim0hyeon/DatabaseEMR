@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import AccountSettingsAccount from '@/views/pages/account-settings/AccountSettingsAccount.vue'
 import AccountSettingsNotification from '@/views/pages/account-settings/AccountSettingsNotification.vue'
-import AccountSettingsSecurity from '@/views/pages/account-settings/AccountSettingsSecurity.vue'
+import AccountSettingsSecurity from '@/views/pages/account-settings/BloodExamination.vue'
 import Scan from '@/pages/Scan.vue'
 import { useRoute } from 'vue-router'
 import { is } from 'quasar'

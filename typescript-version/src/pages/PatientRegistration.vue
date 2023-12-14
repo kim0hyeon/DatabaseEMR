@@ -6,28 +6,7 @@ import { useRoute } from 'vue-router'
 
 const route = useRoute()
 
-// 모달창 구현
-const isModalOpen = ref(false)
-const openModal = () => {
-  isModalOpen.value = true
-}
-
-// 백엔드에서 환자 정보 받아오기
-let patientInformation = ref<Patient[]>([])
-
-onMounted(async () => {
-  try {
-    const response = await axios.get('http://yunsseong.uk:8000/api/patient/')
-    patientInformation.value = response.data
-    console.log('success')
-  } catch (error) {
-    console.error(error)
-  }
-})
-
-// 환자 정보 검색
-
-// json 양식
+// 인터페이스
 interface Patient {
   patient_id: string
   patient_name: string
@@ -39,9 +18,87 @@ interface Patient {
   patient_address: string
 }
 
+interface Reception {
+  reception: string
+  visit_reason: string
+  reception_date: string
+  reception_date_only: string
+  patient: {
+    patient_id: string
+    patient_name: string
+    patient_gender: string
+    patient_birthday: string
+    patient_residence_number: string
+    patient_phone_number: string
+    patient_emergency_phone_number: string
+    patient_address: string
+  }
+}
+
+// 모달창 구현
+const isModalOpen = ref(false)
+const openModal = () => {
+  isModalOpen.value = true
+}
+
+// 백엔드에서 환자 정보 받아오기
+let patientInformation = ref<Patient[]>([])
+
+onMounted(async () => {
+  try {
+    const response = await axios.get('http://yunsseong.uk:8000/api/patients/')
+    patientInformation.value = response.data
+    console.log('patient data loding success')
+  } catch (error) {
+    console.error(error)
+  }
+})
+
+// 백엔드에서 접수 정보 받아오기
+let receptionInformation = ref<Reception[]>([])
+
+const loadReceptionData = async () => {
+  console.log('load reception_data')
+  try {
+    console.log(selectedPatient.value?.patient_id)
+    const response = await axios.get(`http://yunsseong.uk:8000/api/receptions?patient=${selectedPatient.value?.patient_id}`)
+    receptionInformation.value = response.data
+    console.log('reception_data loading success')
+
+    return response.data.map((item: Reception) => {
+      return {
+        ...item,
+        reception_date_only: item.reception_date.split('T')[0]
+      };
+    });
+  } catch (error) {
+    console.error(error)
+  }
+}
+
+// 백엔드로 접수 정보 전송
+const submitForm = async () => {
+  try {
+    const patientID = selectedPatient.value?.patient_id
+    const visit_reason = visitReason.value
+
+    const data =  {
+      patient: patientID,
+      visit_reason: visit_reason
+    }
+
+    const response = await axios.post(`http://yunsseong.uk:8000/api/receptions/`, data)
+    console.log('success')
+  } catch (error) {
+    console.error(error)
+  }
+}
+
+// 환자 정보 검색
 const searchTerm: Ref<string> = ref('')
 const searchResults = reactive<Patient[]>([])
 const selectedPatient = ref<Patient | null>(null)
+const receptionData = ref<Reception[] | null>(null)
 const searchCondition: Ref<string> = ref('선택 안함')
 const visitReason = ref('')
 
@@ -90,28 +147,10 @@ const search = (event: Event) => {
 const selectPatient = (patient: Patient | null) => {
   selectedPatient.value = patient
   searchResults.splice(0, searchResults.length)
-}
-
-// 백엔드로 접수 정보 전송
-const submitForm = async () => {
-  try {
-    const patientID = selectedPatient.value?.patient_id
-    const visit_reason = visitReason.value
-
-    const data =  {
-        patient: patientID,
-        visit_reason: visit_reason
-    }
-
-    const response = await axios.post('http://yunsseong.uk:8000/api/receptions/', data)
-    if (response.status === 200) {
-      console.log('Data submitted successfully')
-    } else {
-      console.log('Failed to submit data')
-    }
-  } catch (error) {
-    console.error(error)
-  }
+  loadReceptionData().then(data => {
+    receptionData.value = data;
+    console.log(receptionData.value)
+  });
 }
 </script>
 
@@ -288,10 +327,9 @@ const submitForm = async () => {
 
         <VCardText>
           <div class="scrollable-area">
-            <!-- 미구현 상태
-            <div v-for="record in selectedPatient?.record">
-              {{ record }}
-            </div>-->
+            <div v-for="(info, index) in receptionData" :key="index">
+              {{ index + 1 }}. 방문 날짜 : {{ info.reception_date_only }} / 방문 사유 : {{ info.visit_reason }}
+            </div>
           </div>
         </VCardText>
       </VCard>

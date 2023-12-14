@@ -28,7 +28,7 @@ const store = IdStore()
 // var patient = PatientData.patients
 const vuetifyTheme = useTheme()
 const route = useRoute()
-const getID = id => {
+const getID = (id) => {
   store.setID(id)
   console.log(store.id)
 }

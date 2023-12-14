@@ -106,7 +106,7 @@ watch(
 <template>
   <VDialog v-model="isOpen" class="dialog">
     <VCard class="card">
-      <div v-show="showVideo">
+      <div v-show="showVideo" class="ma-4">
         <video ref="video" class="video"></video>
       </div>
 

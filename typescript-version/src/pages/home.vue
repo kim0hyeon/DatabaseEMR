@@ -157,6 +157,8 @@ switch (dayOfWeek.value) {
 }
 
 console.log(`오늘은 ${dayName}입니다.`)
+
+const userInfo = loginStore.$state.userInfo
 </script>
 <template>
   <!-- {{ foo }}
@@ -191,7 +193,14 @@ console.log(`오늘은 ${dayName}입니다.`)
       class="box"
       style="margin-top: 30px"
     >
-      <p style="color: dodgerblue; font-weight: bold; font-size: 40px">공지사항</p>
+      <VRow>
+        <p style="color: dodgerblue; font-weight: bold; font-size: 40px">공지사항</p>
+
+        <VSpacer/>
+        <VBtn v-if="userInfo?.job == 10210" class="mt-4 mr-6 pl-0 pr-0">+</VBtn>
+      </VRow>
+
+      <VDivider/>
       <ul class="alert-list-font">
         <li>현재 입원중인 환자가 많아 입원이 불가능합니다1</li>
         <li>현재 입원중인 환자가 많아 입원이 불가능합니다2</li>

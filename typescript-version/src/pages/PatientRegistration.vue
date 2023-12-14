@@ -1,17 +1,10 @@
 <script lang="ts" setup>
 import NewPatientRegistration from '@/views/pages/account-settings/NewPatientRegistration.vue'
-import avatar1 from '@images/avatars/avatar-1.png'
 import axios from 'axios'
 import { Ref } from 'vue'
 import { useRoute } from 'vue-router'
 
 const route = useRoute()
-
-const accountData = {
-  avatarImg: avatar1,
-}
-
-const accountDataLocal = ref(structuredClone(accountData))
 
 // 모달창 구현
 const isModalOpen = ref(false)
@@ -50,6 +43,7 @@ const searchTerm: Ref<string> = ref('')
 const searchResults = reactive<Patient[]>([])
 const selectedPatient = ref<Patient | null>(null)
 const searchCondition: Ref<string> = ref('선택 안함')
+const visitReason = ref('')
 
 const search = (event: Event) => {
   searchTerm.value = (event.target as HTMLInputElement).value
@@ -98,10 +92,18 @@ const selectPatient = (patient: Patient | null) => {
   searchResults.splice(0, searchResults.length)
 }
 
-// 백엔드로 환자 정보 전송
+// 백엔드로 접수 정보 전송
 const submitForm = async () => {
   try {
-    const response = await axios.put('http://your-server.com/api/patient/{{ patientid }}', accountDataLocal.value)
+    const patientID = selectedPatient.value?.patient_id
+    const visit_reason = visitReason.value
+
+    const data =  {
+        patient: patientID,
+        visit_reason: visit_reason
+    }
+
+    const response = await axios.post('http://yunsseong.uk:8000/api/receptions/', data)
     if (response.status === 200) {
       console.log('Data submitted successfully')
     } else {
@@ -301,7 +303,7 @@ const submitForm = async () => {
         <VDivider/>
         <VCol>
           <div>
-            <VTextarea label="방문 사유 기입"></VTextarea>
+            <VTextarea label="방문 사유 기입" v-model="visitReason"></VTextarea>
           </div>
         </VCol>
       </VCard>
@@ -321,30 +323,6 @@ const submitForm = async () => {
   z-index: 999;
   inline-size: 30%;
   inset-block-start: 100%;
-}
-
-/* 환자 사진 스타일 */
-.avatar-container {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  block-size: 100%;
-  inline-size: 100%;
-  justify-items: center;
-}
-
-.avatar {
-  block-size: 105%;
-  inline-size: 110%;
-  inset-block-start: 50%;
-  inset-inline-start: 50%;
-  transform: translate(-15%, -50%);
-}
-
-.avatar img {
-  block-size: 100%;
-  inline-size: 100%;
-  object-fit: cover;
 }
 
 /* 내원 기록 카드 스크롤바 변환 및 재방문 사유 카드와 높이 맞춤 */

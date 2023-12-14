@@ -2,7 +2,9 @@
 import AccountSettingsAccount from '@/views/pages/account-settings/AccountSettingsAccount.vue';
 import AccountSettingsNotification from '@/views/pages/account-settings/AccountSettingsNotification.vue';
 import AccountSettingsSecurity from '@/views/pages/account-settings/AccountSettingsSecurity.vue';
+import Scan from '@/pages/Scan.vue'
 import { useRoute } from 'vue-router';
+import {is} from "quasar";
 
 const route = useRoute()
 
@@ -14,6 +16,14 @@ const tabs = [
   { title: 'Blood', icon: 'mdi-water', tab: 'blood' },
   { title: 'Physical', icon: 'mdi-gymnastics', tab: 'physical' },
 ]
+
+// 모달창 구현
+const isScanOpen = ref(false)
+const openScan = () => {
+  console.log(isScanOpen.value)
+  isScanOpen.value = true
+  console.log(isScanOpen.value)
+}
 </script>
 
 <template>
@@ -34,6 +44,11 @@ const tabs = [
         />
         {{ item.title }}
       </VTab>
+
+      <VSpacer/>
+
+      <Scan v-model="isScanOpen" />
+      <VBtn @click="openScan">Scan</VBtn>
     </VTabs>
     <VDivider />
     <VWindow

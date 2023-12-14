@@ -121,11 +121,11 @@ const addEvent = (patient: Patient | null) => {
 </script>
 
 <template>
-  <VDialog v-model="isPatientSearchOpen" max-width="1200px">
+  <VDialog v-model="isPatientSearchOpen" max-width="1000px">
     <div>
       <VCard class="form">
         <VCardTitle class="headline mt-1">환자 예약</VCardTitle>
-        <VRow class="mt-3 ml-3">
+        <VRow class="mt-1 ml-3">
           <VCol cols="12">
             <div class="search-container">
               <!-- 검색창 -->
@@ -180,8 +180,8 @@ const addEvent = (patient: Patient | null) => {
           </VCol>
         </VRow>
 
-        <VRow class="ma-6" style="width: 100%;">
-          <VCard>
+        <VRow class="ma-6" style="width: 96%;">
+          <VCard style="width: 100%;">
             <VCol cols="12">
               <VRow>
                 <VCol
@@ -234,7 +234,7 @@ const addEvent = (patient: Patient | null) => {
             </VCol>
           </VCard>
         </VRow>
-        <VRow class="ml-4">
+        <VRow class="ml-4 mb-4">
           <VCol cols="12" md="2">
             <VSelect
               v-model="selectedHour"
@@ -285,7 +285,5 @@ const addEvent = (patient: Patient | null) => {
   width: 550px;
 }
 
-.form {
-  height: 600px;
-}
+
 </style>

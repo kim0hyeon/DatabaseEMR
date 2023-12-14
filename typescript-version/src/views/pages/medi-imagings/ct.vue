@@ -117,7 +117,7 @@ function selectImage(image: Photo) {
 <template>
   <div></div>
   <VRow>
-    <Vcol>
+    <Vcol cols="9">
       <VCard class="photo-vcard">
         <div class="photo">
           <div v-if="photos.length > 0">
@@ -135,7 +135,7 @@ function selectImage(image: Photo) {
         </div>
       </VCard>
     </Vcol>
-    <VCol>
+    <VCol cols="3">
       <VCard class="photo_list scroll-container">
         <h2 v-if="store.id != 0">ID가 &nbsp;{{ store.id }}인 이름</h2>
         <label

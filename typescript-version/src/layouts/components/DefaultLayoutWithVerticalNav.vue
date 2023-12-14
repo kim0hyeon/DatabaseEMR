@@ -41,8 +41,7 @@ const getData = async () => {
     const response = await axios.get('http://yunsseong.uk:8000/api/patient-registration/')
 
     // 받아온 데이터를 responseData에 저장
-    responseData = response.data
-    patients.value = responseData
+    patients.value = response.data
   } catch (error) {
     console.error('Error fetching data:', error)
   }

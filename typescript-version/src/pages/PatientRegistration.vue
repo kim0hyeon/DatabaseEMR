@@ -16,6 +16,8 @@ interface Patient {
   patient_phone_number: string
   patient_emergency_phone_number: string
   patient_address: string
+  patient_agree_essential_term: boolean,
+  patient_agree_optional_term: boolean
 }
 
 interface Reception {
@@ -87,6 +89,7 @@ const submitForm = async () => {
       visit_reason: visit_reason
     }
 
+    console.log(data)
     const response = await axios.post(`http://yunsseong.uk:8000/api/receptions/`, data)
     console.log('success')
   } catch (error) {

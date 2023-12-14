@@ -1,55 +1,37 @@
 <script lang="ts" setup>
-import avatar1 from '@images/avatars/avatar-1.png';
 import axios from 'axios'
 
-const accountData = {
-  avatarImg: avatar1,
-  Name: '홍길동',
-  firstRRN: '010101',
-  gender: '남성',
-  LastRRN: '1234567',
-  org: 'ThemeSelection',
-  phone: '010-XXXX-YYYY',
-  emergencyPhone: '010-YYYY-XXXX',
-  address: '경기도 안산시 상록구 한양대학로 55',
-  patientType: '선택안함',
-  purpose: '방문 목적 기입'
+const patientData = {
+  patient_name: '',
+  patient_gender: '선택',
+  patient_birth: '',
+  patient_residence_number: '',
+  patient_phone_number: '',
+  patient_emergency_phone_number: '',
+  patient_address: '',
+  patient_agree_essential_term: false,
+  patient_agree_optional_term: false
 }
 
-const refInputEl = ref<HTMLElement>()
-
-const accountDataLocal = ref(structuredClone(accountData))
+const patientDataLocal = ref(structuredClone(patientData))
 
 // 주민등록번호 뒷자리 가리기
 const isLastRRNVisible = ref(false)
 
 // 약관 전체 동의 구현
 let termsAll = ref(false)
-let termsPrivacy = ref(false)
-let termsMarketing = ref(false)
+
+const checkPrivacy = () => {
+  patientDataLocal.value.patient_agree_essential_term = !patientDataLocal.value.patient_agree_essential_term
+}
+
+const checkMarketing = () => {
+  patientDataLocal.value.patient_agree_optional_term = !patientDataLocal.value.patient_agree_optional_term
+}
 
 const checkAll = () => {
-  termsPrivacy.value = termsAll.value
-  termsMarketing.value = termsAll.value
-}
-
-// changeAvatar function
-const changeAvatar = (file: Event) => {
-  const fileReader = new FileReader()
-  const { files } = file.target as HTMLInputElement
-
-  if (files && files.length) {
-    fileReader.readAsDataURL(files[0])
-    fileReader.onload = () => {
-      if (typeof fileReader.result === 'string')
-        accountDataLocal.value.avatarImg = fileReader.result
-    }
-  }
-}
-
-// reset avatar image
-const resetAvatar = () => {
-  accountDataLocal.value.avatarImg = accountData.avatarImg
+  checkPrivacy()
+  checkMarketing()
 }
 
 // 모달창 구현
@@ -77,18 +59,28 @@ watch(() => isOpen.value, (newVal) => {
 // 백엔드로 환자 정보 전송
 const submitForm = async () => {
   try {
-    const response = await axios.post('http://yunsseong.uk/api/patient', accountDataLocal.value);
-    if (response.status === 200) {
-      console.log('Data submitted successfully');
-      closeModal();
-    } else {
-      console.log('Failed to submit data');
+    const data = {
+      patient_name: patientDataLocal.value.patient_name,
+      patient_gender: patientDataLocal.value.patient_gender,
+      patient_birth: patientDataLocal.value.patient_birth,
+      patient_residence_number: patientDataLocal.value.patient_residence_number,
+      patient_phone_number: patientDataLocal.value.patient_phone_number,
+      patient_emergency_phone_number: patientDataLocal.value.patient_emergency_phone_number,
+      patient_address: patientDataLocal.value.patient_address,
+      patient_agree_essential_term: patientDataLocal.value.patient_agree_essential_term,
+      patient_agree_optional_term: patientDataLocal.value.patient_agree_optional_term
     }
+
+
+    console.log('submit patient data')
+    console.log(data)
+    const response = await axios.post('http://yunsseong.uk:8000/api/patients/', data);
+    console.log('submit success')
+    closeModal()
   } catch (error) {
     console.error(error);
   }
 }
-
 </script>
 
 <template>
@@ -111,8 +103,9 @@ const submitForm = async () => {
                       <!-- 이름 -->
                       <VCol cols="12">
                         <VTextField
-                          v-model="accountDataLocal.Name"
+                          v-model="patientDataLocal.patient_name"
                           label="이름"
+                          placeholder="홍길동"
                         />
                       </VCol>
 
@@ -122,8 +115,9 @@ const submitForm = async () => {
                         cols="12"
                       >
                         <VTextField
-                          v-model="accountDataLocal.firstRRN"
+                          v-model="patientDataLocal.patient_birth"
                           label="주민번호 앞자리"
+                          placeholder="010101"
                         />
                       </VCol>
 
@@ -133,10 +127,11 @@ const submitForm = async () => {
                         md="4"
                       >
                         <VTextField
-                          v-model="accountDataLocal.LastRRN"
+                          v-model="patientDataLocal.patient_residence_number"
                           :type="isLastRRNVisible ? 'text' : 'password'"
                           :append-inner-icon="isLastRRNVisible ? 'mdi-eye-off-outline' : 'mdi-eye-outline'"
                           label="주민번호 뒷자리"
+                          placeholder="1234567"
                           @click:append-inner="isLastRRNVisible = !isLastRRNVisible"
                         />
                       </VCol>
@@ -146,9 +141,9 @@ const submitForm = async () => {
                         md="4"
                         cols="12">
                         <VSelect
-                          v-model="accountDataLocal.gender"
+                          v-model="patientDataLocal.patient_gender"
                           label="성별"
-                          :items="['남성', '여성', '기타']"
+                          :items="['남', '여']"
                         />
                       </VCol>
 
@@ -158,8 +153,9 @@ const submitForm = async () => {
                         md="6"
                       >
                         <VTextField
-                          v-model="accountDataLocal.phone"
+                          v-model="patientDataLocal.patient_phone_number"
                           label="연락처"
+                          placeholder="010-XXXX-YYYY"
                         />
                       </VCol>
 
@@ -169,8 +165,9 @@ const submitForm = async () => {
                         md="6"
                       >
                         <VTextField
-                          v-model="accountDataLocal.emergencyPhone"
+                          v-model="patientDataLocal.patient_emergency_phone_number"
                           label="비상 연락처"
+                          placeholder="010-YYYY-XXXX"
                         />
                       </VCol>
 
@@ -179,8 +176,9 @@ const submitForm = async () => {
                         cols="12"
                       >
                         <VTextField
-                          v-model="accountDataLocal.address"
+                          v-model="patientDataLocal.patient_address"
                           label="주소"
+                          placeholder="경기도 안산시 상록구 한양대학로 55"
                         />
                       </VCol>
                     </VRow>
@@ -207,14 +205,14 @@ const submitForm = async () => {
 
                     <VCol cols="12">
                       <VCheckbox
-                        v-model="termsPrivacy"
+                        v-model="patientDataLocal.patient_agree_essential_term"
                         label="(필수)개인정보 수집 및 이용 동의"
                       />
                     </VCol>
 
                     <VCol cols="12">
                       <VCheckbox
-                        v-model="termsMarketing"
+                        v-model="patientDataLocal.patient_agree_optional_term"
                         label="(선택)병의원 마케팅 정보 수신 동의"
                       />
                     </VCol>
@@ -226,7 +224,7 @@ const submitForm = async () => {
               <VRow justify="end" align="end">
 
                 <VCol cols="auto">
-                  <v-btn @click="closeModal">등록</v-btn>
+                  <v-btn @click="submitForm">등록</v-btn>
                 </VCol>
 
                 <VCol cols="auto">

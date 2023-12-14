@@ -32,16 +32,6 @@ onMounted(async () => {
   }
 })
 
-onMounted(async () => {
-  try {
-    const response = await axios.get('http://yunsseong.uk:8000/api/patient/')
-    patientInformation.value = response.data
-    console.log('success')
-  } catch (error) {
-    console.error(error)
-  }
-})
-
 // 환자 정보 검색
 
 // json 양식
@@ -126,11 +116,6 @@ const submitForm = async () => {
 <template>
   <!-- 검색창 및 신규 환자 등록 버튼 -->
   <div class="d-flex h-100 align-center">
-    <!-- 검색 버튼 -->
-    <IconBtn>
-      <VIcon icon="mdi-magnify" />
-    </IconBtn>
-
     <div class="search-container">
       <!-- 검색창 -->
       <div
@@ -195,7 +180,7 @@ const submitForm = async () => {
   <VCard class="mt-4">
     <template v-slot:title>
       <div class="d-flex align-center justify-space-between">
-        기존 환자 접수
+        환자 접수
         <VBtn
           color="primary"
           @click="submitForm"
@@ -209,7 +194,7 @@ const submitForm = async () => {
     <VRow>
       <VCol cols="12">
         <VRow>
-          <VCol cols="12" md="12">
+          <VCol cols="12">
             <VRow>
               <VCol
                 cols="12"

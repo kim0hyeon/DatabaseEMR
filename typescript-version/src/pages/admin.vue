@@ -89,19 +89,18 @@
                 <td>{{ item.job }}</td>
                 <td>
                   <VRow class="mb-4">
+                    <!-- 수정 버튼 -->
                     <VBtn
                         class="edit"
                         @click="editUser(item)"
-                    >수정</VBtn
-                    >
-                    <!-- 수정 버튼 -->
+                    >수정</VBtn>
+
+                    <!-- 삭제 버튼 -->
                     <VBtn
                         class="delete"
                         @click="deleteUser(item)"
-                    >삭제</VBtn
-                    >
+                    >삭제</VBtn>
                   </VRow>
-                  <!-- 삭제 버튼 -->
                 </td>
               </tr>
               </tbody>

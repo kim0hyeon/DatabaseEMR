@@ -27,12 +27,11 @@ const events = inject<Ref<Event[]>>('events')
 provide('selectedDate', selectedDate)
 provide('isPatientSearchOpen', isPatientSearchOpen)
 
-const openPatientSearch = (day: string) => {
-  selectedDate.value = day.id
+const openPatientSearch = () => {
+  console.log('Selected Date :', selectedDate.value)
   isPatientSearchOpen.value = true
   console.log('open')
   console.log(isPatientSearchOpen.value)
-  console.log('Day clicked: ', day)
 }
 
 const showEvent = (event: Event) => {

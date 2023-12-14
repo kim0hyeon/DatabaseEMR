@@ -226,7 +226,7 @@ const submitForm = async () => {
               <VRow justify="end" align="end">
 
                 <VCol cols="auto">
-                  <v-btn @click="closeModal">접수</v-btn>
+                  <v-btn @click="closeModal">등록</v-btn>
                 </VCol>
 
                 <VCol cols="auto">

@@ -224,7 +224,6 @@ export default defineComponent({
                 height="45"
               ></canvas>
             </td>
-            <td></td>
           </tr>
           <tr>
             <th>당뇨병</th>

@@ -1,7 +1,7 @@
 <script lang="ts" setup>
-import AccountSettingsAccount from '@/views/pages/account-settings/AccountSettingsAccount.vue'
-import AccountSettingsNotification from '@/views/pages/account-settings/AccountSettingsNotification.vue'
-import AccountSettingsSecurity from '@/views/pages/account-settings/BloodExamination.vue'
+import MedicalImagingExamination from '@/views/pages/account-settings/MedicalImagingExamination.vue'
+import InbodyExamination from '@/views/pages/account-settings/InbodyExamination.vue'
+import BloodExamination from '@/views/pages/account-settings/BloodExamination.vue'
 import Scan from '@/pages/Scan.vue'
 import { useRoute } from 'vue-router'
 import { is } from 'quasar'
@@ -57,17 +57,17 @@ const openScan = () => {
     >
       <!-- Account -->
       <VWindowItem value="image">
-        <AccountSettingsAccount />
+        <MedicalImagingExamination />
       </VWindowItem>
 
       <!-- Security -->
       <VWindowItem value="blood">
-        <AccountSettingsSecurity />
+        <BloodExamination />
       </VWindowItem>
 
       <!-- Notification -->
       <VWindowItem value="physical">
-        <AccountSettingsNotification />
+        <InbodyExamination />
       </VWindowItem>
     </VWindow>
   </div>

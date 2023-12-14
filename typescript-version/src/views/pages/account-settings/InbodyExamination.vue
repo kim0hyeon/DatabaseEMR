@@ -3,6 +3,11 @@ import { defineComponent, ref, onMounted } from 'vue'
 import { Chart, registerables } from 'chart.js'
 
 export default defineComponent({
+  methods: {
+    clickInbodyRecord() {
+      console.log('잘 클릭되었음!!')
+    },
+  },
   setup() {
     const chart1 = ref<HTMLCanvasElement | null>(null)
     const chart2 = ref<HTMLCanvasElement | null>(null)
@@ -132,9 +137,21 @@ export default defineComponent({
 </script>
 
 <template>
+  <div class="title-container">
+    <h2>InBody Result</h2>
+    <VBtn style="margin: 5px">기록 추가</VBtn>
+  </div>
   <VRow>
-    <VCol>
-      <h2 style="margin-left: 10px; margin-bottom: 10px">InBody Result</h2>
+    <VCol cols="2">
+      <VCard class="inbody-record">
+        <h3>인바디 기록</h3>
+        <div @click="clickInbodyRecord">2023-12-12</div>
+        <div @click="clickInbodyRecord">2023-12-11</div>
+        <div @click="clickInbodyRecord">2023-12-10</div>
+        <div @click="clickInbodyRecord">2023-12-09</div>
+      </VCard>
+    </VCol>
+    <VCol cols="10">
       <VCard class="container"
         ><table
           border="1"
@@ -207,5 +224,14 @@ export default defineComponent({
 }
 .standard-range {
   text-align: center;
+}
+.inbody-record {
+  text-align: center;
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+.title-container {
+  display: grid;
+  grid-template-columns: 11fr 1fr;
 }
 </style>

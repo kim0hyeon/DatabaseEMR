@@ -1,10 +1,10 @@
 <script lang="ts" setup>
-import AccountSettingsAccount from '@/views/pages/account-settings/AccountSettingsAccount.vue';
-import AccountSettingsNotification from '@/views/pages/account-settings/AccountSettingsNotification.vue';
-import AccountSettingsSecurity from '@/views/pages/account-settings/AccountSettingsSecurity.vue';
+import AccountSettingsAccount from '@/views/pages/account-settings/AccountSettingsAccount.vue'
+import AccountSettingsNotification from '@/views/pages/account-settings/AccountSettingsNotification.vue'
+import AccountSettingsSecurity from '@/views/pages/account-settings/AccountSettingsSecurity.vue'
 import Scan from '@/pages/Scan.vue'
-import { useRoute } from 'vue-router';
-import {is} from "quasar";
+import { useRoute } from 'vue-router'
+import { is } from 'quasar'
 
 const route = useRoute()
 
@@ -14,7 +14,7 @@ const activeTab = ref(route.params.tab)
 const tabs = [
   { title: 'Medical Imaging', icon: 'mdi-camera', tab: 'image' },
   { title: 'Blood', icon: 'mdi-water', tab: 'blood' },
-  { title: 'Physical', icon: 'mdi-gymnastics', tab: 'physical' },
+  { title: 'Inbody', icon: 'mdi-gymnastics', tab: 'physical' },
 ]
 
 // 모달창 구현
@@ -45,7 +45,7 @@ const openScan = () => {
         {{ item.title }}
       </VTab>
 
-      <VSpacer/>
+      <VSpacer />
 
       <Scan v-model="isScanOpen" />
       <VBtn @click="openScan">Scan</VBtn>

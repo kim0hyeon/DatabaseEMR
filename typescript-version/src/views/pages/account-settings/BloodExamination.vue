@@ -3,6 +3,40 @@ import { defineComponent, ref, onMounted } from 'vue'
 import { Chart, registerables } from 'chart.js'
 
 export default defineComponent({
+  data() {
+    return {
+      dialog: false,
+      Hemoglobin: 0,
+      fasting_blood_sugar: 0,
+      total_cholesterol: 0,
+      HDL_cholesterol: 0,
+      triglyceride: 0,
+      LDL_cholesterol: 0,
+      serum_creatinine: 0,
+      e_GFR: 0,
+      SGOT: 0,
+      SGPT: 0,
+      v_GTP: 0,
+    }
+  },
+  methods: {
+    clickInbodyRecord() {
+      console.log('잘 클릭되었음!!')
+    },
+    openDialog() {
+      this.dialog = true
+      console.log('토글버튼클릭!')
+    },
+    closeDialog() {
+      this.dialog = false
+      console.log('closeDialog 호출!')
+    },
+    saveRecord() {
+      // 여기서 수치를 어떻게 저장할지 구현해야함
+      this.dialog = false // 저장 후 모달 닫기
+      console.log('saveRecord 호출!')
+    },
+  },
   setup() {
     const chart1 = ref<HTMLCanvasElement | null>(null)
     const chart2 = ref<HTMLCanvasElement | null>(null)
@@ -208,9 +242,119 @@ export default defineComponent({
 </script>
 
 <template>
+  <div class="title-container">
+    <h2 style="margin-left: 10px; margin-bottom: 10px">Blood Test Result</h2>
+    <VDialog
+      v-model="dialog"
+      max-width="500"
+    >
+      <template v-slot:activator="{ on }">
+        <VBtn
+          v-on="on"
+          @click="openDialog"
+          >기록 추가</VBtn
+        >
+      </template>
+      <VCard class="dialog-content">
+        <VCardTitle>혈액검사 측정값 입력</VCardTitle>
+        <VCardContent>
+          <VTextField
+            v-model="Hemoglobin"
+            label="혈색소"
+            type="number"
+            class="text-field"
+          ></VTextField>
+          <VTextField
+            v-model="fasting_blood_sugar"
+            label="공복혈당"
+            type="number"
+            class="text-field"
+          ></VTextField>
+          <VTextField
+            v-model="total_cholesterol"
+            label="총 콜레스테롤"
+            type="number"
+            class="text-field"
+          ></VTextField>
+          <VTextField
+            v-model="HDL_cholesterol"
+            label="HDL-콜레스테롤"
+            type="number"
+            class="text-field"
+          ></VTextField>
+          <VTextField
+            v-model="triglyceride"
+            label="중성지방"
+            type="number"
+            class="text-field"
+          ></VTextField>
+          <VTextField
+            v-model="LDL_cholesterol"
+            label="LDL-콜레스테롤"
+            type="number"
+            class="text-field"
+          ></VTextField>
+          <VTextField
+            v-model="serum_creatinine"
+            label="혈청크레아티닌"
+            type="number"
+            class="text-field"
+          ></VTextField>
+          <VTextField
+            v-model="e_GFR"
+            label="신사구체여과율"
+            type="number"
+            class="text-field"
+          ></VTextField>
+          <VTextField
+            v-model="SGOT"
+            label="AST"
+            type="number"
+            class="text-field"
+          ></VTextField>
+          <VTextField
+            v-model="SGPT"
+            label="ALT"
+            type="number"
+            class="text-field"
+          ></VTextField>
+          <VTextField
+            v-model="v_GTP"
+            label="감마지티피"
+            type="number"
+            class="text-field"
+          ></VTextField>
+        </VCardContent>
+        <VCardActions>
+          <VBtn @click="saveRecord">저장</VBtn>
+          <VBtn @click="closeDialog">나가기</VBtn>
+        </VCardActions>
+      </VCard>
+    </VDialog>
+  </div>
+  <div style="margin-top: 10px; margin-bottom: 10px"></div>
   <VRow>
-    <VCol>
-      <h2 style="margin-left: 10px; margin-bottom: 10px">Blood Test Result</h2>
+    <VCol cols="2">
+      <VCard class="inbody-record">
+        <h3>피검사 기록</h3>
+        <VBtn
+          @click="clickInbodyRecord"
+          class="date-button"
+          >2023-12-12</VBtn
+        >
+        <VBtn
+          @click="clickInbodyRecord"
+          class="date-button"
+          >2023-12-11</VBtn
+        >
+        <VBtn
+          @click="clickInbodyRecord"
+          class="date-button"
+          >2023-12-10</VBtn
+        >
+      </VCard>
+    </VCol>
+    <VCol cols="10">
       <VCard class="container"
         ><table
           border="1"
@@ -282,5 +426,16 @@ export default defineComponent({
 }
 .table-content {
   padding: 20px;
+}
+.title-container {
+  display: grid;
+  grid-template-columns: 11fr 1fr;
+}
+.dialog-content {
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+.text-field {
+  margin: 10px;
 }
 </style>

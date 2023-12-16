@@ -3,17 +3,44 @@ import { defineComponent, ref, onMounted } from 'vue'
 import { Chart, registerables } from 'chart.js'
 
 export default defineComponent({
+  data() {
+    return {
+      dialog: false,
+      weight: 0,
+      muscle_mass: 0,
+      body_fat_mass: 0,
+      bmi: 0,
+      percent_body_fat: 0,
+      right_arm: 0,
+      left_arm: 0,
+      trunk: 0,
+      right_leg: 0,
+      left_leg: 0,
+    }
+  },
   methods: {
     clickInbodyRecord() {
       console.log('잘 클릭되었음!!')
     },
+    openDialog() {
+      this.dialog = true
+      console.log('토글버튼클릭!')
+    },
+    closeDialog() {
+      this.dialog = false
+    },
+    saveRecord() {
+      // 여기서 수치를 어떻게 저장할지 구현해야함
+      this.dialog = false // 저장 후 모달 닫기
+    },
   },
   setup() {
+    // 인바디 기록 확인하기
+
+    // 차트 그림 만들기
     const chart1 = ref<HTMLCanvasElement | null>(null)
     const chart2 = ref<HTMLCanvasElement | null>(null)
     const chart3 = ref<HTMLCanvasElement | null>(null)
-    const chart4 = ref<HTMLCanvasElement | null>(null)
-    const chart5 = ref<HTMLCanvasElement | null>(null)
 
     onMounted(() => {
       if (chart1.value) {
@@ -60,11 +87,11 @@ export default defineComponent({
           new Chart(ctx, {
             type: 'bar', // 막대 그래프
             data: {
-              labels: ['BMI', '체지방률', '복부지방률'],
+              labels: ['BMI', '체지방률'],
               datasets: [
                 {
                   label: '비만진단',
-                  data: [25, 25.4, 0.89], // 데이터 입력
+                  data: [25, 25.4], // 데이터 입력
                   backgroundColor: 'rgba(54, 162, 235, 0.2)',
                   borderColor: 'rgba(54, 162, 235, 1)',
                   borderWidth: 1,
@@ -137,18 +164,112 @@ export default defineComponent({
 </script>
 
 <template>
+  <!-- 인바디 기록날짜, 인바디 그래프 출력 -->
   <div class="title-container">
-    <h2>InBody Result</h2>
-    <VBtn style="margin: 5px">기록 추가</VBtn>
+    <h2 style="margin-left: 10px; margin-bottom: 10px">InBody Result</h2>
+    <!-- 인바디 기록 추가 -->
+    <VDialog
+      v-model="dialog"
+      max-width="500"
+    >
+      <template v-slot:activator="{ on }">
+        <VBtn
+          v-on="on"
+          @click="openDialog"
+          >기록 추가</VBtn
+        >
+      </template>
+      <VCard>
+        <VCardTitle>인바디 측정값 입력</VCardTitle>
+        <VCardContent class="dialog-content">
+          <VTextField
+            v-model="weight"
+            label="체중"
+            type="number"
+            class="text-field"
+          ></VTextField>
+          <VTextField
+            v-model="muscle_mass"
+            label="근육량"
+            type="number"
+            class="text-field"
+          ></VTextField>
+          <VTextField
+            v-model="body_fat_mass"
+            label="체지방량"
+            type="number"
+            class="text-field"
+          ></VTextField>
+          <VTextField
+            v-model="bmi"
+            label="BMI"
+            type="number"
+            class="text-field"
+          ></VTextField>
+          <VTextField
+            v-model="percent_body_fat"
+            label="체지방률"
+            type="number"
+            class="text-field"
+          ></VTextField>
+          <VTextField
+            v-model="right_arm"
+            label="오른팔"
+            type="number"
+            class="text-field"
+          ></VTextField>
+          <VTextField
+            v-model="left_arm"
+            label="왼팔"
+            type="number"
+            class="text-field"
+          ></VTextField>
+          <VTextField
+            v-model="trunk"
+            label="몸통"
+            type="number"
+            class="text-field"
+          ></VTextField>
+          <VTextField
+            v-model="right_leg"
+            label="오른다리"
+            type="number"
+            class="text-field"
+          ></VTextField>
+          <VTextField
+            v-model="left_leg"
+            label="왼다리"
+            type="number"
+            class="text-field"
+          ></VTextField>
+        </VCardContent>
+        <VCardActions>
+          <VBtn @click="saveRecord">저장</VBtn>
+          <VBtn @click="closeDialog">나가기</VBtn>
+        </VCardActions>
+      </VCard>
+    </VDialog>
   </div>
+  <div style="margin-top: 10px; margin-bottom: 10px"></div>
   <VRow>
     <VCol cols="2">
       <VCard class="inbody-record">
         <h3>인바디 기록</h3>
-        <div @click="clickInbodyRecord">2023-12-12</div>
-        <div @click="clickInbodyRecord">2023-12-11</div>
-        <div @click="clickInbodyRecord">2023-12-10</div>
-        <div @click="clickInbodyRecord">2023-12-09</div>
+        <VBtn
+          @click="clickInbodyRecord"
+          class="date-button"
+          >2023-12-12</VBtn
+        >
+        <VBtn
+          @click="clickInbodyRecord"
+          class="date-button"
+          >2023-12-11</VBtn
+        >
+        <VBtn
+          @click="clickInbodyRecord"
+          class="date-button"
+          >2023-12-10</VBtn
+        >
       </VCard>
     </VCol>
     <VCol cols="10">
@@ -166,9 +287,9 @@ export default defineComponent({
             </td>
             <td class="standard-range">
               <h4>표준점수</h4>
-              <div>62.0 - 83.8</div>
-              <div>31.3 - 38.3</div>
-              <div>8.8 - 17.5</div>
+              <div class="standard-score">62.0 - 83.8</div>
+              <div class="standard-score">31.3 - 38.3</div>
+              <div class="standard-score">8.8 - 17.5</div>
             </td>
           </tr>
           <tr>
@@ -180,9 +301,8 @@ export default defineComponent({
             </td>
             <td class="standard-range">
               <h4>표준점수</h4>
-              <div>18.5 - 23.0</div>
-              <div>10.0 - 20.0</div>
-              <div>0.80 - 0.90</div>
+              <div class="standard-score">18.5 - 23.0</div>
+              <div class="standard-score">10.0 - 20.0</div>
             </td>
           </tr>
           <tr class="table-content">
@@ -194,11 +314,11 @@ export default defineComponent({
             </td>
             <td class="standard-range">
               <h4>표준점수</h4>
-              <div>85 - 115</div>
-              <div>85 - 115</div>
-              <div>90 - 110</div>
-              <div>90 - 110</div>
-              <div>90 - 110</div>
+              <div class="standard-score">85 - 115</div>
+              <div class="standard-score">85 - 115</div>
+              <div class="standard-score">90 - 110</div>
+              <div class="standard-score">90 - 110</div>
+              <div class="standard-score">90 - 110</div>
             </td>
           </tr>
         </table>
@@ -224,6 +344,7 @@ export default defineComponent({
 }
 .standard-range {
   text-align: center;
+  font-size: 10px;
 }
 .inbody-record {
   text-align: center;
@@ -233,5 +354,12 @@ export default defineComponent({
 .title-container {
   display: grid;
   grid-template-columns: 11fr 1fr;
+}
+.date-button {
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+.text-field {
+  margin: 10px;
 }
 </style>

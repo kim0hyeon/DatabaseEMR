@@ -1,52 +1,46 @@
 <script setup lang="ts">
-import Physiotherapy from '@/views/pages/therapy/Physiotherapy.vue'
-import Rehabilitation from '@/views/pages/therapy/Rehabilitation.vue'
-import { useRoute } from 'vue-router'
-
+import PhysiotherapyModal from '@/views/pages/therapy/PhysiotherapyModal.vue'
+import RehabilitationModal from '@/views/pages/therapy/RehabilitationModal.vue'
 // Components 일단 환자 정보를 불러와야 하기 때문에 사용함
-import { IdStore } from '@/store/index'
 import { reactive, ref } from 'vue'
-import PatientData from '../exampleJson/patient.json'
-
-// 사용자 타입 예시 (백엔드에 따라 수정해야 함)
-interface Patient {
-  id: number
-  name: string
-  age: number
-  gender: string
-  diagnosis: string
-}
-
-const patients = reactive<Patient[]>(PatientData.patients)
-console.log(patients)
-console.log(IdStore().id)
-console.log(patients[IdStore().id])
-
-let patientId: { id: number; name: string; age: number; gender: string; diagnosis: string } | undefined
-patientId = patients[0] // 변수 선언
-
-function clickPatient(event: MouseEvent) {
-  patientId = patients.find(patient => patient.id === IdStore().id)
-
-  if (patientId == null) {
-    patientId = patients.find(patient => patient.id === 1)
-  } else {
-    console.log(patientId)
-  }
-}
-
-document.documentElement.addEventListener('click', clickPatient)
-
-// Components 일단 환자 정보를 불러와야 하기 때문에 사용함
+import { useRoute } from 'vue-router'
+import axios from 'axios'
 
 const route = useRoute()
 
 const activeTab = ref(route.params.tab)
 
 const tabs = [
-  { title: '물리치료', icon: 'mdi-camera', tab: 'image' },
-  { title: '재활치료', icon: 'mdi-water', tab: 'blood' },
+  { title: '물리치료', icon: 'mdi-camera', tab: 'Physiotherapy' },
+  { title: '재활치료', icon: 'mdi-water', tab: 'rehabilitation' },
 ]
+
+// 사용자 타입
+interface Patient {
+  patient_id: string
+  patient_name: string
+  patient_gender: string
+  patient_birth: string
+  patient_residence_number: string
+  patient_phone_number: string
+  patient_emergency_phone_number: string
+  patient_address: string
+  patient_agree_essential_term: boolean
+  patient_agree_optional_term: boolean
+}
+
+// 백엔드에서 환자 정보 받아오기
+let patientInformation = ref<Patient[]>([])
+
+onMounted(async () => {
+  try {
+    const response = await axios.get('http://yunsseong.uk:8000/api/patients/')
+    patientInformation.value = response.data
+    console.log('patient data loding success')
+  } catch (error) {
+    console.error(error)
+  }
+})
 </script>
 
 <template>
@@ -59,7 +53,6 @@ const tabs = [
         v-for="item in tabs"
         :key="item.icon"
         :value="item.tab"
-        style="margin-right: 300px"
       >
         <VIcon
           size="20"
@@ -69,19 +62,19 @@ const tabs = [
         {{ item.title }}
       </VTab>
     </VTabs>
-    <VDivider />
+
     <VWindow
       v-model="activeTab"
       class="mt-5 disable-tab-transition"
     >
       <!-- 물리치료 -->
-      <VWindowItem value="image">
-        <Physiotherapy />
+      <VWindowItem value="Physiotherapy">
+        <PhysiotherapyModal />
       </VWindowItem>
 
       <!-- 재활치료 -->
-      <VWindowItem value="blood">
-        <Rehabilitation />
+      <VWindowItem value="rehabilitation">
+        <RehabilitationModal />
       </VWindowItem>
     </VWindow>
   </div>

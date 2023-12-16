@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import PatientData from './PatientData.json'
-import {is} from "quasar";
-import {Ref} from "vue";
-import axios from "axios";
+import { is } from 'quasar'
+import { Ref } from 'vue'
+import axios from 'axios'
 // json 양식
 interface Patient {
   patient_id: string
@@ -42,12 +42,12 @@ let patientInformation = ref<Patient[]>([])
 const searchTerm: Ref<string> = ref('')
 const searchResults = reactive<Patient[]>([])
 const selectedPatient = ref<Patient | null>(null)
-const searchCondition: Ref<string> =  ref('선택 안함')
+const searchCondition: Ref<string> = ref('선택 안함')
 
 // 백엔드에서 환자 정보 받아오기
 onMounted(async () => {
   try {
-    const response = await axios.get('http://yunsseong.uk:8000/api/patient/')
+    const response = await axios.get('http://yunsseong.uk:8000/api/patients/')
     patientInformation.value = response.data
     console.log('success')
   } catch (error) {
@@ -62,34 +62,30 @@ const search = (event: InputEvent) => {
     if (searchCondition.value == '선택 안함') {
       // 검색어가 숫자로만 구성 -> id에서만 검색
       searchResults.splice(
-          0,
-          searchResults.length,
-          ...patientInformation.value.filter(
-              patient =>
-                  patient.patient_name.includes(searchTerm.value) || patient.patient_phone_number.includes(searchTerm.value),
-          ),
+        0,
+        searchResults.length,
+        ...patientInformation.value.filter(
+          patient =>
+            patient.patient_name.includes(searchTerm.value) || patient.patient_phone_number.includes(searchTerm.value),
+        ),
       )
       // 검색 조건 선택했을 때
     } else {
       // '전화번호' 선택
       if (searchCondition.value === '전화번호') {
         searchResults.splice(
-            0,
-            searchResults.length,
-            ...patientInformation.value.filter((patient) =>
-                patient.patient_phone_number.includes(searchTerm.value)
-            )
-        );
+          0,
+          searchResults.length,
+          ...patientInformation.value.filter(patient => patient.patient_phone_number.includes(searchTerm.value)),
+        )
       }
       // '이름' 선택
       else if (searchCondition.value === '이름') {
         searchResults.splice(
-            0,
-            searchResults.length,
-            ...patientInformation.value.filter((patient) =>
-                patient.patient_name.includes(searchTerm.value)
-            )
-        );
+          0,
+          searchResults.length,
+          ...patientInformation.value.filter(patient => patient.patient_name.includes(searchTerm.value)),
+        )
       }
     }
   } else {
@@ -99,7 +95,7 @@ const search = (event: InputEvent) => {
 
 const selectPatient = (patient: Patient | null) => {
   selectedPatient.value = patient
-  searchResults.splice(0, searchResults.length);
+  searchResults.splice(0, searchResults.length)
 }
 
 const addEvent = (patient: Patient | null) => {
@@ -109,19 +105,21 @@ const addEvent = (patient: Patient | null) => {
     minute: selectedMinute.value || 0,
     title: patient?.patient_name || '환자 이름 없음',
   })
-  console.log(toRaw(selectedDate?.value));
-  events.value.forEach(event => console.log(event));
+  console.log(toRaw(selectedDate?.value))
+  events.value.forEach(event => console.log(event))
 
   isPatientSearchOpen.value = false
   selectedPatient.value = null
   selectedMinute.value = null
   selectedHour.value = null
 }
-
 </script>
 
 <template>
-  <VDialog v-model="isPatientSearchOpen" max-width="1000px">
+  <VDialog
+    v-model="isPatientSearchOpen"
+    max-width="1000px"
+  >
     <div>
       <VCard class="form">
         <VCardTitle class="headline mt-1">환자 예약</VCardTitle>
@@ -130,33 +128,48 @@ const addEvent = (patient: Patient | null) => {
             <div class="search-container">
               <!-- 검색창 -->
               <div
-                  class="d-flex align-center cursor-pointer"
-                  style="user-select: none"
+                class="d-flex align-center cursor-pointer"
+                style="user-select: none"
               >
-                <VTextField  type="text" v-model="searchTerm" label="환자 검색" @input="search" />
-                <div class="search-results" v-if="searchResults.length">
-                  <div v-for="result in searchResults" :key="result.patient_id" @click="selectPatient(result)">
+                <VTextField
+                  type="text"
+                  v-model="searchTerm"
+                  label="환자 검색"
+                  @input="search"
+                />
+                <div
+                  class="search-results"
+                  v-if="searchResults.length"
+                >
+                  <div
+                    v-for="result in searchResults"
+                    :key="result.patient_id"
+                    @click="selectPatient(result)"
+                  >
                     <!-- 환자 선택 시 검색창 초기화 -->
                     <VCard
-                        class="mt-1"
-                        id="autoSearch"
-                        @click="searchTerm = ''"
+                      class="mt-1"
+                      id="autoSearch"
+                      @click="searchTerm = ''"
                     >
                       <VRow class="mb-0">
-                        <VCol cols="12" md="8">
+                        <VCol
+                          cols="12"
+                          md="8"
+                        >
                           <VCardText>ID: {{ result.patient_id }}</VCardText>
                         </VCol>
 
                         <VCol
-                            cols="12"
-                            md="3"
+                          cols="12"
+                          md="3"
                         >
                           <VCardText>이름: {{ result.patient_name }}</VCardText>
                         </VCol>
 
                         <VCol
-                            cols="12"
-                            md="5"
+                          cols="12"
+                          md="5"
                         >
                           <VCardText>주민등록번호: {{ result.patient_residence_number }}</VCardText>
                         </VCol>
@@ -170,9 +183,9 @@ const addEvent = (patient: Patient | null) => {
                 </div>
                 <div class="search-condition ml-2">
                   <VSelect
-                      label="검색 조건"
-                      v-model="searchCondition"
-                      :items="['선택 안함', '이름', '전화번호']"
+                    label="검색 조건"
+                    v-model="searchCondition"
+                    :items="['선택 안함', '이름', '전화번호']"
                   />
                 </div>
               </div>
@@ -180,62 +193,73 @@ const addEvent = (patient: Patient | null) => {
           </VCol>
         </VRow>
 
-        <VRow class="ma-6" style="width: 96%;">
-          <VCard style="width: 100%;">
+        <VRow
+          class="ma-6"
+          style="width: 96%"
+        >
+          <VCard style="width: 100%">
             <VCol cols="12">
               <VRow>
                 <VCol
-                    cols="12"
-                    md="8"
+                  cols="12"
+                  md="8"
                 >
                   <VCardText>
                     이름 : {{ selectedPatient?.patient_name }} (환자ID : {{ selectedPatient?.patient_id }})
                   </VCardText>
                 </VCol>
 
-                <VCol cols="12" md="4">
-                  <VCardText>
-                    성별 : {{ selectedPatient?.patient_gender }}
-                  </VCardText>
+                <VCol
+                  cols="12"
+                  md="4"
+                >
+                  <VCardText> 성별 : {{ selectedPatient?.patient_gender }} </VCardText>
                 </VCol>
 
-                <VCol cols="12" md="4">
-                  <VCardText>
-                    생년월일 : {{ selectedPatient?.patient_birthday }}
-                  </VCardText>
+                <VCol
+                  cols="12"
+                  md="4"
+                >
+                  <VCardText> 생년월일 : {{ selectedPatient?.patient_birthday }} </VCardText>
                 </VCol>
 
-                <VCol cols="12" md="4">
-                  <VCardText>
-                    주민등록번호 : {{ selectedPatient?.patient_residence_number }}
-                  </VCardText>
+                <VCol
+                  cols="12"
+                  md="4"
+                >
+                  <VCardText> 주민등록번호 : {{ selectedPatient?.patient_residence_number }} </VCardText>
                 </VCol>
 
-                <VCol cols="12" md="4">
-                  <VCardText>
-                    주소 : {{ selectedPatient?.patient_address }}
-                  </VCardText>
+                <VCol
+                  cols="12"
+                  md="4"
+                >
+                  <VCardText> 주소 : {{ selectedPatient?.patient_address }} </VCardText>
                 </VCol>
               </VRow>
               <VRow>
-
-                <VCol cols="12" md="4">
-                  <VCardText>
-                    연락처 : {{ selectedPatient?.patient_phone_number }}
-                  </VCardText>
+                <VCol
+                  cols="12"
+                  md="4"
+                >
+                  <VCardText> 연락처 : {{ selectedPatient?.patient_phone_number }} </VCardText>
                 </VCol>
 
-                <VCol cols="12" md="4">
-                  <VCardText>
-                    비상 연락처 : {{ selectedPatient?.patient_emergency_phone_number }}
-                  </VCardText>
+                <VCol
+                  cols="12"
+                  md="4"
+                >
+                  <VCardText> 비상 연락처 : {{ selectedPatient?.patient_emergency_phone_number }} </VCardText>
                 </VCol>
               </VRow>
             </VCol>
           </VCard>
         </VRow>
         <VRow class="ml-4 mb-4">
-          <VCol cols="12" md="2">
+          <VCol
+            cols="12"
+            md="2"
+          >
             <VSelect
               v-model="selectedHour"
               :items="Array.from({ length: 24 }, (_, i) => i)"
@@ -243,7 +267,10 @@ const addEvent = (patient: Patient | null) => {
             />
           </VCol>
 
-          <VCol cols="12" md="2">
+          <VCol
+            cols="12"
+            md="2"
+          >
             <VSelect
               v-model="selectedMinute"
               :items="Array.from({ length: 60 }, (_, i) => i)"
@@ -251,15 +278,22 @@ const addEvent = (patient: Patient | null) => {
             />
           </VCol>
 
-          <VSpacer/>
+          <VSpacer />
 
-          <VCol cols="12" md="1" class="mr-0">
+          <VCol
+            cols="12"
+            md="1"
+            class="mr-0"
+          >
             <v-btn @click="addEvent(selectedPatient)">선택</v-btn>
           </VCol>
-          <VCol cols="12" md="1" class="mr-8">
+          <VCol
+            cols="12"
+            md="1"
+            class="mr-8"
+          >
             <v-btn @click="closePatientSearch">닫기</v-btn>
           </VCol>
-
         </VRow>
       </VCard>
     </div>
@@ -284,6 +318,4 @@ const addEvent = (patient: Patient | null) => {
 #autoSearch {
   width: 550px;
 }
-
-
 </style>

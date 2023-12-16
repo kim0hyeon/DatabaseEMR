@@ -336,7 +336,7 @@ export default defineComponent({
   <VRow>
     <VCol cols="2">
       <VCard class="inbody-record">
-        <h3>피검사 기록</h3>
+        <h3>혈액검사 기록</h3>
         <VBtn
           @click="clickInbodyRecord"
           class="date-button"

@@ -1,18 +1,9 @@
-// 추가로 필요한 것
-// 추가 눌렀을 시 모달창 띄우기, 모달창에서 원하는 요소 3가지(개수는 노상관) 추가하기
-// 추가한 요소들 그래프로 보여주기
-// 초기화 누르면 그래프 소멸 후 다시 추가 버튼 등장
 <script setup lang="ts">
-import NewPatientRegistration from '@/views/pages/account-settings/NewPatientRegistration.vue'
 import avatar1 from '@images/avatars/avatar-1.png'
 import axios from 'axios'
 import { Ref } from 'vue'
 import { useRoute } from 'vue-router'
 import PatientData from './PatientData.json'
-import BloodPressureTest from '@/views/pages/statistics/BloodPressureTest.vue'
-import BloodTest from '@/views/pages/statistics/BloodTest.vue'
-import PhysicalInformation from '@/views/pages/statistics/PhysicalInformation.vue'
-import PhysicalAbility from '@/views/pages/statistics/PhysicalAbility.vue'
 
 const route = useRoute()
 
@@ -147,8 +138,8 @@ const statisticsroute = useRoute()
 const activeTab = ref(statisticsroute.params.tab)
 
 const tabs = [
-  { title: '운동능력', icon: 'mdi-camera', tab: 'image' },
-  { title: '검사', icon: 'mdi-water', tab: 'blood' },
+  { title: '인바디 통계', icon: 'mdi-camera', tab: 'inbody' },
+  { title: '혈액검사 통계', icon: 'mdi-water', tab: 'blood' },
 ]
 </script>
 
@@ -253,20 +244,7 @@ const tabs = [
       class="mt-5 disable-tab-transition"
     >
       <!-- 운동능력 -->
-      <VWindowItem value="image">
-        <VCard
-          class="card-style"
-          title="운동능력"
-        >
-          <PhysicalAbility />
-        </VCard>
-        <VCard
-          class="card-style"
-          title="신체정보"
-        >
-          <PhysicalInformation />
-        </VCard>
-      </VWindowItem>
+      <VWindowItem value="inbody"> </VWindowItem>
 
       <!-- 검사 -->
       <VWindowItem value="blood">

@@ -14,22 +14,26 @@ import axios from 'axios'
 import { watch } from 'vue'
 import { useRoute } from 'vue-router'
 // 접수환자 리스트 ( 고정 )
-interface PatientInfo {
-    patient_id: string
-    patient_name: string
+interface PatientList {
+    list_id: string
+    patient: {
+      patient_id: string
+      patient_name: string
+      patient_gender: string
+    }
 }
 
 const store = IdStore()
 // var patient = PatientData.patients
 const vuetifyTheme = useTheme()
 const route = useRoute()
-const getID = (id) => {
+const getID = (id: string) => {
   store.setID(id)
   console.log(store.id)
 }
 
-let responseData = null
-const patients = ref<PatientInfo[]>([])
+const responseData = ref<PatientList[]>([])
+const patients = ref<PatientList[]>([])
 
 onMounted( async () => {
   try {
@@ -37,7 +41,8 @@ onMounted( async () => {
     const response = await axios.get('http://yunsseong.uk:8000/api/list/')
 
     // 받아온 데이터를 responseData에 저장
-    patients.value = response.data
+    responseData.value = response.data
+    patients.value = responseData.value
     console.log(patients.value)
   } catch (error) {
     console.error('Error fetching data:', error)
@@ -45,24 +50,19 @@ onMounted( async () => {
 })
 
 const searchTerm: Ref<string> = ref('')
-const searchResults = reactive<PatientInfo[]>([])
-const selectedPatient = ref<PatientInfo | null>(null)
+const searchResults = reactive<PatientList[]>([])
+
 const searchPatient = (event: Event) => {
   searchTerm.value = (event.target as HTMLInputElement).value
   if (searchTerm.value) {
-    // console.log(searchTerm.value)
     searchResults.splice(
       0,
       searchResults.length,
-      ...patients.value.filter(patient => patient.patient_name.includes(searchTerm.value)),
+      ...patients.value.filter(patient => patient.patient.patient_name.includes(searchTerm.value)),
     )
-    console.log(patients.value[0].patient_name)
-    console.log(searchResults)
-    patients.value = searchResults
-    // console.log(patients);
+    console.log('after:',searchResults)
   } else {
     searchResults.splice(0, searchResults.length)
-    patients.value = responseData // 입력창 비워지면  초기화
   }
 }
 
@@ -72,7 +72,7 @@ watch(
   },
   (newP, oldP) => {
     console.log(`route changed from ${oldP} to ${newP}`)
-    patients.value = responseData // 페이지 바뀌면 초기화
+    patients.value = responseData.value // 페이지 바뀌면 초기화
     getRoutePath()
   },
 )
@@ -211,22 +211,36 @@ const userInfo = useUserStore().$state.userInfo
             <VTextField
               class="patinput"
               @input="searchPatient"
-              label="환자입력"
+              label="환자검색"
             />
+            <!-- searchTerm이 비어있을 때(검색하지 않을 때)-->
             <div
+              v-if="searchTerm !== ''"
               class="patList2"
               :style="{
-                opacity: item.id === store.id ? 1.0 : 0.3,
+                opacity: item.patient.patient_id === store.id ? 1.0 : 0.3,
               }"
-              v-for="item in patients"
-              :key="item.patient_name"
+              v-for="item in searchResults"
             >
               <router-link
-                @click="getID(item.id)"
+                @click="getID(item.patient.patient_id)"
                 active-class="patItem"
                 :to="pathway"
-                >{{ item.patient_name }} </router-link
-              >
+                >{{ item.patient.patient_name }}</router-link> {{ item.patient.patient_gender }}
+            </div>
+            <div
+                v-else
+                class="patList2"
+                :style="{
+                opacity: item.patient.patient_id === store.id ? 1.0 : 0.3,
+              }"
+                v-for="item in patients"
+            >
+              <router-link
+                  @click="getID(item.patient.patient_id)"
+                  active-class="patItem"
+                  :to="pathway"
+              >{{ item.patient.patient_name }}</router-link> {{ item.patient.patient_gender }}
             </div>
           </div>
         </div>

@@ -78,6 +78,21 @@ const loadReceptionData = async () => {
   }
 }
 
+// 환자 리스트에 접수 환자 추가
+const addList = async () => {
+  try {
+    const patientID = selectedPatient.value?.patient_id
+
+    const data = {
+      patient: patientID
+    }
+
+    const response = await axios.post(`http://yunsseong.uk:8000/api/list/`, data)
+  } catch (error) {
+    console.error(error)
+  }
+}
+
 // 백엔드로 접수 정보 전송
 const submitForm = async () => {
   try {
@@ -91,7 +106,12 @@ const submitForm = async () => {
 
     console.log(data)
     const response = await axios.post(`http://yunsseong.uk:8000/api/receptions/`, data)
-    console.log('success')
+    console.log('Submit success')
+
+    await addList() // 환자 리스트에 접수된 환자 추가
+    console.log('Add list success')
+
+    location.reload() // 페이지 새로고침
   } catch (error) {
     console.error(error)
   }
@@ -110,7 +130,6 @@ const search = (event: Event) => {
   if (searchTerm.value && Array.isArray(patientInformation.value)) {
     // 검색 조건을 선택 안했을 때
     if (searchCondition.value == '선택 안함') {
-      // 검색어가 숫자로만 구성 -> id에서만 검색
       searchResults.splice(
         0,
         searchResults.length,

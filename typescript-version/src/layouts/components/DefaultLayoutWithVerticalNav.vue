@@ -84,7 +84,6 @@ const getRoutePath = () => {
 }
 
 const userInfo = useUserStore().$state.userInfo
-onMounted(getData)
 </script>
 
 <template>

@@ -1,7 +1,7 @@
 <script lang="ts" setup>
-import { IdStore } from '@/store'
+import { mediStore } from '@/store'
 import jsQR from 'jsqr'
-const IDstore = IdStore()
+const MDstore = mediStore()
 // 모달창 구현
 const props = defineProps({
   modelValue: Boolean,
@@ -96,7 +96,7 @@ function tick() {
     if (code) {
       showVideo.value = false
       console.log('Found QR code', code.data)
-      IDstore.setID(code.data)
+      MDstore.setID(code.data)
       stopScanning()
     }
   }

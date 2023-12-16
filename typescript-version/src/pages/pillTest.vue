@@ -13,7 +13,9 @@
         <VCol cols="6">
           <VCard class="user_list scroll-container">
             <VCardItem class="justify-center">
-              <VCardTitle class="font-weight-semibold text-2xl text-uppercase"> PILL LIST </VCardTitle>
+              <VCardTitle class="font-weight-semibold text-2xl text-uppercase">
+                PILL LIST <Scan v-model="isScanOpen" /> <VBtn @click="openScan">Scan</VBtn></VCardTitle
+              >
             </VCardItem>
 
             <VDivider />
@@ -47,8 +49,8 @@
             <VCardItem class="justify-center">
               <VCardTitle class="font-weight-semibold text-2xl text-uppercase">
                 PILL LIST
-                <Scan v-model="isScanOpen" />
-                <VBtn @click="openScan">Scan</VBtn></VCardTitle
+                <ScanMD v-model="isMDScanOpen" />
+                <VBtn @click="openMDScan">Scan</VBtn></VCardTitle
               >
             </VCardItem>
 
@@ -89,8 +91,8 @@
 import PatientPill from '@/exampleJson/PatientPill.json'
 import { mediStore } from '@/store/index'
 import { ref, watch } from 'vue'
-
 import Scan from './Scan.vue'
+import ScanMD from './ScanMedi.vue'
 import MedicationsData from './medications.interface'
 const store = mediStore()
 interface Medication {
@@ -204,9 +206,17 @@ interface PrescriptionRecord {
 }
 // 모달창 구현
 const isScanOpen = ref(false)
+const isMDScanOpen = ref(false)
+
 const openScan = () => {
   console.log(isScanOpen.value)
   isScanOpen.value = true
+  console.log(isScanOpen.value)
+}
+
+const openMDScan = () => {
+  console.log(isScanOpen.value)
+  isMDScanOpen.value = true
   console.log(isScanOpen.value)
 }
 

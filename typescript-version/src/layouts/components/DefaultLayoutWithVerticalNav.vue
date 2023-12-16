@@ -193,7 +193,7 @@ const userInfo = useUserStore().$state.userInfo
               to: '/reservation',
             }"
           />
-          <div style="height: 200px" />
+          <div style="height: 170px" />
           <VerticalNavSectionTitle :item="{ heading: '관리자 메뉴' }" />
           <VerticalNavLink
             v-if="userInfo.job == 10210"

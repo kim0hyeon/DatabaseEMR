@@ -1,0 +1,32 @@
+{
+    "patient": {
+        "code": "P001",
+        "name": "홍길동",
+        "age": 30,
+        "gender": "남성"
+    },
+    "prescription": {
+        "symptoms": [
+            "기침",
+            "콧물",
+            "목감기"
+        ],
+        "medications": [
+            {
+                "code": "ABC123",
+                "name": "판콜",
+                "dosage": 1
+            },
+            {
+                "code": "DEF456",
+                "name": "비타민 C",
+                "dosage": 2
+            },
+            {
+                "code": "GHI789",
+                "name": "레보세트",
+                "dosage": 3
+            }
+        ]
+    }
+}

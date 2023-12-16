@@ -15,12 +15,12 @@ import { watch } from 'vue'
 import { useRoute } from 'vue-router'
 // 접수환자 리스트 ( 고정 )
 interface PatientList {
-    list_id: string
-    patient: {
-      patient_id: string
-      patient_name: string
-      patient_gender: string
-    }
+  list_id: string
+  patient: {
+    patient_id: string
+    patient_name: string
+    patient_gender: string
+  }
 }
 
 const store = IdStore()
@@ -35,7 +35,7 @@ const getID = (id: string) => {
 const responseData = ref<PatientList[]>([])
 const patients = ref<PatientList[]>([])
 
-onMounted( async () => {
+onMounted(async () => {
   try {
     // Axios를 사용하여 백엔드로 GET 요청 보내기
     const response = await axios.get('http://yunsseong.uk:8000/api/list/')
@@ -60,7 +60,7 @@ const searchPatient = (event: Event) => {
       searchResults.length,
       ...patients.value.filter(patient => patient.patient.patient_name.includes(searchTerm.value)),
     )
-    console.log('after:',searchResults)
+    console.log('after:', searchResults)
   } else {
     searchResults.splice(0, searchResults.length)
   }
@@ -153,6 +153,13 @@ const userInfo = useUserStore().$state.userInfo
           />
           <VerticalNavLink
             :item="{
+              title: '약',
+              icon: 'mdi-pill',
+              to: '/pill',
+            }"
+          />
+          <VerticalNavLink
+            :item="{
               title: '검사',
               icon: 'mdi-test-tube',
               to: '/examination',
@@ -226,21 +233,25 @@ const userInfo = useUserStore().$state.userInfo
                 @click="getID(item.patient.patient_id)"
                 active-class="patItem"
                 :to="pathway"
-                >{{ item.patient.patient_name }}</router-link> {{ item.patient.patient_gender }}
+                >{{ item.patient.patient_name }}</router-link
+              >
+              {{ item.patient.patient_gender }}
             </div>
             <div
-                v-else
-                class="patList2"
-                :style="{
+              v-else
+              class="patList2"
+              :style="{
                 opacity: item.patient.patient_id === store.id ? 1.0 : 0.3,
               }"
-                v-for="item in patients"
+              v-for="item in patients"
             >
               <router-link
-                  @click="getID(item.patient.patient_id)"
-                  active-class="patItem"
-                  :to="pathway"
-              >{{ item.patient.patient_name }}</router-link> {{ item.patient.patient_gender }}
+                @click="getID(item.patient.patient_id)"
+                active-class="patItem"
+                :to="pathway"
+                >{{ item.patient.patient_name }}</router-link
+              >
+              {{ item.patient.patient_gender }}
             </div>
           </div>
         </div>

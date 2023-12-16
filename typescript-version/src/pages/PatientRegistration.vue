@@ -16,7 +16,7 @@ interface Patient {
   patient_phone_number: string
   patient_emergency_phone_number: string
   patient_address: string
-  patient_agree_essential_term: boolean,
+  patient_agree_essential_term: boolean
   patient_agree_optional_term: boolean
 }
 
@@ -63,16 +63,18 @@ const loadReceptionData = async () => {
   console.log('load reception_data')
   try {
     console.log(selectedPatient.value?.patient_id)
-    const response = await axios.get(`http://yunsseong.uk:8000/api/receptions?patient=${selectedPatient.value?.patient_id}`)
+    const response = await axios.get(
+      `http://yunsseong.uk:8000/api/receptions?patient=${selectedPatient.value?.patient_id}`,
+    )
     receptionInformation.value = response.data
     console.log('reception_data loading success')
 
     return response.data.map((item: Reception) => {
       return {
         ...item,
-        reception_date_only: item.reception_date.split('T')[0]
-      };
-    });
+        reception_date_only: item.reception_date.split('T')[0],
+      }
+    })
   } catch (error) {
     console.error(error)
   }
@@ -84,7 +86,7 @@ const addList = async () => {
     const patientID = selectedPatient.value?.patient_id
 
     const data = {
-      patient: patientID
+      patient: patientID,
     }
 
     const response = await axios.post(`http://yunsseong.uk:8000/api/list/`, data)
@@ -99,9 +101,9 @@ const submitForm = async () => {
     const patientID = selectedPatient.value?.patient_id
     const visit_reason = visitReason.value
 
-    const data =  {
+    const data = {
       patient: patientID,
-      visit_reason: visit_reason
+      visit_reason: visit_reason,
     }
 
     console.log(data)
@@ -143,22 +145,18 @@ const search = (event: Event) => {
       // '전화번호' 선택
       if (searchCondition.value === '전화번호') {
         searchResults.splice(
-            0,
-            searchResults.length,
-            ...patientInformation.value.filter((patient) =>
-                patient.patient_phone_number.includes(searchTerm.value)
-            )
-        );
+          0,
+          searchResults.length,
+          ...patientInformation.value.filter(patient => patient.patient_phone_number.includes(searchTerm.value)),
+        )
       }
       // '이름' 선택
       else if (searchCondition.value === '이름') {
         searchResults.splice(
-            0,
-            searchResults.length,
-            ...patientInformation.value.filter((patient) =>
-                patient.patient_name.includes(searchTerm.value)
-            )
-        );
+          0,
+          searchResults.length,
+          ...patientInformation.value.filter(patient => patient.patient_name.includes(searchTerm.value)),
+        )
       }
     }
   } else {
@@ -170,9 +168,9 @@ const selectPatient = (patient: Patient | null) => {
   selectedPatient.value = patient
   searchResults.splice(0, searchResults.length)
   loadReceptionData().then(data => {
-    receptionData.value = data;
+    receptionData.value = data
     console.log(receptionData.value)
-  });
+  })
 }
 </script>
 
@@ -185,9 +183,21 @@ const selectPatient = (patient: Patient | null) => {
         class="d-flex align-center cursor-pointer"
         style="user-select: none"
       >
-        <VTextField  type="text" v-model="searchTerm" label="환자 검색" @input="search" />
-        <div class="search-results" v-if="searchResults.length">
-          <div v-for="result in searchResults" :key="result.patient_id" @click="selectPatient(result)">
+        <VTextField
+          type="text"
+          v-model="searchTerm"
+          label="환자 검색"
+          @input="search"
+        />
+        <div
+          class="search-results"
+          v-if="searchResults.length"
+        >
+          <div
+            v-for="result in searchResults"
+            :key="result.patient_id"
+            @click="selectPatient(result)"
+          >
             <!-- 환자 선택 시 검색창 초기화 -->
             <VCard
               class="mt-1"
@@ -195,7 +205,10 @@ const selectPatient = (patient: Patient | null) => {
               @click="searchTerm = ''"
             >
               <VRow class="mb-0">
-                <VCol cols="12" md="8">
+                <VCol
+                  cols="12"
+                  md="8"
+                >
                   <VCardText>ID: {{ result.patient_id }}</VCardText>
                 </VCol>
 
@@ -268,42 +281,47 @@ const selectPatient = (patient: Patient | null) => {
                 </VCardText>
               </VCol>
 
-              <VCol cols="12" md="4">
-                <VCardText>
-                  성별 : {{ selectedPatient?.patient_gender }}
-                </VCardText>
+              <VCol
+                cols="12"
+                md="4"
+              >
+                <VCardText> 성별 : {{ selectedPatient?.patient_gender }} </VCardText>
               </VCol>
 
-              <VCol cols="12" md="4">
-                <VCardText>
-                  생년월일 : {{ selectedPatient?.patient_birth }}
-                </VCardText>
+              <VCol
+                cols="12"
+                md="4"
+              >
+                <VCardText> 생년월일 : {{ selectedPatient?.patient_birth }} </VCardText>
               </VCol>
 
-              <VCol cols="12" md="4">
-                <VCardText>
-                  주민등록번호 : {{ selectedPatient?.patient_residence_number }}
-                </VCardText>
+              <VCol
+                cols="12"
+                md="4"
+              >
+                <VCardText> 주민등록번호 : {{ selectedPatient?.patient_residence_number }} </VCardText>
               </VCol>
 
-              <VCol cols="12" md="4">
-                <VCardText>
-                  주소 : {{ selectedPatient?.patient_address }}
-                </VCardText>
+              <VCol
+                cols="12"
+                md="4"
+              >
+                <VCardText> 주소 : {{ selectedPatient?.patient_address }} </VCardText>
               </VCol>
             </VRow>
             <VRow>
-
-              <VCol cols="12" md="4">
-                <VCardText>
-                  연락처 : {{ selectedPatient?.patient_phone_number }}
-                </VCardText>
+              <VCol
+                cols="12"
+                md="4"
+              >
+                <VCardText> 연락처 : {{ selectedPatient?.patient_phone_number }} </VCardText>
               </VCol>
 
-              <VCol cols="12" md="4">
-                <VCardText>
-                  비상 연락처 : {{ selectedPatient?.patient_emergency_phone_number }}
-                </VCardText>
+              <VCol
+                cols="12"
+                md="4"
+              >
+                <VCardText> 비상 연락처 : {{ selectedPatient?.patient_emergency_phone_number }} </VCardText>
               </VCol>
             </VRow>
           </VCol>
@@ -349,7 +367,10 @@ const selectPatient = (patient: Patient | null) => {
 
         <VCardText>
           <div class="scrollable-area">
-            <div v-for="(info, index) in receptionData" :key="index">
+            <div
+              v-for="(info, index) in receptionData"
+              :key="index"
+            >
               {{ index + 1 }}. 방문 날짜 : {{ info.reception_date_only }} / 방문 사유 : {{ info.visit_reason }}
             </div>
           </div>
@@ -358,12 +379,21 @@ const selectPatient = (patient: Patient | null) => {
     </VCol>
 
     <!-- 방문 사유 -->
-    <VCol cols="12" md="6">
-      <VCard title="방문 사유" class="full-height">
-        <VDivider/>
+    <VCol
+      cols="12"
+      md="6"
+    >
+      <VCard
+        title="방문 사유"
+        class="full-height"
+      >
+        <VDivider />
         <VCol>
           <div>
-            <VTextarea label="방문 사유 기입" v-model="visitReason"></VTextarea>
+            <VTextarea
+              label="방문 사유 기입"
+              v-model="visitReason"
+            ></VTextarea>
           </div>
         </VCol>
       </VCard>

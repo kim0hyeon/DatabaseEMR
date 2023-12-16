@@ -2,8 +2,8 @@ import { useUserStore } from '@/store';
 import { createRouter, createWebHistory } from 'vue-router';
 import PhotoView from '../pages/ImageViewer.vue';
 import ChartView from '../pages/chart.vue';
-import LoginView from '../pages/login.vue';
 import CostView from '../pages/cost.vue';
+import LoginView from '../pages/login.vue';
 const basicRoute = ref('');
 // const loginStore = useUserStore(); 왠지 모르겠는데 이거하면 주석없애면 로드 안됌 
 basicRoute.value = '/login'
@@ -112,7 +112,16 @@ const router = createRouter({
             requiresAuth: true, // 인증이 필요한 경로일 경우 설정
             jobAuth: [1,1,0,0] // 의사 간호사만
           }
-        }
+        },
+        {
+          path : '/pill',name : 'pill',
+          component : () => import('../pages/pillTest.vue'),
+          meta: {
+            requiresAuth: true , // 인증이 필요한 경로일 경우 설정
+            jobAuth: [1,1,0,0] // 의사 간호사만 
+          }
+        },
+        
       ],
     },
     {
@@ -131,14 +140,14 @@ const router = createRouter({
           path: '/login',component: LoginView,name: 'login',
         meta: {
           requiresAuth: false , // 인증이 필요한 경로일 경우 설정
-          jobAuth: [0,0,0,0] // 의사 간호사만 
+          jobAuth: [0,0,0,0] 
         }},
         {
           path: '/files',name: 'files',
           component : PhotoView,
           meta: {
             requiresAuth: true,  // 인증이 필요한 경로일 경우 설정
-            jobAuth: [1,1,,0] // 의사 간호사 물리치료사만 
+            jobAuth: [1,1,0,0] // 의사 간호사 물리치료사만 
           }
         },
         {

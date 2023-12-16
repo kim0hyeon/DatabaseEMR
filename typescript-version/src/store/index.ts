@@ -10,11 +10,15 @@ export const IdStore = defineStore('id', {
   actions: {
     setID(id: string){
       this.id = id
+      this.name = name
     }
   },
   getters: {
     getID(state){
       return this.id
+    },
+    getName(state){
+      return this.name
     }
   }
 })
@@ -29,6 +33,17 @@ export interface UserInfo {
   job: Number;
 }
 const user = userInfo;
+
+export const mediStore = defineStore('mediInfo', {
+  state: () => ({
+    id: ""
+  }),
+  actions: {
+    setID(id: string){
+      this.id= id
+    }
+  },
+});
 
 export const useUserStore = defineStore('userInfo', {
   state: () => ({

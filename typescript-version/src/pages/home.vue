@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { useUserStore } from '@/store'
-import { ref, watch } from 'vue'
+import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 const loginStore = useUserStore()
 const router = useRouter()
@@ -117,11 +117,15 @@ const userInfo = loginStore.$state.userInfo
       <VRow>
         <p style="color: dodgerblue; font-weight: bold; font-size: 40px">공지사항</p>
 
-        <VSpacer/>
-        <VBtn v-if="userInfo?.job == 10210" class="mt-4 mr-6 pl-0 pr-0">+</VBtn>
+        <VSpacer />
+        <VBtn
+          v-if="userInfo?.job == 10210"
+          class="mt-4 mr-6 pl-0 pr-0"
+          >+</VBtn
+        >
       </VRow>
 
-      <VDivider/>
+      <VDivider />
       <ul class="alert-list-font">
         <li>현재 입원중인 환자가 많아 입원이 불가능합니다1</li>
         <li>현재 입원중인 환자가 많아 입원이 불가능합니다2</li>

@@ -1,6 +1,36 @@
 <script lang="ts">
 import { defineComponent, ref, onMounted } from 'vue'
 import { Chart, registerables } from 'chart.js'
+import axios from 'axios'
+
+// 혈액검사 테스트 기록 정보 받아오기 (속성들은 이름 정하면 그때 넣기)
+interface BloodTest {
+  hemoglobin: number
+  fasting_blood_sugar: number
+  total_cholesterol: number
+  hdl_cholesterol: number
+  triglycerides: number
+  ldl_cholesterol: number
+  serum_creatinine: number
+  glomerular_filtration_rate: number
+  ast: number
+  alt: number
+  gamma_gt: number
+}
+
+// 혈액검사기록을 저장할 리스트 생성 -> 변경 가능해야함
+let BloodTestRecord = ref<BloodTest[]>([])
+
+// 오류나지 않게 임시로 url 넣어놨음. 혈액검사에 맞는 url로 고쳐줘야함
+onMounted(async () => {
+  try {
+    const response = await axios.get('http;//yunsseong.uk:8000/api/patients/') // 수정 필요
+    const BloodTestRecord = response.data // 가져온 데이터를 어떻게 가공하여 사용할지 정의 필요
+    console.log('Blood test record loading success')
+  } catch (error) {
+    console.error(error)
+  }
+})
 
 export default defineComponent({
   data() {

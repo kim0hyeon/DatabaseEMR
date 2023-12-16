@@ -3,7 +3,7 @@ import jsQR from 'jsqr'
 
 // 모달창 구현
 const props = defineProps({
-  modelValue: Boolean
+  modelValue: Boolean,
 })
 
 const emit = defineEmits(['update:modelValue'])
@@ -15,19 +15,26 @@ const closeModal = () => {
   console.log(isOpen.value)
 }
 
-watch(() => props.modelValue, (newVal) => {
-  isOpen.value = newVal
-}, { immediate: true })
+watch(
+  () => props.modelValue,
+  newVal => {
+    isOpen.value = newVal
+  },
+  { immediate: true },
+)
 
-watch(() => isOpen.value, (newVal) => {
-  console.log(isOpen.value)
-  if (props.modelValue !== newVal) {
-    emit('update:modelValue', newVal)
-  }
-  if (newVal === true) {
-    startScanning()
-  }
-})
+watch(
+  () => isOpen.value,
+  newVal => {
+    console.log(isOpen.value)
+    if (props.modelValue !== newVal) {
+      emit('update:modelValue', newVal)
+    }
+    if (newVal === true) {
+      startScanning()
+    }
+  },
+)
 
 // QR 코드 인식
 const video = ref<HTMLVideoElement | null>(null)
@@ -97,18 +104,27 @@ function tick() {
 }
 
 watch(
-    () => showVideo.value,
-    (newP, oldP) => {
-      console.log(`showVideo changed from ${oldP} to ${newP}`)
-    },
+  () => showVideo.value,
+  (newP, oldP) => {
+    console.log(`showVideo changed from ${oldP} to ${newP}`)
+  },
 )
 </script>
 
 <template>
-  <VDialog v-model="isOpen" class="dialog">
+  <VDialog
+    v-model="isOpen"
+    class="dialog"
+  >
     <VCard class="card">
-      <div v-show="showVideo" class="ma-4">
-        <video ref="video" class="video"></video>
+      <div
+        v-show="showVideo"
+        class="ma-4"
+      >
+        <video
+          ref="video"
+          class="video"
+        ></video>
       </div>
 
       <VBtn @click="closeModal">닫기</VBtn>
@@ -118,17 +134,16 @@ watch(
 
 <style scoped>
 .dialog {
-  width: 100%;
-  max-width: 600px;
-
+  inline-size: 100%;
+  max-inline-size: 600px;
 }
 
 .card {
-  width: 100%;
+  inline-size: 100%;
 }
 
 .video {
-  width: 100%;
-  height: auto;
+  block-size: auto;
+  inline-size: 100%;
 }
 </style>

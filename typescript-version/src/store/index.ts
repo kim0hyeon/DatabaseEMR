@@ -5,16 +5,28 @@ import {createStore} from "vuex";
 //환자아이디 
 export const IdStore = defineStore('id', {
   state: () => ({
+<<<<<<< HEAD
     id: ""
   }),
   actions: {
     setID(id: string){
+=======
+    id: String,
+    name: String
+  }),
+  actions: {
+    setID(id,name){
+>>>>>>> 10136b4 (hmm)
       this.id = id
+      this.name = name
     }
   },
   getters: {
     getID(state){
       return this.id
+    },
+    getName(state){
+      return this.name
     }
   }
 })

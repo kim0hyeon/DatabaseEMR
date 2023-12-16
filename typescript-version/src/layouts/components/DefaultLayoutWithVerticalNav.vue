@@ -14,6 +14,7 @@ import axios from 'axios'
 import { watch } from 'vue'
 import { useRoute } from 'vue-router'
 // 접수환자 리스트 ( 고정 )
+<<<<<<< HEAD
 interface PatientList {
     list_id: string
     patient: {
@@ -21,21 +22,31 @@ interface PatientList {
       patient_name: string
       patient_gender: string
     }
+=======
+interface PatientInfo {
+  patient_id: string
+  patient_name: string
+>>>>>>> 10136b4 (hmm)
 }
 
 const store = IdStore()
 // var patient = PatientData.patients
 const vuetifyTheme = useTheme()
 const route = useRoute()
+<<<<<<< HEAD
 const getID = (id: string) => {
   store.setID(id)
+=======
+const getID = (id, name) => {
+  store.setID(id, name)
+>>>>>>> 10136b4 (hmm)
   console.log(store.id)
 }
 
 const responseData = ref<PatientList[]>([])
 const patients = ref<PatientList[]>([])
 
-onMounted( async () => {
+onMounted(async () => {
   try {
     // Axios를 사용하여 백엔드로 GET 요청 보내기
     const response = await axios.get('http://yunsseong.uk:8000/api/list/')
@@ -153,6 +164,13 @@ const userInfo = useUserStore().$state.userInfo
           />
           <VerticalNavLink
             :item="{
+              title: '약',
+              icon: 'mdi-pill',
+              to: '/pill',
+            }"
+          />
+          <VerticalNavLink
+            :item="{
               title: '검사',
               icon: 'mdi-test-tube',
               to: '/examination',
@@ -223,6 +241,7 @@ const userInfo = useUserStore().$state.userInfo
               v-for="item in searchResults"
             >
               <router-link
+<<<<<<< HEAD
                 @click="getID(item.patient.patient_id)"
                 active-class="patItem"
                 :to="pathway"
@@ -241,6 +260,13 @@ const userInfo = useUserStore().$state.userInfo
                   active-class="patItem"
                   :to="pathway"
               >{{ item.patient.patient_name }}</router-link> {{ item.patient.patient_gender }}
+=======
+                @click="getID(item.id, item.name)"
+                active-class="patItem"
+                :to="pathway"
+                >{{ item.patient_name }}
+              </router-link>
+>>>>>>> 10136b4 (hmm)
             </div>
           </div>
         </div>

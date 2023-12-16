@@ -98,39 +98,39 @@ export const useUserStore = defineStore('userInfo', {
 
 export default createStore({
   state: {
-    selectedExam: [],
+    selectedInspection: [],
     selectedMedicine: []
   },
   mutations: {
-    setSelectedExam(state, exams) {
-      state.selectedExam = exams
+    setSelectedInspection(state, inspections) {
+      state.selectedInspection = inspections
     },
-    setSelectedMedicine(state, medi) {
-      state.selectedMedicine = medi
+    setSelectedMedicine(state, medicine) {
+      state.selectedMedicine = medicine
     },
-    RESET_SELECTED_EXAM: state => {
-      state.selectedExam = []
+    RESET_SELECTED_INSPECTION: state => {
+      state.selectedInspection = []
     },
     RESET_SELECTED_MEDICINE: state => {
       state.selectedMedicine = []
     }
   },
   actions: {
-    updateSelectedExam({ commit }, exams) {
-      commit('setSelectedExam', exams)
+    updateSelectedInspection({ commit }, inspections) {
+      commit('setSelectedInspection', inspections)
     },
     updateSelectedMedicine({ commit }, medicine) {
       commit('setSelectedMedicine', medicine)
     },
-    resetSelectedExam: ({ commit }) => {
-      commit('RESET_SELECTED_EXAM')
+    resetSelectedInspections: ({ commit }) => {
+      commit('RESET_SELECTED_INSPECTION')
     },
     resetSelectedMedicine: ({ commit }) => {
       commit('RESET_SELECTED_MEDICINE')
     }
   },
   getters: {
-    selectedExam: state => state.selectedExam,
+    selectedInspection: state => state.selectedInspection,
     selectedMedicine: state => state.selectedMedicine
   }
 })

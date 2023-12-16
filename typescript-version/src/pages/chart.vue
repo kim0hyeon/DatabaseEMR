@@ -1,8 +1,9 @@
 <script setup lang="ts">
 // Components
 import MedicalRecord from '@/pages/MedicalRecord.vue'
-import SelectExam from '@/pages/selectExam.vue'
+import SelectInspection from '@/pages/selectInspection.vue'
 import SelectMedicine from '@/pages/selectMedicine.vue'
+import Scan from "@/pages/Scan.vue";
 import { IdStore } from '@/store/index'
 import axios from 'axios'
 import { ref } from 'vue'
@@ -58,6 +59,12 @@ interface Chart {
   medication: []
 }
 
+interface Inspect {
+  inspect_type_id: string
+  inspect_type: string
+  cost: number
+}
+
 interface Photo {
   url: string
   name: string
@@ -98,13 +105,13 @@ function selectImage(image: Photo) {
   selectedPhoto.value = image.url
 }
 
-// 백엔드에서 환자 정보 받아오기
+// 백엔드에서 접수 정보, 차트 정보 받아오기
 let receptionInfo = ref<Reception>()
 let chartInfo = ref<Chart[]>([])
 
 const getReceptionInfo = async (id: string) => {
   try {
-    const response = await axios.get(`http://yunsseong.uk:8000/api/receptions?patient=${id}`)
+    const response = await axios.get(`http://yunsseong.uk:8000/api/receptions?patient=${ id }`)
     receptionInfo.value = response.data[0]
     console.log('reception data loding success')
   } catch (error) {
@@ -142,11 +149,24 @@ watch(
     },
 )
 
-let selectedChartId = ref('')
-let selectedReceptionId = ref('')
+// 백엔드에서 검사 정보 받아오기
+let inspectList = ref<Inspect[]>([])
+
+onMounted(async () => {
+  try {
+    const response = await axios.get(`http://yunsseong.uk:8000/api/inspect_type/`)
+    inspectList.value = response.data
+    console.log('inspectList loading success')
+    console.log(inspectList.value)
+  } catch (error) {
+    console.error(error)
+  }
+})
 
 // 모달창 구현
 // 진료기록 모달
+let selectedChartId = ref('')
+let selectedReceptionId = ref('')
 const isRecordOpen = ref(false)
 const openRecord = (chart_id: string, patient_id: string) => {
   isRecordOpen.value = true
@@ -155,11 +175,11 @@ const openRecord = (chart_id: string, patient_id: string) => {
 }
 
 // 검사목록 모달
-const isExamListOpen = ref(false)
-const openExamList = () => {
-  console.log('isExamListOpen before:', isExamListOpen.value)
-  isExamListOpen.value = true
-  console.log('isExamListOpen after:', isExamListOpen.value)
+const isInspectionListOpen = ref(false)
+const openInspectionList = () => {
+  console.log('isInspectionListOpen before:', isInspectionListOpen.value)
+  isInspectionListOpen.value = true
+  console.log('isInspectionListOpen after:', isInspectionListOpen.value)
 }
 
 // 처방목록 모달
@@ -170,8 +190,16 @@ const openMedicine = () => {
 
 const chartStore = useStore()
 
-const selectedExam = computed(() => chartStore.getters.selectedExam)
+const selectedInspection = computed(() => chartStore.getters.selectedInspection)
 const selectedMedicine = computed(() => chartStore.getters.selectedMedicine)
+
+// 스캔 모달
+const isScanOpen = ref(false)
+const OpenScanning = () => {
+  console.log(isScanOpen.value)
+  isScanOpen.value = true
+  console.log(isScanOpen.value)
+}
 </script>
 
 <template>
@@ -183,6 +211,8 @@ const selectedMedicine = computed(() => chartStore.getters.selectedMedicine)
       <div class="pat_list">
         <VCard class="pa-4">
           <h2 class="letter-spacing">{{ receptionInfo?.patient.patient_name ?? '이름' }}</h2>
+          <Scan v-model="isScanOpen"/>
+          <VBtn @click="OpenScanning">Scan</VBtn>
           <VDivider />
 
           <h3 class="mt-4 ml-2 mb-4"><b>내원이력</b></h3>
@@ -234,7 +264,7 @@ const selectedMedicine = computed(() => chartStore.getters.selectedMedicine)
                 outline
                 rows="2"
                 auto-grow
-                style="border: 1px solid; border-radius: 5px;;"
+                style="border: 1px solid; border-radius: 5px;"
                 class="ml-2 mr-2 cardText"
               >{{ receptionInfo?.visit_reason }}</VCardText>
             </VCard>
@@ -326,9 +356,9 @@ const selectedMedicine = computed(() => chartStore.getters.selectedMedicine)
               >진단 제거</VBtn
             >
 
-            <SelectExam v-model="isExamListOpen" />
+            <SelectInspection v-model="isInspectionListOpen" />
             <VBtn
-              @click="openExamList"
+              @click="openInspectionList"
               class="right-btn"
               >진단 추가</VBtn
             >
@@ -357,25 +387,24 @@ const selectedMedicine = computed(() => chartStore.getters.selectedMedicine)
                 </thead>
                 <tbody>
                   <tr
-                    v-for="(item, index) in selectedExam"
+                    v-for="(item, index) in selectedInspection"
                     :key="index"
                   >
                     <template v-if="item">
-                      <td>{{ item.id }}</td>
-                      <td>{{ item.name }}</td>
-                      <td>{{ item.cost }}</td>
+                      <td>{{ item.inspect_type_id }}</td>
+                      <td>{{ item.inspect_type }}</td>
+                      <td>{{ item.inspect_cost }}</td>
                     </template>
                   </tr>
                 </tbody>
               </table>
             </VCardText>
 
-            <SelectExam v-model="isExamListOpen" />
+            <SelectInspection v-model="isInspectionListOpen" />
             <VBtn
-              @click="openExamList"
+              @click="openInspectionList"
               class="right-btn"
-              >검사 추가</VBtn
-            >
+              >검사 추가</VBtn>
           </VCard>
         </VRow>
 
@@ -398,9 +427,9 @@ const selectedMedicine = computed(() => chartStore.getters.selectedMedicine)
               >병명 제거</VBtn
             >
 
-            <SelectExam v-model="isExamListOpen" />
+            <SelectInspection v-model="isInspectionListOpen" />
             <VBtn
-              @click="openExamList"
+              @click="openInspectionList"
               class="right-btn"
               >병명 추가</VBtn
             >

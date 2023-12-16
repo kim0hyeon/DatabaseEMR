@@ -1,6 +1,7 @@
 
 import { defineStore } from 'pinia';
 import userInfo from '../exampleJson/userInfo.json';
+import {createStore} from "vuex";
 //환자아이디 
 export const IdStore = defineStore('id', {
   state: () => ({
@@ -80,3 +81,41 @@ export const useUserStore = defineStore('userInfo', {
   }
 })
 
+export default createStore({
+  state: {
+    selectedExam: [],
+    selectedMedicine: []
+  },
+  mutations: {
+    setSelectedExam(state, exams) {
+      state.selectedExam = exams
+    },
+    setSelectedMedicine(state, medi) {
+      state.selectedMedicine = medi
+    },
+    RESET_SELECTED_EXAM: state => {
+      state.selectedExam = []
+    },
+    RESET_SELECTED_MEDICINE: state => {
+      state.selectedMedicine = []
+    }
+  },
+  actions: {
+    updateSelectedExam({ commit }, exams) {
+      commit('setSelectedExam', exams)
+    },
+    updateSelectedMedicine({ commit }, medicine) {
+      commit('setSelectedMedicine', medicine)
+    },
+    resetSelectedExam: ({ commit }) => {
+      commit('RESET_SELECTED_EXAM')
+    },
+    resetSelectedMedicine: ({ commit }) => {
+      commit('RESET_SELECTED_MEDICINE')
+    }
+  },
+  getters: {
+    selectedExam: state => state.selectedExam,
+    selectedMedicine: state => state.selectedMedicine
+  }
+})

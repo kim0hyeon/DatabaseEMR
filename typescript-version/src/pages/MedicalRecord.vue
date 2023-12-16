@@ -107,6 +107,7 @@ function subPrescriptionCard() {
   PrescriptionCards.pop()
 }
 
+// 모달창 구현
 const props = defineProps({
   modelValue: Boolean
 })

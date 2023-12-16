@@ -1,0 +1,29 @@
+{
+  "examination": [
+    {
+      "id": "1",
+      "name": "MRI",
+      "cost": 30000
+    },
+    {
+      "id": "2",
+      "name": "X-RAY",
+      "cost": 30000
+    },
+    {
+      "id": "3",
+      "name": "CT",
+      "cost": 30000
+    },
+    {
+      "id": "4",
+      "name": "BLOOD",
+      "cost": 30000
+    },
+    {
+      "id": "5",
+      "name": "INBODY",
+      "cost": 30000
+    }
+  ]
+}

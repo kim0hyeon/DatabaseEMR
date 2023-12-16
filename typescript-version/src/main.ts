@@ -12,6 +12,7 @@ import axios from 'axios'
 import { createPinia } from 'pinia'
 import { createApp } from 'vue'
 import VCalendar from 'v-calendar'
+import store from "@/store";
 
 loadFonts()
 
@@ -23,7 +24,7 @@ app.use(vuetify)
 app.use(createPinia())
 app.use(router)
 app.use(VCalendar, {})
-// app.use(store);
+app.use(store);
 
 app.config.globalProperties.$axios = axios
 

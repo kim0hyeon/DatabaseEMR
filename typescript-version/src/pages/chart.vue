@@ -2,17 +2,28 @@
 // Components
 import PatientRecord from '@/exampleJson/patient_record.json'
 import MedicalRecord from '@/pages/MedicalRecord.vue'
+import SelectExam from '@/pages/selectExam.vue'
+import SelectMedicine from "@/pages/selectMedicine.vue";
 import { IdStore } from '@/store/index'
 import { ref } from 'vue'
-// 사용자 타입 예시 (백엔드에 따라 수정해야 함)
+import axios from "axios";
+import {useStore} from "vuex";
+
 const store = IdStore()
+
 interface Patient {
-  id: number
-  name: string
-  age: number
-  gender: string
-  diagnosis: string
+  patient_id: string
+  patient_name: string
+  patient_gender: string
+  patient_birth: string
+  patient_residence_number: string
+  patient_phone_number: string
+  patient_emergency_phone_number: string
+  patient_address: string
+  patient_agree_essential_term: boolean,
+  patient_agree_optional_term: boolean
 }
+
 interface PatientRecord {
   id: number
   patient_id: number
@@ -67,27 +78,31 @@ const patientRecord: PatientRecordsData = PatientRecord
 
 const patientInfoRec = ref<PatientRecord | undefined>(undefined)
 
-const getUserInfoByID = () => {
-  // Update the value of patientInfo
-  patientInfoRec.value = patientRecord.patient_records.filter(patient => patient.patient_id === Number(store.id))
+// 백엔드에서 환자 정보 받아오기
+let patientInfo = ref<Patient>()
 
-  //가까운 시기로 정렬
-  patientInfoRec.value?.sort((a, b) => {
-    return new Date(b.diagnosis_id) - new Date(a.diagnosis_id)
-  })
-  // console.log(store.id);
-  // console.log(patientInfoRec)
-}
+const getPatientInfo = (async (id: string) => {
+  try {
+    const response = await axios.get(`http://yunsseong.uk:8000/api/patients?patient_id=${ id }`)
+    patientInfo.value = response.data[0]
+    console.log('patient data loding success')
+  } catch (error) {
+    console.error(error)
+  }
+})
+
 watch(
-  () => {
-    return store.id
-  },
-  (newId, oldId) => {
-    // console.log(`ID changed from ${oldId} to ${newId}`);
-    getUserInfoByID()
-  },
+    () => {
+      return store.id
+    },
+    async (newId, oldId) => {
+      console.log(`ID changed from ${oldId} to ${newId}`);
+      // getUserInfoByID()
+      await getPatientInfo(newId)
+      console.log(patientInfo.value?.patient_name)
+    },
 )
-getUserInfoByID()
+
 
 // 진단카드, 카드추가, 카드제거
 const DiagnosisCards = reactive<number[]>([])
@@ -107,17 +122,35 @@ function subPrescriptionCard() {
 }
 
 // 모달창 구현
-const isModalOpen = ref(false)
-const openModal = () => {
-  console.log('before:',isModalOpen.value)
-  isModalOpen.value = true
-  console.log('after:',isModalOpen.value)
+// 진료기록 모달
+const isRecordOpen = ref(false)
+const openRecord = () => {
+  isRecordOpen.value = true
 }
+
+// 검사목록 모달
+const isExamListOpen = ref(false)
+const openExamList = () => {
+  console.log('isExamListOpen before:', isExamListOpen.value)
+  isExamListOpen.value = true
+  console.log('isExamListOpen after:', isExamListOpen.value)
+}
+
+// 처방목록 모달
+const isMedicineOpen = ref(false)
+const openMedicine = () => {
+  isMedicineOpen.value = true
+}
+
+const chartStore = useStore()
+
+const selectedExam = computed(() => chartStore.getters.selectedExam)
+const selectedMedicine = computed(() => chartStore.getters.selectedMedicine)
 </script>
 
 <template>
-  <MedicalRecord v-model="isModalOpen"/>
-  <VBtn @click="openModal">상세정보</VBtn>
+  <MedicalRecord v-model="isRecordOpen"/>
+  <VBtn @click="openRecord">상세정보</VBtn>
   <VRow>
     <VCol
       class="pa-0"
@@ -125,9 +158,10 @@ const openModal = () => {
     >
       <div class="pat_list">
         <VCard class="pa-4">
-          <h2 class="letter-spacing">(이름)홍길동</h2>
-          <p>(나중에 이름은 백에서 조인해서 쓰면 될듯)</p>
-          <h3 class="ml-2 mb-4"><b>내원이력</b></h3>
+          <h2 class="letter-spacing">{{ patientInfo?.patient_name??'이름' }}</h2>
+          <VDivider/>
+
+          <h3 class="mt-4 ml-2 mb-4"><b>내원이력</b></h3>
           <div class="scroll-container history">
             <VCard class="px-1 py-1">
               <VCard
@@ -164,7 +198,7 @@ const openModal = () => {
             class="pa-0"
             cols="8"
           >
-            <VCard class="pat_chart px-2 py-2">
+            <VCard class="pat_chart px-2 py-2" style="height: 90%;">
               <div class="letter-spacing">
                 <img
                   src="../assets/icons/stethoscope.png"
@@ -186,7 +220,7 @@ const openModal = () => {
             class="pa-0"
             cols="4"
           >
-            <VCard class="pat_chart px-2 py-2">
+            <VCard class="pat_chart px-2 py-2" style="height: 90%;">
               <div class="letter-spacing">
                 <img
                   src="../assets/icons/picture.png"
@@ -233,76 +267,208 @@ const openModal = () => {
               </div>
             </VCard>
           </VCol>
+        </VRow>
+
+        <!-- 진단 -->
+        <VRow>
           <VCard class="pat_chart2 pa-2 ma-2">
             <div class="letter-spacing">
               <img
-                src="../assets/icons/prescription.png"
-                class="large-icon-size"
+                  src="../assets/icons/prescription.png"
+                  class="large-icon-size"
               />
               <h2>진단</h2>
             </div>
             <VTextarea
-              label="진단기록"
-              outline
-              rows="2"
-              auto-grow
-              style="margin-bottom: 5px"
+                label="진단기록"
+                outline
+                rows="2"
+                auto-grow
+                style="margin-bottom: 5px"
             ></VTextarea>
             <VCard
-              v-for="(i, index) in DiagnosisCards"
-              :key="index"
-              class="add-card"
-              >추가된 진단입니다.</VCard
-            >
-            <VBtn style="border-radius: 13px; font-size: 15px">저장</VBtn>
+                v-for="(i, index) in DiagnosisCards"
+                :key="index"
+                class="add-card"
+            >추가된 진단입니다.</VCard>
+
             <VBtn
-              style="border-radius: 13px; font-size: 15px"
-              @click="addDiagnosisCard"
-              class="right-btn"
-              >진단 추가</VBtn
-            >
+                @click="subDiagnosisCard"
+                class="right-btn"
+            >진단 제거</VBtn>
+
+            <SelectExam v-model="isExamListOpen"/>
             <VBtn
-              style="border-radius: 13px; font-size: 15px"
-              @click="subDiagnosisCard"
-              class="right-btn"
-              >진단 제거</VBtn
-            >
+                @click="openExamList"
+                class="right-btn"
+            >진단 추가</VBtn>
           </VCard>
+        </VRow>
+
+        <!-- 검사 -->
+        <VRow>
           <VCard class="pat_chart2 pa-2 ma-2">
             <div class="letter-spacing">
               <img
-                src="../assets/icons/prescription.png"
-                class="large-icon-size"
+                  src="../assets/icons/prescription.png"
+                  class="large-icon-size"
+              />
+              <h2>검사</h2>
+            </div>
+            <VDivider/>
+            <VCardText class="pt-2 table-container">
+              <table class="list_table">
+                <thead>
+                <tr>
+                  <th>검사 ID</th>
+                  <th>검사 이름</th>
+                  <th>검사 비용</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr
+                    v-for="(item, index) in selectedExam"
+                    :key="index"
+                >
+                  <template v-if="item">
+                    <td>{{ item.id }}</td>
+                    <td>{{ item.name }}</td>
+                    <td>{{ item.cost }}</td>
+                  </template>
+                </tr>
+                </tbody>
+              </table>
+            </VCardText>
+
+            <SelectExam v-model="isExamListOpen"/>
+            <VBtn
+                @click="openExamList"
+                class="right-btn"
+            >검사 추가</VBtn>
+          </VCard>
+        </VRow>
+
+        <!-- 진단 병명 -->
+        <VRow>
+          <VCard class="pat_chart2 pa-2 ma-2">
+            <div class="letter-spacing">
+              <img
+                  src="../assets/icons/prescription.png"
+                  class="large-icon-size"
+              />
+              <h2>진단 병명</h2>
+            </div>
+            <VDivider/>
+
+            <VCard
+                v-for="(i, index) in DiagnosisCards"
+                :key="index"
+                class="add-card"
+            >추가된 병명입니다.</VCard
+            >
+
+            <VBtn
+                @click="subDiagnosisCard"
+                class="right-btn"
+            >병명 제거</VBtn>
+
+            <SelectExam v-model="isExamListOpen"/>
+            <VBtn
+                @click="openExamList"
+                class="right-btn"
+            >병명 추가</VBtn>
+          </VCard>
+        </VRow>
+
+        <!-- 치료 -->
+        <VRow>
+          <VCard class="pat_chart2 pa-2 ma-2">
+            <div class="letter-spacing">
+              <img
+                  src="../assets/icons/prescription.png"
+                  class="large-icon-size"
+              />
+              <h2>치료</h2>
+            </div>
+            <VTextarea
+                label="치료내용"
+                outline
+                rows="2"
+                auto-grow
+                style="margin-bottom: 5px"
+            ></VTextarea>
+            <VCard
+                v-for="(i, index) in PrescriptionCards"
+                :key="index"
+                class="add-card"
+            >추가된 치료입니다.</VCard>
+
+            <VBtn
+                @click="subPrescriptionCard"
+                class="right-btn"
+            >치료 제거</VBtn>
+
+            <SelectMedicine v-model="isMedicineOpen"/>
+            <VBtn
+                @click="openMedicine"
+                class="right-btn"
+            >치료 추가</VBtn>
+          </VCard>
+        </VRow>
+
+        <!-- 약물 처방 -->
+        <VRow>
+          <VCard class="pat_chart2 pa-2 ma-2">
+            <div class="letter-spacing">
+              <img
+                  src="../assets/icons/prescription.png"
+                  class="large-icon-size"
               />
               <h2>처방</h2>
             </div>
             <VTextarea
-              label="처방기록"
-              outline
-              rows="2"
-              auto-grow
-              style="margin-bottom: 5px"
+                label="처방기록"
+                outline
+                rows="2"
+                auto-grow
+                style="margin-bottom: 5px"
             ></VTextarea>
-            <VCard
-              v-for="(i, index) in PrescriptionCards"
-              :key="index"
-              class="add-card"
-              >추가된 치료입니다.</VCard
-            >
-            <VBtn style="border-radius: 13px; font-size: 15px">저장</VBtn>
+            <VCardText class="pt-2 table-container">
+              <table class="list_table">
+                <thead>
+                <tr>
+                  <th>약품 ID</th>
+                  <th>약품 이름</th>
+                  <th>약품 비용</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr
+                    v-for="(item, index) in selectedMedicine"
+                    :key="index"
+                >
+                  <template v-if="item">
+                    <td>{{ item.id }}</td>
+                    <td>{{ item.name }}</td>
+                    <td>{{ item.cost }}</td>
+                  </template>
+                </tr>
+                </tbody>
+              </table>
+            </VCardText>
+
+            <SelectMedicine v-model="isMedicineOpen"/>
             <VBtn
-              @click="addPrescriptionCard"
-              style="border-radius: 13px; font-size: 15px"
-              class="right-btn"
-              >처방 추가</VBtn
-            >
-            <VBtn
-              @click="subPrescriptionCard"
-              style="border-radius: 13px; font-size: 15px"
-              class="right-btn"
-              >처방 제거</VBtn
+                @click="openMedicine"
+                class="right-btn"
+            >약품 추가</VBtn
             >
           </VCard>
+        </VRow>
+        <VRow>
+          <VCol>
+            <VBtn class="right-btn">저장</VBtn>
+          </VCol>
         </VRow>
       </div>
     </VCol>
@@ -416,5 +582,23 @@ const openModal = () => {
 .right-btn {
   float: right;
   margin-left: 10px;
+}
+
+.list_table {
+  border-collapse: separate; /* 셀 경계를 분리합니다. */
+  border-spacing: 10px; /* 원하는 간격으로 설정합니다. */
+  color: black;
+  inline-size: 100%;
+}
+
+/* 예시 스타일 */
+.list_table th,
+.list_table td {
+  padding: 10px; /* 셀 안의 내용과 경계 사이의 여백을 조절합니다. */
+  text-align: center;
+}
+
+.list_table th {
+  font-size: 15px;
 }
 </style>

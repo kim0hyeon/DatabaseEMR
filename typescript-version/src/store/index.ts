@@ -5,18 +5,10 @@ import {createStore} from "vuex";
 //환자아이디 
 export const IdStore = defineStore('id', {
   state: () => ({
-<<<<<<< HEAD
     id: ""
   }),
   actions: {
     setID(id: string){
-=======
-    id: String,
-    name: String
-  }),
-  actions: {
-    setID(id,name){
->>>>>>> 10136b4 (hmm)
       this.id = id
       this.name = name
     }
@@ -41,6 +33,17 @@ export interface UserInfo {
   job: Number;
 }
 const user = userInfo;
+
+export const mediStore = defineStore('mediInfo', {
+  state: () => ({
+    id: ""
+  }),
+  actions: {
+    setID(id: string){
+      this.id= id
+    }
+  },
+});
 
 export const useUserStore = defineStore('userInfo', {
   state: () => ({

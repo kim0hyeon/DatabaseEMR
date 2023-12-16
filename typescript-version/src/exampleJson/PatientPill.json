@@ -15,17 +15,17 @@
             {
                 "code": "ABC123",
                 "name": "판콜",
-                "dosage": "1정"
+                "dosage": 1
             },
             {
                 "code": "DEF456",
                 "name": "비타민 C",
-                "dosage": "1정"
+                "dosage": 2
             },
             {
                 "code": "GHI789",
                 "name": "레보세트",
-                "dosage": "1정"
+                "dosage": 3
             }
         ]
     }

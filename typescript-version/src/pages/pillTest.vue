@@ -43,36 +43,40 @@
         </VCol>
 
         <VCol cols="6">
-          <!-- USER LIST  -->
           <VCard class="user_list scroll-container">
             <VCardItem class="justify-center">
               <VCardTitle class="font-weight-semibold text-2xl text-uppercase">
-                PILL LIST <Scan v-model="isScanOpen" /> <VBtn @click="openScan">Scan</VBtn></VCardTitle
+                PILL LIST
+                <Scan v-model="isScanOpen" />
+                <VBtn @click="openScan">Scan</VBtn></VCardTitle
               >
             </VCardItem>
 
             <VDivider />
 
             <VCardText>
-              <table class="list_table">
-                <thead>
-                  <tr>
-                    <th>Code</th>
-                    <th>Name</th>
-                    <th>Usage</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr
-                    v-for="item in pillInfo.prescription.medications"
-                    :key="item.code"
-                  >
-                    <td>{{ item.code }}</td>
-                    <td>{{ item.name }}</td>
-                    <td>{{ item.dosage }}</td>
-                  </tr>
-                </tbody>
-              </table>
+              <div>
+                <label for="medicationCode">약물 코드:</label>
+                <input
+                  v-model="medicationCode"
+                  type="text"
+                />
+                <button @click="searchMedication">약물 조회</button>
+                <div class="ma-5"></div>
+                <div
+                  v-if="searchedMedication"
+                  :class="medicationNotFound ? 'found-medication' : 'not-found'"
+                >
+                  <h3>조회 결과:</h3>
+                  <p>이름: {{ searchedMedication.name }}</p>
+                  <p>종류: {{ searchedMedication.type }}</p>
+                  <p>설명: {{ searchedMedication.description }}</p>
+                </div>
+
+                <div v-if="!searchedMedication && searchAttempted">
+                  <p>일치하는 약물을 찾을 수 없습니다.</p>
+                </div>
+              </div>
             </VCardText>
           </VCard>
         </VCol>
@@ -83,12 +87,103 @@
 
 <script lang="ts" setup>
 import PatientPill from '@/exampleJson/PatientPill.json'
-import Scan from './Scan.vue'
+import { mediStore } from '@/store/index'
+import { ref, watch } from 'vue'
 
+import Scan from './Scan.vue'
+import MedicationsData from './medications.interface'
+const store = mediStore()
 interface Medication {
   code: string
   name: string
-  dosage: string
+  type: string
+  description: string
+}
+
+// 예시 데이터
+const medicationsData: MedicationsData = {
+  medications: [
+    {
+      code: 'ABC123',
+      name: '아스피린',
+      type: '진통제',
+      description: '두통 및 통증 완화에 사용되는 일반적인 진통제입니다.',
+    },
+    {
+      code: 'DEF456',
+      name: '로타티드',
+      type: '소화제',
+      description: '소화 불량 및 위장 문제에 사용되는 소화제입니다.',
+    },
+    {
+      code: 'GHI789',
+      name: '클라리틴',
+      type: '항히스타민제',
+      description: '알레르기 증상 완화에 사용되는 항히스타민제입니다.',
+    },
+    {
+      code: 'JKL012',
+      name: '메트포민',
+      type: '당뇨병 치료제',
+      description: '2형 당뇨병의 초기 치료에 사용되는 약물입니다.',
+    },
+    {
+      code: 'MNO345',
+      name: '에나프로직',
+      type: '고혈압 치료제',
+      description: '고혈압 및 심장부전의 치료에 사용되는 약물입니다.',
+    },
+    {
+      code: 'PQR678',
+      name: '파모클로짓',
+      type: '항생제',
+      description: '균에 의한 감염의 치료에 사용되는 항생제입니다.',
+    },
+    {
+      code: 'STU901',
+      name: '삐콤',
+      type: '해열제',
+      description: '열이 나거나 고통을 완화하기 위해 사용되는 해열제입니다.',
+    },
+  ],
+}
+const searchedMedicationCode = ref('')
+const medicationNotFound = ref(false)
+const patient = ref(PatientPill.patient)
+const prescription = ref(PatientPill.prescription)
+const searchedMedications = ref<MedicationsData['medications']>([])
+
+const medicationCode = ref('')
+const searchedMedication = ref<MedicationsData['medications'][number] | null>(null)
+const searchAttempted = ref(false)
+
+const searchMedication = () => {
+  if (store.id) medicationCode.value = store.id
+  const code = medicationCode.value.trim().toUpperCase()
+  console.log(store.id)
+  searchAttempted.value = true
+  searchedMedicationCode.value = code
+  medicationNotFound.value = isMedicationFound(searchedMedicationCode)
+  if (code) {
+    const foundMedication = findMedicationByCode(code)
+    searchedMedication.value = foundMedication || null
+  } else {
+    searchedMedication.value = null
+  }
+}
+function isMedicationFound(code) {
+  const inputCode = medicationCode.value.trim().toUpperCase()
+  const foundMedication = prescription.value.medications.find(medication => medication.code === inputCode)
+  // console.log(foundMedication.code + inputCode)
+  if (foundMedication && foundMedication.code === inputCode) return true
+  else {
+    return false
+  }
+}
+
+const findMedicationByCode = (code: string) => {
+  // medicationsData는 외부에서 가져온 데이터 혹은 API 호출을 통해 가져온 데이터일 것입니다.
+  return medicationsData.medications.find(medication => medication.code === code)
 }
 
 interface Patient {
@@ -116,10 +211,26 @@ const openScan = () => {
 }
 
 let pillInfo = PatientPill
+watch(
+  () => store.id,
+  (newId, oldId) => {
+    // 여기서 원하는 로직을 수행
+    searchMedication()
+    // 변경된 ID에 따라 특정 함수 호출 등의 로직을 추가할 수 있음
+    // 예: fetchData(newId);
+  },
+)
 </script>
 
 <style scoped>
 /* 스타일 정보는 이전 HTML 예제와 유사하므로 생략했습니다. */
+.not-found {
+  background-color: red; /* 검색이 안되었을 때 전체 행을 빨간색으로 설정 */
+}
+
+.found-medication {
+  background-color: green; /* 검색이 되었을 때 전체 행을 초록색으로 설정 */
+}
 
 .auth-card {
   align-content: center;

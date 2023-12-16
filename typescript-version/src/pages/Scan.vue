@@ -1,13 +1,13 @@
 <script lang="ts" setup>
+import { mediStore } from '@/store'
 import jsQR from 'jsqr'
-
+const store = mediStore()
 // 모달창 구현
 const props = defineProps({
   modelValue: Boolean,
 })
 
 const emit = defineEmits(['update:modelValue'])
-
 let isOpen = ref(props.modelValue)
 const closeModal = () => {
   isOpen.value = false
@@ -96,7 +96,7 @@ function tick() {
     if (code) {
       showVideo.value = false
       console.log('Found QR code', code.data)
-      window.open(code.data, '_blank')
+      store.setID(code.data)
       stopScanning()
     }
   }

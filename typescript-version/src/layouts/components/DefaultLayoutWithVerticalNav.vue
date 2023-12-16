@@ -14,32 +14,21 @@ import axios from 'axios'
 import { watch } from 'vue'
 import { useRoute } from 'vue-router'
 // 접수환자 리스트 ( 고정 )
-<<<<<<< HEAD
 interface PatientList {
-    list_id: string
-    patient: {
-      patient_id: string
-      patient_name: string
-      patient_gender: string
-    }
-=======
-interface PatientInfo {
-  patient_id: string
-  patient_name: string
->>>>>>> 10136b4 (hmm)
+  list_id: string
+  patient: {
+    patient_id: string
+    patient_name: string
+    patient_gender: string
+  }
 }
 
 const store = IdStore()
 // var patient = PatientData.patients
 const vuetifyTheme = useTheme()
 const route = useRoute()
-<<<<<<< HEAD
 const getID = (id: string) => {
   store.setID(id)
-=======
-const getID = (id, name) => {
-  store.setID(id, name)
->>>>>>> 10136b4 (hmm)
   console.log(store.id)
 }
 
@@ -71,7 +60,7 @@ const searchPatient = (event: Event) => {
       searchResults.length,
       ...patients.value.filter(patient => patient.patient.patient_name.includes(searchTerm.value)),
     )
-    console.log('after:',searchResults)
+    console.log('after:', searchResults)
   } else {
     searchResults.splice(0, searchResults.length)
   }
@@ -241,32 +230,28 @@ const userInfo = useUserStore().$state.userInfo
               v-for="item in searchResults"
             >
               <router-link
-<<<<<<< HEAD
                 @click="getID(item.patient.patient_id)"
                 active-class="patItem"
                 :to="pathway"
-                >{{ item.patient.patient_name }}</router-link> {{ item.patient.patient_gender }}
+                >{{ item.patient.patient_name }}</router-link
+              >
+              {{ item.patient.patient_gender }}
             </div>
             <div
-                v-else
-                class="patList2"
-                :style="{
+              v-else
+              class="patList2"
+              :style="{
                 opacity: item.patient.patient_id === store.id ? 1.0 : 0.3,
               }"
-                v-for="item in patients"
+              v-for="item in patients"
             >
               <router-link
-                  @click="getID(item.patient.patient_id)"
-                  active-class="patItem"
-                  :to="pathway"
-              >{{ item.patient.patient_name }}</router-link> {{ item.patient.patient_gender }}
-=======
-                @click="getID(item.id, item.name)"
+                @click="getID(item.patient.patient_id)"
                 active-class="patItem"
                 :to="pathway"
-                >{{ item.patient_name }}
-              </router-link>
->>>>>>> 10136b4 (hmm)
+                >{{ item.patient.patient_name }}</router-link
+              >
+              {{ item.patient.patient_gender }}
             </div>
           </div>
         </div>

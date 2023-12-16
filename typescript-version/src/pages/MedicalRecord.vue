@@ -5,29 +5,66 @@ import PatientRecord from '@/exampleJson/patient_record.json'
 import MedicalRecord from '@/pages/MedicalRecord.vue'
 import { IdStore } from '@/store/index'
 import { ref } from 'vue'
+import axios from "axios";
 // 사용자 타입 예시 (백엔드에 따라 수정해야 함)
 const store = IdStore()
-interface Patient {
-  id: number
-  name: string
-  age: number
-  gender: string
-  diagnosis: string
+
+interface Reception {
+  reception: string
+  visit_reason: string
+  reception_date: string
+  reception_date_only: string
+  patient: {
+    patient_id: string
+    patient_name: string
+    patient_gender: string
+  }
 }
-interface PatientRecord {
-  id: number
-  patient_id: number
-  diagnosis_id: number
-  date: string
+
+interface Chart {
+  chart_id: string
+  diagnosis: string
+  datetime: string
+  date_only: string
+  image_id: string
+  image_url: string
+  patient: {
+    patient_id: string
+    patient_name: string
+    patient_gender: string
+    patient_birth: string
+    patient_residence_number: string
+    patient_phone_number: string
+    patient_emergency_phone_number: string
+    patient_address: string
+    patient_agree_essential_term: boolean
+    patient_agree_optional_term: boolean
+  }
+  medical: {
+    medical_person_id: string
+    medical_person_name: string
+    medical_person_system_id: string
+    medical_person_gender: string
+    medical_person_birthday: string
+    medical_person_phone_number: string
+    medical_person_main_address: string
+    medical_person_license: string
+    classification_code: string
+  }
+  inspect: []
+  disease: []
+  treatment: []
+  medication: []
 }
 
 interface Photo {
   url: string
-  name: string
+  id: string
 }
 
 const photos = ref<Photo[]>([])
 const selectedPhoto = ref('')
+
 const clickedSendFile = () => {
   photos.value = []
   alert('저장완료')
@@ -61,55 +98,35 @@ function selectImage(image: Photo) {
   selectedPhoto.value = image.url
 }
 
-interface PatientRecordsData {
-  patient_records: PatientRecord[]
-}
-const patientRecord: PatientRecordsData = PatientRecord
+// 백엔드에서 환자 정보 받아오기
+let receptionInfo = ref<Reception>()
+let chartInfo = ref<Chart>()
 
-const patientInfoRec = ref<PatientRecord | undefined>(undefined)
+const getReceptionInfo = (async () => {
+  try {
+    const response = await axios.get(`http://yunsseong.uk:8000/api/receptions?id=${ props.reception_id }`)
+    receptionInfo.value = response.data[0]
+    console.log('reception data loding success')
+  } catch (error) {
+    console.error(error)
+  }
+})
 
-const getUserInfoByID = () => {
-  // Update the value of patientInfo
-  patientInfoRec.value = patientRecord.patient_records.filter(patient => patient.patient_id === Number(store.id))
-
-  //가까운 시기로 정렬
-  patientInfoRec.value?.sort((a, b) => {
-    return new Date(b.diagnosis_id) - new Date(a.diagnosis_id)
-  })
-  // console.log(store.id);
-  // console.log(patientInfoRec)
-}
-watch(
-    () => {
-      return store.id
-    },
-    (newId, oldId) => {
-      // console.log(`ID changed from ${oldId} to ${newId}`);
-      getUserInfoByID()
-    },
-)
-getUserInfoByID()
-
-// 진단카드, 카드추가, 카드제거
-const DiagnosisCards = reactive<number[]>([])
-function addDiagnosisCard() {
-  DiagnosisCards.push(DiagnosisCards.length + 1)
-}
-function subDiagnosisCard() {
-  DiagnosisCards.pop()
-}
-// 처방카드, 카드추가, 카드제거
-const PrescriptionCards = reactive<number[]>([])
-function addPrescriptionCard() {
-  PrescriptionCards.push(PrescriptionCards.length + 1)
-}
-function subPrescriptionCard() {
-  PrescriptionCards.pop()
-}
+const getChartInfo = (async () => {
+  try {
+    const response = await axios.get(`http://yunsseong.uk:8000/api/chart?id=${ props.chart_id }`)
+    chartInfo.value = response.data[0]
+    console.log('chart data loading success')
+  } catch (error) {
+    console.error(error)
+  }
+})
 
 // 모달창 구현
 const props = defineProps({
-  modelValue: Boolean
+  modelValue: Boolean,
+  chart_id: String,
+  reception_id: String
 })
 
 const emit = defineEmits(['update:modelValue'])
@@ -121,6 +138,11 @@ const closeModal = () => {
 
 watch(() => props.modelValue, (newVal) => {
   isOpen.value = newVal
+  console.log('load data')
+  getChartInfo()
+  console.log(chartInfo)
+  getReceptionInfo()
+  console.log(receptionInfo.value)
 }, { immediate: true })
 
 watch(() => isOpen.value, (newVal) => {
@@ -135,23 +157,20 @@ watch(() => isOpen.value, (newVal) => {
     <VCard class="pa-2">
       <VRow>
         <VCol
-            cols="4"
+            cols="2"
             style="height: 100%"
         >
           <div>
-            <h2 class="letter-spacing" style="text-align: center">(이름)홍길동</h2>
+            <h2 class="letter-spacing" style="text-align: center">{{ receptionInfo?.patient.patient_name }}</h2>
             <VCardText>
-              내원 이력
-            </VCardText>
-            <VCardText>
-              방문 사유
+              방문 날짜: {{ receptionInfo?.reception_date }}
             </VCardText>
           </div>
         </VCol>
         <VCol
             style="height: 100%"
-            cols="8"
-            class="pb-0"
+            cols="6"
+            class="pb-0 pr-0 pl-0"
         >
           <VCard class="pat_chart px-2 py-2"
           style="height: 220px;">
@@ -162,74 +181,23 @@ watch(() => isOpen.value, (newVal) => {
               />
               <h2>방문사유</h2>
             </div>
-            <VTextarea
+            <VCardText
                 readonly
                 outline
                 rows="2"
                 auto-grow
-                style="margin-bottom: 5px; height: 100%;"
-                value="종강을 못참는 병"
-            ></VTextarea>
+                style="border: 1px solid; border-radius: 5px; height: 70%;"
+                class="ml-2 mr-2 cardText"
+            >{{ receptionInfo?.visit_reason }}</VCardText>
           </VCard>
         </VCol>
-      </VRow>
-      <VRow>
-        <VCol
-            class="pa-0 ma-0"
-            cols="8"
-        >
-          <div
-              class="pat_chart"
-          >
-            <VRow>
-              <VCol cols="12">
-                <VCard class="pat_chart2 pa-2 ma-2"
-                       style="width: 100%; height: 100%;">
-                  <div class="letter-spacing">
-                    <img
-                        src="../assets/icons/prescription.png"
-                        class="large-icon-size"
-                    />
-                    <h2>진단</h2>
-                  </div>
-                  <VTextarea
-                      label="진단기록"
-                      outline
-                      rows="2"
-                      auto-grow
-                      style="margin-bottom: 5px"
-                  ></VTextarea>
-                </VCard>
-              </VCol>
 
-              <VCol cols="12">
-                <VCard class="pat_chart2 pa-2 ma-2"
-                  style="width: 100%; height: 100%;">
-                  <div class="letter-spacing">
-                    <img
-                        src="../assets/icons/prescription.png"
-                        class="large-icon-size"
-                    />
-                    <h2>처방</h2>
-                  </div>
-                  <VTextarea
-                      label="처방기록"
-                      outline
-                      rows="2"
-                      auto-grow
-                      style="margin-bottom: 5px"
-                  ></VTextarea>
-                </VCard>
-              </VCol>
-
-            </VRow>
-          </div>
-        </VCol>
         <VCol
             cols="4"
+            class="pr-5 pl-0"
         >
           <VCard class="pat_chart px-2 py-2"
-          style="height: 100%">
+                 style="height: 96%">
             <div class="letter-spacing">
               <img
                   src="../assets/icons/picture.png"
@@ -237,29 +205,170 @@ watch(() => isOpen.value, (newVal) => {
               />
               <h2>사진</h2>
             </div>
-            <div
-                class="scroll-container photo_list"
-                v-if="photos.length > 0"
-            >
-              <div
-                  v-for="(photo, index) in photos"
-                  :key="photo.name"
-              >
-                <VDivider class="ma-3" />
-                <img
-                    :src="photo.url"
-                    :alt="photo.name"
-                    class="sm-image"
-                />
-                <p class="name">{{ photo.name }}</p>
-
-                <button @click="selectImage(photo)">(overview)</button>
-                &nbsp;
-                <button @click="removePhoto(index)">(remove)</button>
-              </div>
+            <div class="text-center">
+              <img
+                  :src="chartInfo?.image_url"
+                  :alt="chartInfo?.image_id"
+                  style="width: 40%; height: 40%;"
+              />
             </div>
+            <p class="name">{{ chartInfo?.image_id }}</p>
           </VCard>
         </VCol>
+      </VRow>
+      <VRow>
+          <div
+              class="pat_chart ml-6" style="width: 100%;"
+          >
+            <!-- 진단 -->
+            <VRow style="width: 100%;">
+              <VCard class="pat_chart2 pa-2 ma-2" style="width: 100%;">
+                <div class="letter-spacing">
+                  <img
+                      src="../assets/icons/prescription.png"
+                      class="large-icon-size"
+                  />
+                  <h2>진단</h2>
+                </div>
+                <VCardText
+                    readonly
+                    outline
+                    rows="2"
+                    auto-grow
+                    style="border: 1px solid; border-radius: 5px;"
+                    class="ml-2 mr-2 cardText"
+                >{{ chartInfo?.diagnosis }}</VCardText>
+              </VCard>
+            </VRow>
+
+            <!-- 검사 -->
+            <VRow style="width: 100%">
+              <VCard class="pat_chart2 pa-2 ma-2" style="width: 100%">
+                <div class="letter-spacing">
+                  <img
+                      src="../assets/icons/prescription.png"
+                      class="large-icon-size"
+                  />
+                  <h2>검사</h2>
+                </div>
+                <VDivider/>
+                <VCardText class="pt-2 table-container">
+                  <table class="list_table">
+                    <thead>
+                    <tr>
+                      <th>검사 ID</th>
+                      <th>검사 이름</th>
+                      <th>검사 비용</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr
+                        v-for="(item, index) in selectedExam"
+                        :key="index"
+                    >
+                      <template v-if="item">
+                        <td>{{ item.id }}</td>
+                        <td>{{ item.name }}</td>
+                        <td>{{ item.cost }}</td>
+                      </template>
+                    </tr>
+                    </tbody>
+                  </table>
+                </VCardText>
+              </VCard>
+            </VRow>
+
+            <!-- 진단 병명 -->
+            <VRow style="width: 100%">
+              <VCard class="pat_chart2 pa-2 ma-2" style="width: 100%">
+                <div class="letter-spacing">
+                  <img
+                      src="../assets/icons/prescription.png"
+                      class="large-icon-size"
+                  />
+                  <h2>진단 병명</h2>
+                </div>
+
+                <VDivider class="mb-2"/>
+              </VCard>
+            </VRow>
+
+            <!-- 의사 소견 -->
+            <VRow style="width: 100%">
+              <VCard class="pat_chart2 pa-2 ma-2" style="width: 100%">
+                <div class="letter-spacing">
+                  <img
+                      src="../assets/icons/prescription.png"
+                      class="large-icon-size"
+                  />
+                  <h2>의사 소견</h2>
+                </div>
+                <VTextarea
+                    label="의사 소견"
+                    outline
+                    rows="2"
+                    auto-grow
+                    style="margin-bottom: 5px"
+                ></VTextarea>
+              </VCard>
+            </VRow>
+
+            <!-- 치료 -->
+            <VRow style="width: 100%">
+              <VCard class="pat_chart2 pa-2 ma-2" style="width: 100%">
+                <div class="letter-spacing">
+                  <img
+                      src="../assets/icons/prescription.png"
+                      class="large-icon-size"
+                  />
+                  <h2>치료</h2>
+                </div>
+
+                <VDivider class="mb-2"/>
+
+              </VCard>
+            </VRow>
+
+            <!-- 약물 처방 -->
+            <VRow style="width: 100%">
+              <VCard class="pat_chart2 pa-2 ma-2" style="width: 100%">
+                <div class="letter-spacing">
+                  <img
+                      src="../assets/icons/prescription.png"
+                      class="large-icon-size"
+                  />
+                  <h2>처방</h2>
+                </div>
+
+                <VDivider/>
+
+                <VCardText class="pt-2 table-container">
+                  <table class="list_table">
+                    <thead>
+                    <tr>
+                      <th>약품 ID</th>
+                      <th>약품 이름</th>
+                      <th>약품 비용</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr
+                        v-for="(item, index) in selectedMedicine"
+                        :key="index"
+                    >
+                      <template v-if="item">
+                        <td>{{ item.id }}</td>
+                        <td>{{ item.name }}</td>
+                        <td>{{ item.cost }}</td>
+                      </template>
+                    </tr>
+                    </tbody>
+                  </table>
+                </VCardText>
+
+              </VCard>
+            </VRow>
+          </div>
       </VRow>
       <VRow>
         <VCol class="text-end">

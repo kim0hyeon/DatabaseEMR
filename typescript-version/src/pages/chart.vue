@@ -1,6 +1,5 @@
 <script setup lang="ts">
 // Components
-import PatientRecord from '@/exampleJson/patient_record.json'
 import MedicalRecord from '@/pages/MedicalRecord.vue'
 import SelectExam from '@/pages/selectExam.vue'
 import SelectMedicine from "@/pages/selectMedicine.vue";
@@ -12,7 +11,7 @@ import {useStore} from "vuex";
 const store = IdStore()
 
 interface Reception {
-  reception: string
+  reception_id: string
   visit_reason: string
   reception_date: string
   reception_date_only: string
@@ -20,19 +19,43 @@ interface Reception {
     patient_id: string
     patient_name: string
     patient_gender: string
-    patient_birthday: string
+  }
+}
+
+interface Chart {
+  chart_id: string
+  diagnosis: string
+  datetime: string
+  date_only: string
+  image_id: string
+  image_url: string
+  patient: {
+    patient_id: string
+    patient_name: string
+    patient_gender: string
+    patient_birth: string
     patient_residence_number: string
     patient_phone_number: string
     patient_emergency_phone_number: string
     patient_address: string
+    patient_agree_essential_term: boolean
+    patient_agree_optional_term: boolean
   }
-}
-
-interface PatientRecord {
-  id: number
-  patient_id: number
-  diagnosis_id: number
-  date: string
+  medical: {
+    medical_person_id: string
+    medical_person_name: string
+    medical_person_system_id: string
+    medical_person_gender: string
+    medical_person_birthday: string
+    medical_person_phone_number: string
+    medical_person_main_address: string
+    medical_person_license: string
+    classification_code: string
+  }
+  inspect: []
+  disease: []
+  treatment: []
+  medication: []
 }
 
 interface Photo {
@@ -75,15 +98,9 @@ function selectImage(image: Photo) {
   selectedPhoto.value = image.url
 }
 
-interface PatientRecordsData {
-  patient_records: PatientRecord[]
-}
-const patientRecord: PatientRecordsData = PatientRecord
-
-const patientInfoRec = ref<PatientRecord | undefined>(undefined)
-
 // 백엔드에서 환자 정보 받아오기
 let receptionInfo = ref<Reception>()
+let chartInfo = ref<Chart[]>([])
 
 const getReceptionInfo = (async (id: string) => {
   try {
@@ -95,41 +112,46 @@ const getReceptionInfo = (async (id: string) => {
   }
 })
 
+const getChartInfo = (async (id: string) => {
+  try {
+    const response = await axios.get(`http://yunsseong.uk:8000/api/chart?patient=${ id }`)
+    chartInfo.value = response.data
+    console.log('chart data loading success')
+
+    chartInfo.value = response.data.map((item: Chart) => {
+      return {
+        ...item,
+        date_only: item.datetime.split('T')[0]
+      };
+    });
+
+    return chartInfo.value
+  } catch (error) {
+    console.error(error)
+  }
+})
+
 watch(
     () => {
       return store.id
     },
     async (newId, oldId) => {
       console.log(`ID changed from ${oldId} to ${newId}`);
-      // getUserInfoByID()
       await getReceptionInfo(newId)
-      console.log(receptionInfo.value)
+      await getChartInfo(newId)
     },
 )
 
-
-// 진단카드, 카드추가, 카드제거
-const DiagnosisCards = reactive<number[]>([])
-function addDiagnosisCard() {
-  DiagnosisCards.push(DiagnosisCards.length + 1)
-}
-function subDiagnosisCard() {
-  DiagnosisCards.pop()
-}
-// 처방카드, 카드추가, 카드제거
-const PrescriptionCards = reactive<number[]>([])
-function addPrescriptionCard() {
-  PrescriptionCards.push(PrescriptionCards.length + 1)
-}
-function subPrescriptionCard() {
-  PrescriptionCards.pop()
-}
+let selectedChartId = ref('')
+let selectedReceptionId = ref('')
 
 // 모달창 구현
 // 진료기록 모달
 const isRecordOpen = ref(false)
-const openRecord = () => {
+const openRecord = (chart_id: string, patient_id: string) => {
   isRecordOpen.value = true
+  selectedChartId.value = chart_id
+  selectedReceptionId.value = patient_id
 }
 
 // 검사목록 모달
@@ -153,8 +175,6 @@ const selectedMedicine = computed(() => chartStore.getters.selectedMedicine)
 </script>
 
 <template>
-  <MedicalRecord v-model="isRecordOpen"/>
-  <VBtn @click="openRecord">상세정보</VBtn>
   <VRow>
     <VCol
       class="pa-0"
@@ -168,21 +188,17 @@ const selectedMedicine = computed(() => chartStore.getters.selectedMedicine)
           <h3 class="mt-4 ml-2 mb-4"><b>내원이력</b></h3>
           <div class="scroll-container history">
             <VCard class="px-1 py-1">
+              <MedicalRecord v-model="isRecordOpen" :chart_id="selectedChartId" :patient_id="selectedReceptionId"/>
               <VCard
-                v-for="patient_rec in patientInfoRec"
-                :key="patient_rec.id"
+                v-if="chartInfo"
+                v-for="item in chartInfo"
+                :key="item.chart_id"
                 class="visit-history-box ma-1"
+                @click="openRecord(item.chart_id, receptionInfo?.reception_id)"
               >
-                <h4 class="letter-spacing">진료아이디: {{ patient_rec?.id }}</h4>
-                <h4 class="letter-spacing">진료날짜: {{ patient_rec?.date }}</h4>
-                <h4 class="letter-spacing">병 아이디: {{ patient_rec?.diagnosis_id }}</h4>
-                <div style="padding: 10px">
-                  <img
-                    src="../assets/icons/record.png"
-                    class="small-icon-size"
-                  />
-                  <p>간단한 진료 목적 ex.재진찰</p>
-                </div>
+                <h4 class="letter-spacing">진료날짜: {{ item.date_only }}</h4>
+                <h4 class="letter-spacing">병 아이디: {{ item.disease }}</h4>
+                <h4 class="letter-spacing">진단: {{ item.diagnosis }}</h4>
               </VCard>
             </VCard>
           </div>
@@ -215,8 +231,8 @@ const selectedMedicine = computed(() => chartStore.getters.selectedMedicine)
                 outline
                 rows="2"
                 auto-grow
-                style="border: 1px solid; border-radius: 5px; border-color: gray;"
-                class="ml-2 mr-2"
+                style="border: 1px solid; border-radius: 5px;;"
+                class="ml-2 mr-2 cardText"
               >{{ receptionInfo?.visit_reason }}</VCardText>
             </VCard>
           </VCol>
@@ -290,22 +306,6 @@ const selectedMedicine = computed(() => chartStore.getters.selectedMedicine)
                 auto-grow
                 style="margin-bottom: 5px"
             ></VTextarea>
-            <VCard
-                v-for="(i, index) in DiagnosisCards"
-                :key="index"
-                class="add-card"
-            >추가된 진단입니다.</VCard>
-
-            <VBtn
-                @click="subDiagnosisCard"
-                class="right-btn"
-            >진단 제거</VBtn>
-
-            <SelectExam v-model="isExamListOpen"/>
-            <VBtn
-                @click="openExamList"
-                class="right-btn"
-            >진단 추가</VBtn>
           </VCard>
         </VRow>
 
@@ -362,14 +362,8 @@ const selectedMedicine = computed(() => chartStore.getters.selectedMedicine)
               />
               <h2>진단 병명</h2>
             </div>
-            <VDivider/>
 
-            <VCard
-                v-for="(i, index) in DiagnosisCards"
-                :key="index"
-                class="add-card"
-            >추가된 병명입니다.</VCard
-            >
+            <VDivider class="mb-2"/>
 
             <VBtn
                 @click="subDiagnosisCard"
@@ -384,6 +378,26 @@ const selectedMedicine = computed(() => chartStore.getters.selectedMedicine)
           </VCard>
         </VRow>
 
+        <!-- 의사 소견 -->
+        <VRow>
+          <VCard class="pat_chart2 pa-2 ma-2">
+            <div class="letter-spacing">
+              <img
+                  src="../assets/icons/prescription.png"
+                  class="large-icon-size"
+              />
+              <h2>의사 소견</h2>
+            </div>
+            <VTextarea
+                label="의사 소견"
+                outline
+                rows="2"
+                auto-grow
+                style="margin-bottom: 5px"
+            ></VTextarea>
+          </VCard>
+        </VRow>
+
         <!-- 치료 -->
         <VRow>
           <VCard class="pat_chart2 pa-2 ma-2">
@@ -394,13 +408,9 @@ const selectedMedicine = computed(() => chartStore.getters.selectedMedicine)
               />
               <h2>치료</h2>
             </div>
-            <VTextarea
-                label="치료내용"
-                outline
-                rows="2"
-                auto-grow
-                style="margin-bottom: 5px"
-            ></VTextarea>
+
+            <VDivider class="mb-2"/>
+
             <VCard
                 v-for="(i, index) in PrescriptionCards"
                 :key="index"
@@ -430,13 +440,9 @@ const selectedMedicine = computed(() => chartStore.getters.selectedMedicine)
               />
               <h2>처방</h2>
             </div>
-            <VTextarea
-                label="처방기록"
-                outline
-                rows="2"
-                auto-grow
-                style="margin-bottom: 5px"
-            ></VTextarea>
+
+            <VDivider/>
+
             <VCardText class="pt-2 table-container">
               <table class="list_table">
                 <thead>
@@ -604,5 +610,9 @@ const selectedMedicine = computed(() => chartStore.getters.selectedMedicine)
 
 .list_table th {
   font-size: 15px;
+}
+
+.cardText {
+  border-color: gray;
 }
 </style>

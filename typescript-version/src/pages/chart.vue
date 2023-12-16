@@ -11,17 +11,21 @@ import {useStore} from "vuex";
 
 const store = IdStore()
 
-interface Patient {
-  patient_id: string
-  patient_name: string
-  patient_gender: string
-  patient_birth: string
-  patient_residence_number: string
-  patient_phone_number: string
-  patient_emergency_phone_number: string
-  patient_address: string
-  patient_agree_essential_term: boolean,
-  patient_agree_optional_term: boolean
+interface Reception {
+  reception: string
+  visit_reason: string
+  reception_date: string
+  reception_date_only: string
+  patient: {
+    patient_id: string
+    patient_name: string
+    patient_gender: string
+    patient_birthday: string
+    patient_residence_number: string
+    patient_phone_number: string
+    patient_emergency_phone_number: string
+    patient_address: string
+  }
 }
 
 interface PatientRecord {
@@ -79,13 +83,13 @@ const patientRecord: PatientRecordsData = PatientRecord
 const patientInfoRec = ref<PatientRecord | undefined>(undefined)
 
 // 백엔드에서 환자 정보 받아오기
-let patientInfo = ref<Patient>()
+let receptionInfo = ref<Reception>()
 
-const getPatientInfo = (async (id: string) => {
+const getReceptionInfo = (async (id: string) => {
   try {
-    const response = await axios.get(`http://yunsseong.uk:8000/api/patients?patient_id=${ id }`)
-    patientInfo.value = response.data[0]
-    console.log('patient data loding success')
+    const response = await axios.get(`http://yunsseong.uk:8000/api/receptions?patient=${ id }`)
+    receptionInfo.value = response.data[0]
+    console.log('reception data loding success')
   } catch (error) {
     console.error(error)
   }
@@ -98,8 +102,8 @@ watch(
     async (newId, oldId) => {
       console.log(`ID changed from ${oldId} to ${newId}`);
       // getUserInfoByID()
-      await getPatientInfo(newId)
-      console.log(patientInfo.value?.patient_name)
+      await getReceptionInfo(newId)
+      console.log(receptionInfo.value)
     },
 )
 
@@ -158,7 +162,7 @@ const selectedMedicine = computed(() => chartStore.getters.selectedMedicine)
     >
       <div class="pat_list">
         <VCard class="pa-4">
-          <h2 class="letter-spacing">{{ patientInfo?.patient_name??'이름' }}</h2>
+          <h2 class="letter-spacing">{{ receptionInfo?.patient.patient_name??'이름' }}</h2>
           <VDivider/>
 
           <h3 class="mt-4 ml-2 mb-4"><b>내원이력</b></h3>
@@ -206,14 +210,14 @@ const selectedMedicine = computed(() => chartStore.getters.selectedMedicine)
                 />
                 <h2>방문사유</h2>
               </div>
-              <VTextarea
+              <VCardText
                 readonly
                 outline
                 rows="2"
                 auto-grow
-                style="margin-bottom: 5px"
-                value="종강을 못참는 병"
-              ></VTextarea>
+                style="border: 1px solid; border-radius: 5px; border-color: gray;"
+                class="ml-2 mr-2"
+              >{{ receptionInfo?.visit_reason }}</VCardText>
             </VCard>
           </VCol>
           <VCol

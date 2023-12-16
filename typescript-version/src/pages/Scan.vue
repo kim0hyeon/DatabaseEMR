@@ -67,6 +67,7 @@ const stopScanning = () => {
   cancelAnimationFrame(animationFrameId!)
   animationFrameId = null
   showVideo.value = false
+  closeModal()
 }
 
 function tick() {

@@ -4,6 +4,8 @@ import axios from 'axios'
 import { Ref } from 'vue'
 import { useRoute } from 'vue-router'
 import PatientData from './PatientData.json'
+import BloodTestStatistics from '@/views/pages/statistics/BloodTestStatistics.vue'
+import InBodyTestStatistics from '@/views/pages/statistics/InBodyTestStatistics.vue'
 
 const route = useRoute()
 
@@ -244,22 +246,13 @@ const tabs = [
       class="mt-5 disable-tab-transition"
     >
       <!-- 운동능력 -->
-      <VWindowItem value="inbody"> </VWindowItem>
+      <VWindowItem value="inbody">
+        <BloodTestStatistics />
+      </VWindowItem>
 
       <!-- 검사 -->
       <VWindowItem value="blood">
-        <VCard
-          class="card-style"
-          title="혈액검사"
-        >
-          <BloodTest />
-        </VCard>
-        <VCard
-          class="card-style"
-          title="혈압검사"
-        >
-          <BloodPressureTest />
-        </VCard>
+        <InBodyTestStatistics />
       </VWindowItem>
     </VWindow>
   </div>

@@ -6,17 +6,17 @@ export default defineComponent({
   data() {
     return {
       dialog: false,
-      Hemoglobin: 0,
+      hemoglobin: 0,
       fasting_blood_sugar: 0,
       total_cholesterol: 0,
-      HDL_cholesterol: 0,
-      triglyceride: 0,
-      LDL_cholesterol: 0,
+      hdl_cholesterol: 0,
+      triglycerides: 0,
+      ldl_cholesterol: 0,
       serum_creatinine: 0,
-      e_GFR: 0,
-      SGOT: 0,
-      SGPT: 0,
-      v_GTP: 0,
+      glomerular_filtration_rate: 0,
+      ast: 0,
+      alt: 0,
+      gamma_gt: 0,
     }
   },
   methods: {
@@ -38,15 +38,15 @@ export default defineComponent({
     },
   },
   setup() {
-    const chart1 = ref<HTMLCanvasElement | null>(null)
-    const chart2 = ref<HTMLCanvasElement | null>(null)
-    const chart3 = ref<HTMLCanvasElement | null>(null)
-    const chart4 = ref<HTMLCanvasElement | null>(null)
-    const chart5 = ref<HTMLCanvasElement | null>(null)
+    const anemia_chart = ref<HTMLCanvasElement | null>(null)
+    const diabetes_chart = ref<HTMLCanvasElement | null>(null)
+    const lipidemia_chart = ref<HTMLCanvasElement | null>(null)
+    const kidney_chart = ref<HTMLCanvasElement | null>(null)
+    const liver_chart = ref<HTMLCanvasElement | null>(null)
 
     onMounted(() => {
-      if (chart1.value) {
-        const ctx = chart1.value.getContext('2d')
+      if (anemia_chart.value) {
+        const ctx = anemia_chart.value.getContext('2d')
         if (ctx) {
           Chart.register(...registerables)
 
@@ -81,8 +81,8 @@ export default defineComponent({
           })
         }
       }
-      if (chart2.value) {
-        const ctx = chart2.value.getContext('2d')
+      if (diabetes_chart.value) {
+        const ctx = diabetes_chart.value.getContext('2d')
         if (ctx) {
           Chart.register(...registerables)
 
@@ -118,8 +118,8 @@ export default defineComponent({
         }
       }
 
-      if (chart3.value) {
-        const ctx = chart3.value.getContext('2d')
+      if (lipidemia_chart.value) {
+        const ctx = lipidemia_chart.value.getContext('2d')
         if (ctx) {
           Chart.register(...registerables)
 
@@ -155,8 +155,8 @@ export default defineComponent({
         }
       }
 
-      if (chart4.value) {
-        const ctx = chart4.value.getContext('2d')
+      if (kidney_chart.value) {
+        const ctx = kidney_chart.value.getContext('2d')
         if (ctx) {
           Chart.register(...registerables)
 
@@ -192,8 +192,8 @@ export default defineComponent({
         }
       }
 
-      if (chart5.value) {
-        const ctx = chart5.value.getContext('2d')
+      if (liver_chart.value) {
+        const ctx = liver_chart.value.getContext('2d')
         if (ctx) {
           Chart.register(...registerables)
 
@@ -231,11 +231,11 @@ export default defineComponent({
     })
 
     return {
-      chart1,
-      chart2,
-      chart3,
-      chart4,
-      chart5,
+      anemia_chart,
+      diabetes_chart,
+      lipidemia_chart,
+      kidney_chart,
+      liver_chart,
     }
   },
 })
@@ -259,7 +259,7 @@ export default defineComponent({
         <VCardTitle>혈액검사 측정값 입력</VCardTitle>
         <VCardContent>
           <VTextField
-            v-model="Hemoglobin"
+            v-model="hemoglobin"
             label="혈색소"
             type="number"
             class="text-field"
@@ -277,19 +277,19 @@ export default defineComponent({
             class="text-field"
           ></VTextField>
           <VTextField
-            v-model="HDL_cholesterol"
+            v-model="hdl_cholesterol"
             label="HDL-콜레스테롤"
             type="number"
             class="text-field"
           ></VTextField>
           <VTextField
-            v-model="triglyceride"
+            v-model="triglycerides"
             label="중성지방"
             type="number"
             class="text-field"
           ></VTextField>
           <VTextField
-            v-model="LDL_cholesterol"
+            v-model="ldl_cholesterol"
             label="LDL-콜레스테롤"
             type="number"
             class="text-field"
@@ -301,25 +301,25 @@ export default defineComponent({
             class="text-field"
           ></VTextField>
           <VTextField
-            v-model="e_GFR"
+            v-model="glomerular_filtration_rate"
             label="신사구체여과율"
             type="number"
             class="text-field"
           ></VTextField>
           <VTextField
-            v-model="SGOT"
+            v-model="ast"
             label="AST"
             type="number"
             class="text-field"
           ></VTextField>
           <VTextField
-            v-model="SGPT"
+            v-model="alt"
             label="ALT"
             type="number"
             class="text-field"
           ></VTextField>
           <VTextField
-            v-model="v_GTP"
+            v-model="gamma_gt"
             label="감마지티피"
             type="number"
             class="text-field"
@@ -364,7 +364,7 @@ export default defineComponent({
             <th>빈혈</th>
             <td>
               <canvas
-                ref="chart1"
+                ref="anemia_chart"
                 height="45"
               ></canvas>
             </td>
@@ -373,7 +373,7 @@ export default defineComponent({
             <th>당뇨병</th>
             <td>
               <canvas
-                ref="chart2"
+                ref="diabetes_chart"
                 height="45"
               ></canvas>
             </td>
@@ -382,7 +382,7 @@ export default defineComponent({
             <th>이상지질혈증</th>
             <td>
               <canvas
-                ref="chart3"
+                ref="lipidemia_chart"
                 height="120"
               ></canvas>
             </td>
@@ -391,7 +391,7 @@ export default defineComponent({
             <th>신장질환</th>
             <td>
               <canvas
-                ref="chart4"
+                ref="kidney_chart"
                 height="70"
               ></canvas>
             </td>
@@ -400,7 +400,7 @@ export default defineComponent({
             <th>간장질환</th>
             <td>
               <canvas
-                ref="chart5"
+                ref="liver_chart"
                 height="100"
               ></canvas>
             </td>

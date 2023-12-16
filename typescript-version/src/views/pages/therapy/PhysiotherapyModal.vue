@@ -1,6 +1,4 @@
 <script setup lang='ts'>
-// Components 일단 환자 정보를 불러와야 하기 때문에 사용함
-import { IdStore } from '@/store/index'
 import { reactive } from 'vue'
 import axios from 'axios'
 import { useRoute } from 'vue-router'

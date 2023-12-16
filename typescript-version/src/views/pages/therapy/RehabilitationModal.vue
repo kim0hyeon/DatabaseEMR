@@ -2,34 +2,36 @@
 // Components 일단 환자 정보를 불러와야 하기 때문에 사용함
 import { IdStore } from '@/store/index'
 import { reactive } from 'vue'
-import PatientData from '../../../exampleJson/patient.json'
+import axios from 'axios'
+import { useRoute } from 'vue-router'
 
-// 사용자 타입 예시 (백엔드에 따라 수정해야 함)
+const route = useRoute()
+
+// 백엔드에서 환자 정보 받아오기
 interface Patient {
-  id: number
-  name: string
-  age: number
-  gender: string
-  diagnosis: string
+  patient_id: string
+  patient_name: string
+  patient_gender: string
+  patient_birth: string
+  patient_residence_number: string
+  patient_phone_number: string
+  patient_emergency_phone_number: string
+  patient_address: string
+  patient_agree_essential_term: boolean
+  patient_agree_optional_term: boolean
 }
 
-const patients = reactive<Patient[]>(PatientData.patients)
-// console.log(patients);
-// console.log(IdStore().id);
-// console.log(patients[IdStore().id]);
+let patientInformation = ref<Patient[]>([])
 
-let patientId: { id: number; name: string; age: number; gender: string; diagnosis: string } | undefined
-patientId = patients[0] // 변수 선언
-
-function clickPatient(event: MouseEvent) {
-  patientId = patients.find(patient => patient.id === IdStore().id)
-
-  if (patientId == null) {
-    patientId = patients.find(patient => patient.id === 1)
-  } else {
-    // console.log(patientId);
+onMounted(async () => {
+  try {
+    const response = await axios.get('http://yunsseong.uk:8000/api/patients/')
+    patientInformation.value = response.data
+    console.log('patient data loding success')
+  } catch (error) {
+    console.error(error)
   }
-}
+})
 
 const Cards = reactive<number[]>([])
 function addCard() {
@@ -50,14 +52,14 @@ function subCard() {
             <VCard class="px-1 py-1">
               <h2 class="letter-spacing">내원이력</h2>
               <VCard class="visit-history-box">
-                <h4 class="letter-spacing">{{ patientId.name }}</h4>
+                <h4 class="letter-spacing"></h4>
                 <!--클릭해도 여기가 안바껴 미치겠음 -->
                 <div style="padding: 10px">
                   <img
                     src="../../../assets/icons/calendar.png"
                     class="small-icon-size"
                   />
-                  <p>현재 날짜{{ patientId.age }}</p>
+                  <p></p>
                 </div>
                 <div style="padding: 10px">
                   <img
@@ -68,7 +70,7 @@ function subCard() {
                 </div>
               </VCard>
               <VCard>
-                <h4 class="letter-spacing">{{ patients[IdStore().id].name }}</h4>
+                <h4 class="letter-spacing"></h4>
                 <div style="padding: 10px">
                   <img
                     src="../../../assets/icons/calendar.png"
@@ -81,7 +83,7 @@ function subCard() {
                     src="../../../assets/icons/prescription.png"
                     class="small-icon-size"
                   />
-                  <p>과거 물리치료 내용</p>
+                  <p>과거 재활치료 내용</p>
                 </div>
                 <div style="padding: 10px">
                   <img
@@ -117,7 +119,7 @@ function subCard() {
                       src="../../../assets/icons/picture.png"
                       class="large-icon-size"
                     />
-                    <h2>사진</h2>
+                    <h2>사진,영상</h2>
                   </div>
                   <VFileInput></VFileInput>
                   <!-- <div>
@@ -133,35 +135,33 @@ function subCard() {
                   src="../../../assets/icons/prescription.png"
                   class="large-icon-size"
                 />
-                <h2>물리치료</h2>
+                <h2>재활치료</h2>
               </div>
-              <div>
-                <!-- 버튼 -->
-                <VRow>
-                  <VCol>
-                    <VBtn
-                      @click="addCard"
-                      style="margin-bottom: 10px"
-                      >치료 추가</VBtn
-                    >
-                  </VCol>
-                  <VCol>
-                    <VBtn
-                      @click="subCard"
-                      style="margin-bottom: 10px"
-                      >치료 삭제</VBtn
-                    >
-                  </VCol>
-                </VRow>
-                <VCard
-                  v-for="(i, index) in Cards"
-                  :key="index"
-                  class="therapy-card"
-                >
-                  <VCardTitle>카드제목 {{ index }}</VCardTitle>
-                  <VCardText>카드의 내용을 작성하세요.</VCardText>
-                </VCard>
-              </div>
+              <!-- 버튼 -->
+              <VRow>
+                <VCol>
+                  <VBtn
+                    @click="addCard"
+                    style="margin-bottom: 10px"
+                    >치료 추가</VBtn
+                  >
+                </VCol>
+                <VCol>
+                  <VBtn
+                    @click="subCard"
+                    style="margin-bottom: 10px"
+                    >치료 삭제</VBtn
+                  >
+                </VCol>
+              </VRow>
+              <VCard
+                v-for="(i, index) in Cards"
+                :key="index"
+                class="therapy-card"
+              >
+                <VCardTitle>카드제목 {{ index }}</VCardTitle>
+                <VCardText>카드의 내용을 작성하세요.</VCardText>
+              </VCard>
               <VTextarea
                 label="치료 후기 입력"
                 outline
@@ -179,6 +179,11 @@ function subCard() {
 </template>
 <style>
 @use '@core/scss/pages/page-auth.scss';
+.text-box {
+  border: 1px solid #ccc;
+  padding: 10px;
+  min-height: 100px;
+}
 
 .visit-history-box {
   margin-block-end: 10px;
@@ -209,6 +214,7 @@ function subCard() {
 }
 
 .therapy-card {
-  margin-block: 10px;
+  margin-top: 10px;
+  margin-bottom: 10px;
 }
 </style>

@@ -1,11 +1,11 @@
 <script lang="ts" setup>
 // 모달창 구현
 import { IdStore } from '@/store/index'
-import { token } from '@/token'
 import axios from 'axios'
 import { ref } from 'vue'
 // 사용자 타입 예시 (백엔드에 따라 수정해야 함)
 const store = IdStore()
+const token = sessionStorage.getItem('token')
 
 interface Reception {
   reception: string
@@ -78,7 +78,7 @@ let inspectionData = ref<Inspect[]>([])
 const getReceptionInfo = async () => {
   try {
     const response = await axios.get(`http://yunsseong.uk:8000/api/receptions?id=${props.reception_id}`, {
-      headers: { Authorization: `Token ${token.value}` },
+      headers: { Authorization: `Token ${token}` },
     })
     receptionInfo.value = response.data[0]
     console.log('reception data loding success')
@@ -89,8 +89,8 @@ const getReceptionInfo = async () => {
 
 const getChartInfo = async () => {
   try {
-    const response = await axios.get(`http://yunsseong.uk:8000/api/chart?chart_id=${props.chart_id}`,
-      { headers: { Authorization: `Token ${token.value}` },
+    const response = await axios.get(`http://yunsseong.uk:8000/api/chart?chart_id=${props.chart_id}`, {
+      headers: { Authorization: `Token ${token}` },
     })
     chartInfo.value = response.data[0]
     console.log('chart data loading success')

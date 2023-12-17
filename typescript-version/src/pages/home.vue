@@ -12,6 +12,7 @@ const totalProfit = {
   change: 42,
   subtitle: 'Weekly Project',
 }
+const token = sessionStorage.getItem('token')
 
 const newProject = {
   title: 'New Project',

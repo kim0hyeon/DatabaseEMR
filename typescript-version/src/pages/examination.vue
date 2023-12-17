@@ -1,12 +1,12 @@
 <script lang="ts" setup>
-import MedicalImagingExamination from '@/views/pages/account-settings/MedicalImagingExamination.vue'
-import InbodyExamination from '@/views/pages/account-settings/InbodyExamination.vue'
-import BloodExamination from '@/views/pages/account-settings/BloodExamination.vue'
 import Scan from '@/pages/Scan.vue'
+import BloodExamination from '@/views/pages/account-settings/BloodExamination.vue'
+import InbodyExamination from '@/views/pages/account-settings/InbodyExamination.vue'
+import MedicalImagingExamination from '@/views/pages/account-settings/MedicalImagingExamination.vue'
 import { useRoute } from 'vue-router'
-import { is } from 'quasar'
 
 const route = useRoute()
+const token = sessionStorage.getItem('token')
 
 const activeTab = ref(route.params.tab)
 

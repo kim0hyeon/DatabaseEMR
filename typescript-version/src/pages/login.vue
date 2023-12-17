@@ -65,7 +65,7 @@ const handleLogin = async () => {
     // const userInfo = await axios.get('http://yunsseong.uk:8001/api/medical?user={loginForm.email}')
     sessionStorage.setItem('userInfo', JSON.stringify(userInfo))
     console.log('로그인 성공! 토큰:', token)
-    router.push('/home')
+    router.push('home')
     // 로그인 성공 후의 추가 로직을 수행하면 됩니다.
   } catch (error) {
     // 로그인 실패 시의 처리

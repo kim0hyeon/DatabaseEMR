@@ -2,6 +2,7 @@
 import Schedule from '@/exampleJson/Schedule.json'
 import { Ref } from 'vue'
 import PatientSearch from './PatientSearch.vue'
+const token = sessionStorage.getItem('token')
 
 // json 양식
 interface Event {

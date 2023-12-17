@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import Inspection from '@/exampleJson/inspection.json'
 import { IdStore } from '@/store'
-import { token } from '@/token'
 import axios from 'axios'
 import { useRoute } from 'vue-router'
 const store = IdStore()
+const token = sessionStorage.getItem('token')
 
 interface Chart {
   chart_id: string
@@ -36,7 +36,7 @@ let chartData = ref<Chart>()
 const loadPatientChart = async () => {
   try {
     const response = await axios.get(`http://yunsseong.uk:8000/api/chart?patient=${patient_id.value}`, {
-      headers: { Authorization: `Token ${token.value}` },
+      headers: { Authorization: `Token ${token}` },
     })
     chartData.value = response.data
     console.log('load', chartData.value)
@@ -51,7 +51,7 @@ let inspectionData = ref<Inspection[]>([])
 onMounted(async () => {
   try {
     const response = await axios.get(`http://yunsseong.uk:8000/api/inspect_type/`, {
-      headers: { Authorization: `Token ${token.value}` },
+      headers: { Authorization: `Token ${token}` },
     })
     inspectionData.value = response.data
     console.log('load', inspectionData.value)

@@ -10,7 +10,6 @@ import Footer from '@/layouts/components/Footer.vue'
 import NavbarThemeSwitcher from '@/layouts/components/NavbarThemeSwitcher.vue'
 import UserProfile from '@/layouts/components/UserProfile.vue'
 import { IdStore } from '@/store'
-import { token } from '@/token'
 import axios from 'axios'
 import { watch } from 'vue'
 import { useRoute } from 'vue-router'
@@ -23,6 +22,7 @@ interface PatientList {
     patient_gender: string
   }
 }
+const token = sessionStorage.getItem('token')
 
 const store = IdStore()
 // var patient = PatientData.patients
@@ -40,7 +40,7 @@ onMounted(async () => {
   try {
     // Axios를 사용하여 백엔드로 GET 요청 보내기
     const response = await axios.get('http://yunsseong.uk:8000/api/list/', {
-      headers: { Authorization: `Token ${token.value}` },
+      headers: { Authorization: `Token ${token}` },
     })
 
     // 받아온 데이터를 responseData에 저장

@@ -7,7 +7,7 @@ import LoginView from '../pages/login.vue';
 const basicRoute = ref('');
 // const loginStore = useUserStore(); 왠지 모르겠는데 이거하면 주석없애면 로드 안됌 
 basicRoute.value = '/login'
-if(sessionStorage.getItem('token.ts')){
+if(sessionStorage.getItem('token')){
   basicRoute.value = '/home'
 }
 // console.log(basicRoute.value)

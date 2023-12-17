@@ -9,6 +9,7 @@ interface Photo {
   name: string
 }
 const clickedSendFile = () => {
+  console.log(photos.value)
   photos.value = []
   alert('CT 저장완료')
 }

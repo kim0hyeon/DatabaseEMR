@@ -1,10 +1,10 @@
 <script setup lang='ts'>
-import { reactive } from 'vue'
 import axios from 'axios'
+import { reactive } from 'vue'
 import { useRoute } from 'vue-router'
 
 const route = useRoute()
-
+const token = sessionStorage.getItem('token')
 // 백엔드에서 환자 정보 받아오기
 interface Patient {
   patient_id: string
@@ -23,7 +23,9 @@ let patientInformation = ref<Patient[]>([])
 
 onMounted(async () => {
   try {
-    const response = await axios.get('http://yunsseong.uk:8000/api/patients/')
+    const response = await axios.get('http://yunsseong.uk:8000/api/patients/', {
+      headers: { Authorization: `Token ${token}` },
+    })
     patientInformation.value = response.data
     console.log('patient data loding success')
   } catch (error) {

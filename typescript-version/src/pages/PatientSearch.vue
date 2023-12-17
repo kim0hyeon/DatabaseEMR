@@ -1,8 +1,6 @@
 <script setup lang="ts">
-import PatientData from './PatientData.json'
-import { is } from 'quasar'
-import { Ref } from 'vue'
 import axios from 'axios'
+import { Ref } from 'vue'
 // json 양식
 interface Patient {
   patient_id: string
@@ -14,6 +12,7 @@ interface Patient {
   patient_emergency_phone_number: string
   patient_address: string
 }
+const token = sessionStorage.getItem('token')
 
 interface Event {
   date: Date
@@ -47,7 +46,9 @@ const searchCondition: Ref<string> = ref('선택 안함')
 // 백엔드에서 환자 정보 받아오기
 onMounted(async () => {
   try {
-    const response = await axios.get('http://yunsseong.uk:8000/api/patients/')
+    const response = await axios.get('http://yunsseong.uk:8000/api/patients/', {
+      headers: { Authorization: `Token ${token}` },
+    })
     patientInformation.value = response.data
     console.log('success')
   } catch (error) {
@@ -316,6 +317,6 @@ const addEvent = (patient: Patient | null) => {
 
 /* 검색어 자동완성 창 폭 조절 */
 #autoSearch {
-  width: 550px;
+  inline-size: 550px;
 }
 </style>

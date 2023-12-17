@@ -2,9 +2,9 @@
 import PhysiotherapyModal from '@/views/pages/therapy/PhysiotherapyModal.vue'
 import RehabilitationModal from '@/views/pages/therapy/RehabilitationModal.vue'
 // Components 일단 환자 정보를 불러와야 하기 때문에 사용함
-import { reactive, ref } from 'vue'
-import { useRoute } from 'vue-router'
 import axios from 'axios'
+import { ref } from 'vue'
+import { useRoute } from 'vue-router'
 
 const route = useRoute()
 
@@ -28,13 +28,15 @@ interface Patient {
   patient_agree_essential_term: boolean
   patient_agree_optional_term: boolean
 }
-
+const token = sessionStorage.getItem('token')
 // 백엔드에서 환자 정보 받아오기
 let patientInformation = ref<Patient[]>([])
 
 onMounted(async () => {
   try {
-    const response = await axios.get('http://yunsseong.uk:8000/api/patients/')
+    const response = await axios.get('http://yunsseong.uk:8000/api/patients/', {
+      headers: { Authorization: `Token ${token}` },
+    })
     patientInformation.value = response.data
     console.log('patient data loding success')
   } catch (error) {

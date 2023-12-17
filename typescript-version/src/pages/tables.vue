@@ -7,6 +7,7 @@ import { ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import patientData from '../exampleJson/patient.json'
 const store = IdStore()
+const token = sessionStorage.getItem('token')
 
 // 결제창 아직 안됌
 const requestPay = () => {

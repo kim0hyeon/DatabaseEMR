@@ -1,5 +1,4 @@
 <script lang="ts" setup>
-import { token } from '@/token'
 import NewPatientRegistration from '@/views/pages/account-settings/NewPatientRegistration.vue'
 import GenerateQR from "@/pages/generateQR.vue";
 import axios from 'axios'
@@ -8,7 +7,7 @@ import { Ref } from 'vue'
 import { useRoute } from 'vue-router'
 
 const route = useRoute()
-
+const token = sessionStorage.getItem('token')
 // 인터페이스
 interface Patient {
   patient_id: string
@@ -64,7 +63,7 @@ let patientInformation = ref<Patient[]>([])
 onMounted(async () => {
   try {
     const response = await axios.get('http://yunsseong.uk:8000/api/patients/', {
-      headers: { Authorization: `Token ${token.value}` },
+      headers: { Authorization: `Token ${token}` },
     })
     patientInformation.value = response.data
     console.log('patient data loding success')
@@ -82,7 +81,7 @@ const loadReceptionData = async () => {
     console.log(selectedPatient.value?.patient_id)
     const response = await axios.get(
       `http://yunsseong.uk:8000/api/receptions?patient=${selectedPatient.value?.patient_id}`,
-      { headers: { Authorization: `Token ${token.value}` } },
+      { headers: { Authorization: `Token ${token}` } },
     )
     receptionInformation.value = response.data
     console.log('reception_data loading success')
@@ -108,7 +107,7 @@ const addList = async () => {
     }
 
     const response = await axios.post(`http://yunsseong.uk:8000/api/list/`, data, {
-      headers: { Authorization: `Token ${token.value}` },
+      headers: { Authorization: `Token ${token}` },
     })
   } catch (error) {
     console.error(error)
@@ -128,7 +127,7 @@ const submitForm = async () => {
 
     console.log(data)
     const response = await axios.post(`http://yunsseong.uk:8000/api/receptions/`, data, {
-      headers: { Authorization: `Token ${token.value}` },
+      headers: { Authorization: `Token ${token}` },
     })
     console.log('Submit success')
 

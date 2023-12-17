@@ -1,53 +1,43 @@
 <template>
   <div class="auth-wrapper d-flex">
     <VRow>
-      <VCol cols="12" md="4">
+      <VCol
+        cols="12"
+        md="4"
+      >
         <VCard class="auth-card">
           <form
-              class="user_form"
-              @submit.prevent="handleSubmit"
+            class="user_form"
+            @submit.prevent="handleSubmit"
           >
             <h2>새 사용자 생성</h2>
+
             <div>
               <VTextField
-                  type="text"
-                  label="userlabel"
-                  v-model="user.id"
+                type="text"
+                label="userName"
+                v-model="user.name"
               />
             </div>
             <div>
               <VTextField
-                  type="text"
-                  label="userName"
-                  v-model="user.name"
+                type="email"
+                label="userEmail"
+                v-model="user.email"
               />
             </div>
             <div>
               <VTextField
-                  type="email"
-                  label="userEmail"
-                  v-model="user.email"
+                type="password"
+                label="userPassword"
+                v-model="user.password"
               />
             </div>
             <div>
               <VTextField
-                  type="password"
-                  label="userPassword"
-                  v-model="user.password"
-              />
-            </div>
-            <div>
-              <VTextField
-                  type="text"
-                  label="userToken"
-                  v-model="user.token"
-              />
-            </div>
-            <div>
-              <VTextField
-                  type="text"
-                  label="userJob"
-                  v-model="user.job"
+                type="text"
+                label="userJob"
+                v-model="user.job"
               />
             </div>
             <div>
@@ -57,52 +47,48 @@
         </VCard>
       </VCol>
 
-      <VCol cols="12" md="8">
+      <VCol
+        cols="12"
+        md="8"
+      >
         <!-- USER LIST  -->
         <VCard class="user_list scroll-container">
           <VCardItem class="justify-center">
             <VCardTitle class="font-weight-semibold text-2xl text-uppercase"> USER LIST </VCardTitle>
           </VCardItem>
 
-          <VDivider/>
+          <VDivider />
 
           <VCardText>
             <table class="list_table">
               <thead>
-              <tr>
-                <th>ID</th>
-                <th>Name</th>
-                <th>Email</th>
-                <th>Pw</th>
-                <th>Job</th>
-              </tr>
+                <tr>
+                  <th>Name</th>
+                  <th>Email</th>
+                  <th>Pw</th>
+                  <th>Job</th>
+                </tr>
               </thead>
               <tbody>
-              <tr
+                <tr
                   v-for="item in userInfo1"
                   :key="item.id"
-              >
-                <td>{{ item.id }}</td>
-                <td>{{ item.name }}</td>
-                <td>{{ item.email }}</td>
-                <td>{{ item.password }}</td>
-                <td>{{ item.job }}</td>
-                <td>
-                  <VRow class="mb-4">
-                    <!-- 수정 버튼 -->
-                    <VBtn
-                        class="edit"
-                        @click="editUser(item)"
-                    >수정</VBtn>
-
-                    <!-- 삭제 버튼 -->
-                    <VBtn
+                >
+                  <td>{{ item.name }}</td>
+                  <td>{{ item.email }}</td>
+                  <td>{{ item.password }}</td>
+                  <td>{{ item.job }}</td>
+                  <td>
+                    <VRow class="mb-4">
+                      <!-- 삭제 버튼 -->
+                      <VBtn
                         class="delete"
                         @click="deleteUser(item)"
-                    >삭제</VBtn>
-                  </VRow>
-                </td>
-              </tr>
+                        >삭제</VBtn
+                      >
+                    </VRow>
+                  </td>
+                </tr>
               </tbody>
             </table>
           </VCardText>
@@ -114,14 +100,13 @@
 
 <script lang="ts" setup>
 import userInfo from '@/exampleJson/userInfo.json'
-import { reactive } from 'vue'
+import { reactive, ref } from 'vue'
 let userInfo1 = userInfo
 interface User {
   id: string
   name: string
   email: string
   password: string
-  token: string
   job: string
 }
 
@@ -131,9 +116,26 @@ const user = reactive<User>({
   name: '',
   email: '',
   password: '',
-  token: '',
   job: '',
 })
+
+const userList = ref([])
+
+// onMounted(async () => {
+//   try {
+//     const token = sessionStorage.getItem('token')
+//     const config = {
+//       headers: {
+//         Authorization: `Bearer ${token}`,
+//       },
+//     }
+
+//     const response = await axios.get('http://yunsseong.uk:8000/api/user-list', config)
+//     userList.value = response.data
+//   } catch (error) {
+//     console.error('Error fetching user list:', error.message)
+//   }
+// })
 
 // 폼 제출 이벤트를 처리하는 함수입니다.
 const handleSubmit = (): void => {
@@ -147,7 +149,6 @@ const handleSubmit = (): void => {
   user.name = ''
   user.email = ''
   user.password = ''
-  user.token = ''
   user.job = ''
 }
 const addUser = item => {

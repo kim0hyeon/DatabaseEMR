@@ -1,5 +1,4 @@
 <script lang="ts" setup>
-import { token } from '@/token'
 import axios from 'axios'
 import { useStore } from 'vuex'
 
@@ -8,6 +7,7 @@ interface Inspection {
   inspect_type: string
   cost: number
 }
+const token = sessionStorage.getItem('token')
 
 const inspectionList = ref<Inspection[]>([])
 const selectedInspection = ref([])
@@ -15,7 +15,7 @@ const selectedInspection = ref([])
 onMounted(async () => {
   try {
     const response = await axios.get(`http://yunsseong.uk:8000/api/inspect_type`, {
-      headers: { Authorization: `Token ${token.value}` },
+      headers: { Authorization: `Token ${token}` },
     })
     inspectionList.value = response.data
     console.log('load inspectionList success')

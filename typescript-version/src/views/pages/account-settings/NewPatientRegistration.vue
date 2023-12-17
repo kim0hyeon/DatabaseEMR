@@ -1,7 +1,6 @@
 <script lang="ts" setup>
 import axios from 'axios'
-import {token} from "@/token";
-
+const token = sessionStorage.getItem('token')
 const patientData = {
   patient_name: '',
   patient_gender: '선택',
@@ -11,7 +10,7 @@ const patientData = {
   patient_emergency_phone_number: '',
   patient_address: '',
   patient_agree_essential_term: false,
-  patient_agree_optional_term: false
+  patient_agree_optional_term: false,
 }
 
 const patientDataLocal = ref(structuredClone(patientData))
@@ -37,7 +36,7 @@ const checkAll = () => {
 
 // 모달창 구현
 const props = defineProps({
-  modelValue: Boolean
+  modelValue: Boolean,
 })
 
 const emit = defineEmits(['update:modelValue'])
@@ -47,15 +46,22 @@ const closeModal = () => {
   isOpen.value = false
 }
 
-watch(() => props.modelValue, (newVal) => {
-  isOpen.value = newVal
-}, { immediate: true })
+watch(
+  () => props.modelValue,
+  newVal => {
+    isOpen.value = newVal
+  },
+  { immediate: true },
+)
 
-watch(() => isOpen.value, (newVal) => {
-  if (props.modelValue !== newVal) {
-    emit('update:modelValue', newVal)
-  }
-})
+watch(
+  () => isOpen.value,
+  newVal => {
+    if (props.modelValue !== newVal) {
+      emit('update:modelValue', newVal)
+    }
+  },
+)
 
 // 백엔드로 환자 정보 전송
 const submitForm = async () => {
@@ -69,24 +75,27 @@ const submitForm = async () => {
       patient_emergency_phone_number: patientDataLocal.value.patient_emergency_phone_number,
       patient_address: patientDataLocal.value.patient_address,
       patient_agree_essential_term: patientDataLocal.value.patient_agree_essential_term,
-      patient_agree_optional_term: patientDataLocal.value.patient_agree_optional_term
+      patient_agree_optional_term: patientDataLocal.value.patient_agree_optional_term,
     }
-
 
     console.log('submit patient data')
     console.log(data)
-    const response = await axios.post('http://yunsseong.uk:8000/api/patients/', data,
-        { headers: { Authorization: `Token ${token.value}` }});
+    const response = await axios.post('http://yunsseong.uk:8000/api/patients/', data, {
+      headers: { Authorization: `Token ${token}` },
+    })
     console.log('submit success')
     closeModal()
   } catch (error) {
-    console.error(error);
+    console.error(error)
   }
 }
 </script>
 
 <template>
-  <v-dialog v-model="isOpen" max-width="1200px">
+  <v-dialog
+    v-model="isOpen"
+    max-width="1200px"
+  >
     <v-card>
       <v-card-title class="headline">신규 환자 등록</v-card-title>
       <v-card-text>
@@ -95,7 +104,6 @@ const submitForm = async () => {
             <!-- 왼쪽 화면 내용 -->
             <v-col cols="6">
               <VCard title="환자 신상 정보">
-
                 <VDivider />
 
                 <VCardText>
@@ -141,7 +149,8 @@ const submitForm = async () => {
                       <!-- 성별 -->
                       <VCol
                         md="4"
-                        cols="12">
+                        cols="12"
+                      >
                         <VSelect
                           v-model="patientDataLocal.patient_gender"
                           label="성별"
@@ -174,9 +183,7 @@ const submitForm = async () => {
                       </VCol>
 
                       <!-- 주소 -->
-                      <VCol
-                        cols="12"
-                      >
+                      <VCol cols="12">
                         <VTextField
                           v-model="patientDataLocal.patient_address"
                           label="주소"
@@ -223,8 +230,10 @@ const submitForm = async () => {
               </VRow>
 
               <!-- 접수 및 취소 버튼 -->
-              <VRow justify="end" align="end">
-
+              <VRow
+                justify="end"
+                align="end"
+              >
                 <VCol cols="auto">
                   <v-btn @click="submitForm">등록</v-btn>
                 </VCol>
@@ -232,7 +241,6 @@ const submitForm = async () => {
                 <VCol cols="auto">
                   <v-btn @click="closeModal">취소</v-btn>
                 </VCol>
-
               </VRow>
             </v-col>
           </v-row>

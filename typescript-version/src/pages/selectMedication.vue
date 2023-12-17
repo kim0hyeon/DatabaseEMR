@@ -65,22 +65,33 @@ watch(
 <template>
   <VDialog
     v-model="isOpen"
-    style="max-width: 600px"
+    style="max-width: 800px"
   >
-    <VCard style="max-width: 600px">
+    <VCard style="max-width: 800px">
       <VCardTitle>검사 항목</VCardTitle>
 
       <VDivider />
 
       <VRow class="ma-3">
         <VCol cols="12">
-          <VCheckbox
-            v-for="(item, index) in medicationList"
-            :key="index"
-            :label="item.medication_name"
-            :value="item"
-            v-model="selectedMedication"
-          ></VCheckbox>
+          <v-data-table
+              :headers="[
+                { title: '선택', align: 'center', value: 'select' },
+                { title: '약품 이름', align: 'center', value: 'medication_name' },
+                { title: '약품 유형', align: 'center', value: 'medication_type' },
+                { title: '약품 설명', align: 'center', value: 'medication_description' },
+                { title: '복용 방법', align: 'center', value: 'administration_method' },
+                { title: '약품 비용', align: 'center', value: 'medication_cost' },
+              ] as any"
+              :items="medicationList"
+              :items-per-page="5"
+          >
+            <template v-slot:item.select="{ item }">
+              <div style="display: flex; justify-content: center">
+                <v-checkbox :value="item" v-model="selectedMedication"></v-checkbox>
+              </div>
+            </template>
+          </v-data-table>
         </VCol>
       </VRow>
 

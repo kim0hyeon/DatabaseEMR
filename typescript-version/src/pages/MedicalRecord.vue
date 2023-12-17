@@ -20,11 +20,10 @@ let medicationData = ref<Medication[]>([])
 
 const getReceptionInfo = async () => {
   try {
-    const response = await axios.get(`http://yunsseong.uk:8000/api/receptions?id=${props.reception_id}`, {
+    const response = await axios.get(`http://yunsseong.uk:8000/api/receptions?reception_id=${props.reception_id}`, {
       headers: { Authorization: `Token ${token}` },
     })
     receptionInfo.value = response.data[0]
-    console.log('reception data loding success')
   } catch (error) {
     console.error(error)
   }
@@ -36,7 +35,7 @@ const getChartInfo = async () => {
       headers: { Authorization: `Token ${token}` },
     })
     chartInfo.value = response.data[0]
-    console.log('chart data loading success')
+    console.log(chartInfo.value)
   } catch (error) {
     console.error(error)
   }
@@ -109,7 +108,6 @@ watchEffect(() => {
     })
 
     patientDiseases.value = diseases.filter(Boolean) as Disease[]
-    console.log(patientDiseases.value)
   }
 })
 
@@ -157,13 +155,10 @@ watch(
   () => props.modelValue,
   newVal => {
     isOpen.value = newVal
-    console.log('load data')
 
     getChartInfo()
-    console.log(chartInfo)
 
     getReceptionInfo()
-    console.log(receptionInfo.value)
 
     getInspectList()
     getDiseaseList()

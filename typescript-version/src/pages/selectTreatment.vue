@@ -74,13 +74,21 @@ watch(
 
       <VRow class="ma-3">
         <VCol cols="12">
-          <VCheckbox
-            v-for="(item, index) in treatmentList"
-            :key="index"
-            :label="item.treatment_name"
-            :value="item"
-            v-model="selectedTreatment"
-          ></VCheckbox>
+          <v-data-table
+              :headers="[
+                { title: '선택', align: 'center', value: 'select' },
+                { title: '치료 종류', align: 'center', value: 'treatment_name' },
+                { title: '치료 비용', align: 'center', value: 'treatment_cost' },
+              ] as any"
+              :items="treatmentList"
+              :items-per-page="5"
+          >
+            <template v-slot:item.select="{ item }">
+              <div style="display: flex; justify-content: center">
+                <v-checkbox :value="item" v-model="selectedTreatment"></v-checkbox>
+              </div>
+            </template>
+          </v-data-table>
         </VCol>
       </VRow>
 

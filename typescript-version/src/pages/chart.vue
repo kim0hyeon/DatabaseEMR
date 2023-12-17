@@ -157,10 +157,11 @@ onMounted(async () => {
 let selectedChartId = ref('')
 let selectedReceptionId = ref('')
 const isRecordOpen = ref(false)
-const openRecord = (chart_id: string, patient_id: string) => {
+const openRecord = (chart_id: string, reception_id: string) => {
+  console.log(reception_id)
   isRecordOpen.value = true
   selectedChartId.value = chart_id
-  selectedReceptionId.value = patient_id
+  selectedReceptionId.value = reception_id
 }
 
 // 검사목록 모달
@@ -204,6 +205,45 @@ const OpenScanning = () => {
   isScanOpen.value = true
   console.log(isScanOpen.value)
 }
+
+// 백엔드에 chart 정보 전송
+const chartData = {
+  diagnosis: '',
+  doctor_opinion: '',
+  image_url: '',
+  patient: {
+    patient_id: store.id,
+  },
+  inspect: selectedInspection.value??[],
+  disease: selectedDisease.value??[],
+  treatment: selectedTreatment.value??[],
+  medication: selectedMedication.value??[]
+}
+
+const postChart = async () => {
+  try {
+    const data = {
+      diagnosis: chartData.diagnosis,
+      doctor_opinion: chartData.doctor_opinion,
+      image_url: chartData.image_url,
+      patient: {
+        patient_id: chartData.patient.patient_id,
+      },
+      inspect: chartData.inspect,
+      disease: chartData.disease,
+      treatment: chartData.treatment,
+      medication: chartData.medication
+    }
+
+    console.log(data)
+
+    const response = await axios.post(`http://yunsseong.uk:8000/api/chart/`, data, {
+      headers: { Authorization: `Token ${token}` },
+    })
+  } catch (error) {
+    console.error(error)
+  }
+}
 </script>
 
 <template>
@@ -242,7 +282,7 @@ const OpenScanning = () => {
               <MedicalRecord
                 v-model="isRecordOpen"
                 :chart_id="selectedChartId"
-                :patient_id="selectedReceptionId"
+                :reception_id="selectedReceptionId"
               />
               <VCard
                 v-if="chartInfo"
@@ -367,6 +407,7 @@ const OpenScanning = () => {
               rows="2"
               auto-grow
               style="margin-bottom: 5px"
+              v-model="chartData.diagnosis"
             ></VTextarea>
           </VCard>
         </VRow>
@@ -390,7 +431,7 @@ const OpenScanning = () => {
                   <thead>
                   <tr>
                     <th>검사 ID</th>
-                    <th>검사 이름</th>
+                    <th>검사 종류</th>
                     <th>검사 비용</th>
                   </tr>
                   </thead>
@@ -588,7 +629,7 @@ const OpenScanning = () => {
         </VRow>
         <VRow>
           <VCol>
-            <VBtn class="right-btn">저장</VBtn>
+            <VBtn class="right-btn" @click="postChart">저장</VBtn>
           </VCol>
         </VRow>
       </div>

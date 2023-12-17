@@ -74,13 +74,21 @@ watch(
 
       <VRow class="ma-3">
         <VCol cols="12">
-          <VCheckbox
-            v-for="(item, index) in inspectionList"
-            :key="index"
-            :label="item.inspect_type"
-            :value="item"
-            v-model="selectedInspection"
-          ></VCheckbox>
+          <v-data-table
+              :headers="[
+                { title: '선택', align: 'center', value: 'select' },
+                { title: '검사 종류', align: 'center', value: 'inspect_type' },
+                { title: '검사 비용', align: 'center', value: 'inspect_cost' },
+              ] as any"
+              :items="inspectionList"
+              :items-per-page="5"
+          >
+            <template v-slot:item.select="{ item }">
+              <div style="display: flex; justify-content: center">
+                <v-checkbox :value="item" v-model="selectedInspection"></v-checkbox>
+              </div>
+            </template>
+          </v-data-table>
         </VCol>
       </VRow>
 
@@ -98,3 +106,6 @@ watch(
     </VCard>
   </VDialog>
 </template>
+
+<style lang="scss">
+</style>

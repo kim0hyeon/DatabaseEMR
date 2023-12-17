@@ -23,10 +23,14 @@ watch(() => isOpen.value, (newVal) => {
     emit('update:modelValue', newVal)
   }
 })
+
+const printQR = () => {
+  window.print()
+}
 </script>
 
 <template>
-  <VDialog v-model="isOpen" style="max-width: 400px; max-height: 500px;">
+  <VDialog v-model="isOpen" style="max-width: 400px; max-height: 500px;" class="modal">
     <VCard>
       <VRow>
         <VCol cols="12" class="text-center pb-0">
@@ -41,7 +45,7 @@ watch(() => isOpen.value, (newVal) => {
       <VRow class="mt-0">
         <VCol>
           <VBtn @click="closeModal" class="right-btn">닫기</VBtn>
-          <VBtn class="right-btn">출력</VBtn>
+          <VBtn @click="printQR" class="right-btn">출력</VBtn>
         </VCol>
       </VRow>
     </VCard>

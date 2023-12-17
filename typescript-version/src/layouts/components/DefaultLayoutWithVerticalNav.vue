@@ -10,10 +10,10 @@ import Footer from '@/layouts/components/Footer.vue'
 import NavbarThemeSwitcher from '@/layouts/components/NavbarThemeSwitcher.vue'
 import UserProfile from '@/layouts/components/UserProfile.vue'
 import { IdStore } from '@/store'
+import { token } from '@/token'
 import axios from 'axios'
 import { watch } from 'vue'
 import { useRoute } from 'vue-router'
-import {token} from "@/token";
 // 접수환자 리스트 ( 고정 )
 interface PatientList {
   list_id: string
@@ -39,8 +39,9 @@ const patients = ref<PatientList[]>([])
 onMounted(async () => {
   try {
     // Axios를 사용하여 백엔드로 GET 요청 보내기
-    const response = await axios.get('http://yunsseong.uk:8000/api/list/',
-        { headers: { Authorization: `Token ${token.value}` }})
+    const response = await axios.get('http://yunsseong.uk:8000/api/list/', {
+      headers: { Authorization: `Token ${token.value}` },
+    })
 
     // 받아온 데이터를 responseData에 저장
     responseData.value = response.data
@@ -197,14 +198,14 @@ const userInfo = useUserStore().$state.userInfo
           />
           <div style="height: 170px" />
           <VerticalNavSectionTitle :item="{ heading: '관리자 메뉴' }" />
-          <VerticalNavLink
+          <!-- <VerticalNavLink
             v-if="userInfo.job == 10210"
             :item="{
               title: '이용자 관리',
               icon: 'mdi-account-cog',
               to: '/admin',
             }"
-          />
+          /> -->
         </div>
 
         <!-- 환자 리스트 -->
@@ -251,7 +252,8 @@ const userInfo = useUserStore().$state.userInfo
                 @click="getID(item.patient.patient_id)"
                 active-class="patItem"
                 :to="pathway"
-                >{{ item.patient.patient_name }}</router-link>
+                >{{ item.patient.patient_name }}</router-link
+              >
               {{ item.patient.patient_gender }}
             </div>
           </div>

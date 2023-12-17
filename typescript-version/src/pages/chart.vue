@@ -1,14 +1,14 @@
 <script setup lang="ts">
 // Components
 import MedicalRecord from '@/pages/MedicalRecord.vue'
+import Scan from '@/pages/Scan.vue'
 import SelectInspection from '@/pages/selectInspection.vue'
 import SelectMedicine from '@/pages/selectMedicine.vue'
-import Scan from "@/pages/Scan.vue";
 import { IdStore } from '@/store/index'
+import { token } from '@/token'
 import axios from 'axios'
 import { ref } from 'vue'
 import { useStore } from 'vuex'
-import { token } from "@/token";
 
 const store = IdStore()
 
@@ -112,8 +112,9 @@ let chartInfo = ref<Chart[]>([])
 
 const getReceptionInfo = async (id: string) => {
   try {
-    const response = await axios.get(`http://yunsseong.uk:8000/api/receptions?patient=${ id }`,
-      { headers: { Authorization: `Token ${token.value}` }})
+    const response = await axios.get(`http://yunsseong.uk:8000/api/receptions?patient=${id}`, {
+      headers: { Authorization: `Token ${token.value}` },
+    })
     receptionInfo.value = response.data[0]
     console.log('reception data loding success')
   } catch (error) {
@@ -121,35 +122,36 @@ const getReceptionInfo = async (id: string) => {
   }
 }
 
-const getChartInfo = (async (id: string) => {
+const getChartInfo = async (id: string) => {
   try {
-    const response = await axios.get(`http://yunsseong.uk:8000/api/chart?patient=${ id }`,
-      { headers: { Authorization: `Token ${token.value}` }})
+    const response = await axios.get(`http://yunsseong.uk:8000/api/chart?patient=${id}`, {
+      headers: { Authorization: `Token ${token.value}` },
+    })
     chartInfo.value = response.data
     console.log('chart data loading success')
 
     chartInfo.value = response.data.map((item: Chart) => {
       return {
         ...item,
-        date_only: item.datetime.split('T')[0]
-      };
-    });
+        date_only: item.datetime.split('T')[0],
+      }
+    })
 
     return chartInfo.value
   } catch (error) {
     console.error(error)
   }
-})
+}
 
 watch(
-    () => {
-      return store.id
-    },
-    async (newId, oldId) => {
-      console.log(`ID changed from ${oldId} to ${newId}`);
-      await getReceptionInfo(newId)
-      await getChartInfo(newId)
-    },
+  () => {
+    return store.id
+  },
+  async (newId, oldId) => {
+    console.log(`ID changed from ${oldId} to ${newId}`)
+    await getReceptionInfo(newId)
+    await getChartInfo(newId)
+  },
 )
 
 // 백엔드에서 검사 정보 받아오기
@@ -158,8 +160,9 @@ let inspectList = ref<Inspect[]>([])
 onMounted(async () => {
   console.log(token.value)
   try {
-    const response = await axios.get(`http://yunsseong.uk:8000/api/inspect_type/`,
-      { headers: { Authorization: `Token ${token.value}` }})
+    const response = await axios.get(`http://yunsseong.uk:8000/api/inspect_type/`, {
+      headers: { Authorization: `Token ${token.value}` },
+    })
     inspectList.value = response.data
     console.log('inspectList loading success')
     console.log(inspectList.value)
@@ -216,12 +219,23 @@ const OpenScanning = () => {
       <div class="pat_list">
         <VCard class="pa-4">
           <VRow>
-            <VCol cols="12" md="6">
+            <VCol
+              cols="12"
+              md="6"
+            >
               <h3 class="letter-spacing">{{ receptionInfo?.patient.patient_name ?? '이름' }}</h3>
             </VCol>
-            <VCol cols="12" md="6" class="mt-1">
-              <Scan v-model="isScanOpen"/>
-              <VBtn @click="OpenScanning" class="right-btn">Scan</VBtn>
+            <VCol
+              cols="12"
+              md="6"
+              class="mt-1"
+            >
+              <Scan v-model="isScanOpen" />
+              <VBtn
+                @click="OpenScanning"
+                class="right-btn"
+                >Scan</VBtn
+              >
             </VCol>
           </VRow>
           <VDivider />
@@ -229,7 +243,11 @@ const OpenScanning = () => {
           <h3 class="mt-4 ml-2 mb-4"><b>내원이력</b></h3>
           <div class="scroll-container history">
             <VCard class="px-1 py-1">
-              <MedicalRecord v-model="isRecordOpen" :chart_id="selectedChartId" :patient_id="selectedReceptionId"/>
+              <MedicalRecord
+                v-model="isRecordOpen"
+                :chart_id="selectedChartId"
+                :patient_id="selectedReceptionId"
+              />
               <VCard
                 v-if="chartInfo"
                 v-for="item in chartInfo"
@@ -275,9 +293,10 @@ const OpenScanning = () => {
                 outline
                 rows="2"
                 auto-grow
-                style="border: 1px solid; border-radius: 5px;"
+                style="border: 1px solid; border-radius: 5px"
                 class="ml-2 mr-2 cardText"
-              >{{ receptionInfo?.visit_reason }}</VCardText>
+                >{{ receptionInfo?.visit_reason }}</VCardText
+              >
             </VCard>
           </VCol>
           <VCol
@@ -309,7 +328,8 @@ const OpenScanning = () => {
               <VBtn
                 @click="clickedSendFile"
                 class="ml-4 mb-1"
-                >저장</VBtn>
+                >저장</VBtn
+              >
               <div
                 class="scroll-container photo_list"
                 v-if="photos.length > 0"
@@ -394,7 +414,8 @@ const OpenScanning = () => {
             <VBtn
               @click="openInspectionList"
               class="right-btn"
-              >검사 추가</VBtn>
+              >검사 추가</VBtn
+            >
           </VCard>
         </VRow>
 
@@ -409,18 +430,20 @@ const OpenScanning = () => {
               <h2>진단 병명</h2>
             </div>
 
-            <VDivider class="mb-2"/>
+            <VDivider class="mb-2" />
 
             <VBtn
               @click="subDiagnosisCard"
               class="right-btn"
-              >병명 제거</VBtn>
+              >병명 제거</VBtn
+            >
 
             <SelectInspection v-model="isInspectionListOpen" />
             <VBtn
               @click="openInspectionList"
               class="right-btn"
-              >병명 추가</VBtn>
+              >병명 추가</VBtn
+            >
           </VCard>
         </VRow>
 
@@ -429,17 +452,17 @@ const OpenScanning = () => {
           <VCard class="pat_chart2 pa-2 ma-2">
             <div class="letter-spacing">
               <img
-                  src="../assets/icons/prescription.png"
-                  class="large-icon-size"
+                src="../assets/icons/prescription.png"
+                class="large-icon-size"
               />
               <h2>의사 소견</h2>
             </div>
             <VTextarea
-                label="의사 소견"
-                outline
-                rows="2"
-                auto-grow
-                style="margin-bottom: 5px"
+              label="의사 소견"
+              outline
+              rows="2"
+              auto-grow
+              style="margin-bottom: 5px"
             ></VTextarea>
           </VCard>
         </VRow>
@@ -455,18 +478,20 @@ const OpenScanning = () => {
               <h2>치료</h2>
             </div>
 
-            <VDivider class="mb-2"/>
+            <VDivider class="mb-2" />
 
             <VBtn
               @click="subPrescriptionCard"
               class="right-btn"
-              >치료 제거</VBtn>
+              >치료 제거</VBtn
+            >
 
             <SelectMedicine v-model="isMedicineOpen" />
             <VBtn
               @click="openMedicine"
               class="right-btn"
-              >치료 추가</VBtn>
+              >치료 추가</VBtn
+            >
           </VCard>
         </VRow>
 
@@ -481,7 +506,7 @@ const OpenScanning = () => {
               <h2>처방</h2>
             </div>
 
-            <VDivider/>
+            <VDivider />
 
             <VCardText class="pt-2 table-container">
               <table class="list_table">

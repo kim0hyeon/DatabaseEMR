@@ -3,6 +3,7 @@ import { useUserStore } from '@/store'
 import logo from '@images/logo.svg?raw'
 import authV1MaskDark from '@images/pages/auth-v1-mask-dark.png'
 import authV1MaskLight from '@images/pages/auth-v1-mask-light.png'
+import axios from 'axios'
 import { useRouter } from 'vue-router'
 import { useTheme } from 'vuetify'
 import userInfo from '../exampleJson/userInfo.json'
@@ -51,10 +52,32 @@ interface UserInfo {
 }
 const users = userInfo
 // 더미 사용자 데이터를 정의합니다.
+const handleLogin = async () => {
+  try {
+    const response = await axios.post('http://yunsseong.uk:8000/api/token/', {
+      username: loginForm.email,
+      password: loginForm.password,
+    })
 
+    // 서버로부터 받은 토큰을 활용하여 로그인 성공 후의 처리
+    const token = response.data.token
+    sessionStorage.setItem('token', token)
+    // const userInfo = await axios.get('http://yunsseong.uk:8001/api/medical?user={loginForm.email}')
+    sessionStorage.setItem('userInfo', JSON.stringify(userInfo))
+    console.log('로그인 성공! 토큰:', token)
+    router.push('/home')
+    // 로그인 성공 후의 추가 로직을 수행하면 됩니다.
+  } catch (error) {
+    // 로그인 실패 시의 처리
+    console.error('로그인 실패:', error.message)
+
+    // 로그인 실패 시의 추가 로직을 수행하면 됩니다.
+  }
+}
 // 실제 로그인 구현
 // const handleLogin = () => {
 //   // 더미 데이터와 입력된 데이터가 일치하는지 확인합니다.
+
 //   if (loginForm.email === DUMMY_USER.email && loginForm.password === DUMMY_USER.password) {
 //     loginStore.getAccountInfo().then(()=>{
 //         const loginResponse: LoginResponse = {
@@ -79,31 +102,31 @@ const users = userInfo
 // }
 
 // 임시용
-const handleLogin = () => {
-  //예시 사용자 데이터
-  const emailToCheck = loginForm.email.trim().toLowerCase()
-  const passwordToCheck = loginForm.password.trim()
-  const DUMMY_USER = users.find(
-    user => user.email.trim().toLowerCase() == emailToCheck && user.password.trim() == passwordToCheck,
-  )
-  // 더미 데이터와 입력된 데이터가 일치하는지 확인합니다.
-  if (loginForm.email === DUMMY_USER?.email && loginForm.password === DUMMY_USER.password) {
-    const loginResponse: LoginResponse = {
-      token: DUMMY_USER.token,
-    }
-    // 예: 토큰을 상태 관리로 저장하거나, 세션 스토리지에 저장할 수 있습니다.
-    // 상태 관리:
-    loginStore.loginSuccess(DUMMY_USER)
-    const token = reactive({ value: loginResponse.token })
-    // 세션 스토리지:
-    sessionStorage.setItem('token.ts', loginResponse.token)
-    sessionStorage.setItem('userInfo', JSON.stringify(DUMMY_USER))
-    alert(DUMMY_USER.name + '님 반갑습니다!')
-    router.push('/home')
-  }
-  // 예: 토큰을 상태 관리로 저장하거나, 세션 스토리지에 저장할 수 있습니다.
-  // 상태 관리:
-}
+// const handleLogin = () => {
+//   //예시 사용자 데이터
+//   const emailToCheck = loginForm.email.trim().toLowerCase()
+//   const passwordToCheck = loginForm.password.trim()
+//   const DUMMY_USER = users.find(
+//     user => user.email.trim().toLowerCase() == emailToCheck && user.password.trim() == passwordToCheck,
+//   )
+//   // 더미 데이터와 입력된 데이터가 일치하는지 확인합니다.
+//   if (loginForm.email === DUMMY_USER?.email && loginForm.password === DUMMY_USER.password) {
+//     const loginResponse: LoginResponse = {
+//       token: DUMMY_USER.token,
+//     }
+//     // 예: 토큰을 상태 관리로 저장하거나, 세션 스토리지에 저장할 수 있습니다.
+//     // 상태 관리:
+//     loginStore.loginSuccess(DUMMY_USER)
+//     const token = reactive({ value: loginResponse.token })
+//     // 세션 스토리지:
+//     sessionStorage.setItem('token', loginResponse.token)
+//     sessionStorage.setItem('userInfo', JSON.stringify(DUMMY_USER))
+//     alert(DUMMY_USER.name + '님 반갑습니다!')
+//     router.push('/home')
+//   }
+// 예: 토큰을 상태 관리로 저장하거나, 세션 스토리지에 저장할 수 있습니다.
+// 상태 관리:
+// }
 
 // 로그인 처리 함수
 // const handleLogin = async () => {
@@ -139,9 +162,7 @@ const isPasswordVisible = ref(false)
 
 <template>
   <div class="auth-wrapper d-flex align-center justify-center pa-4">
-    <VCard
-      class="auth-card pa-4 pt-7"
-    >
+    <VCard class="auth-card pa-4 pt-7">
       <VCardItem class="justify-center">
         <template #prepend>
           <div class="d-flex">
@@ -184,7 +205,6 @@ const isPasswordVisible = ref(false)
                 Login
               </VBtn>
             </VCol>
-
           </VRow>
         </VForm>
       </VCardText>
@@ -196,6 +216,6 @@ const isPasswordVisible = ref(false)
 @use '@core/scss/pages/page-auth.scss';
 
 .InputIDPW {
-  width: 400px;
+  inline-size: 400px;
 }
 </style>

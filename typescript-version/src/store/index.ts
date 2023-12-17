@@ -102,7 +102,8 @@ export default createStore({
     selectedInspection: [],
     selectedDisease: [],
     selectedTreatment: [],
-    selectedMedication: []
+    selectedMedication: [],
+    selectedPhysio: []
   },
   mutations: {
     setSelectedInspection(state, inspections) {
@@ -117,6 +118,9 @@ export default createStore({
     setSelectedMedication(state, Medication) {
       state.selectedMedication = Medication
     },
+    setSelectedPhysio(state, physio) {
+      state.selectedPhysio = physio
+    },
     RESET_SELECTED_INSPECTION: state => {
       state.selectedInspection = []
     },
@@ -128,6 +132,9 @@ export default createStore({
     },
     RESET_SELECTED_MEDICATION: state => {
       state.selectedMedication = []
+    },
+    RESET_SELECTED_PHYSIO: state => {
+      state.selectedPhysio = []
     }
   },
   actions: {
@@ -143,6 +150,9 @@ export default createStore({
     updateSelectedMedication({ commit }, medications) {
       commit('setSelectedMedication', medications)
     },
+    updateSelectedPhysio({ commit }, physios) {
+      commit('setSelectedPhysio', physios)
+    },
     resetSelectedInspections: ({ commit }) => {
       commit('RESET_SELECTED_INSPECTION')
     },
@@ -154,12 +164,16 @@ export default createStore({
     },
     resetSelectedMedication: ({ commit }) => {
       commit('RESET_SELECTED_MEDICATION')
+    },
+    resetSelectedPhysio: ({ commit }) => {
+      commit('RESET_SELECTED_PHYSIO')
     }
   },
   getters: {
     selectedInspection: state => state.selectedInspection,
     selectedDisease: state => state.selectedDisease,
     selectedTreatment: state => state.selectedTreatment,
-    selectedMedication: state => state.selectedMedication
+    selectedMedication: state => state.selectedMedication,
+    selectedPhysio: state => state.selectedPhysio
   }
 })

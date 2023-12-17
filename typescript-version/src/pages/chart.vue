@@ -15,33 +15,28 @@ import { useStore } from 'vuex'
 const store = IdStore()
 const token = sessionStorage.getItem('token')
 
-const photos = ref<Photo[]>([])
+const photo = ref<Photo>()
 const selectedPhoto = ref('')
-const clickedSendFile = () => {
-  photos.value = []
-  alert('저장완료')
-}
+
 function handleFilesUpload(event: Event) {
   const target = event.target as HTMLInputElement
-  const files = target.files
+  const file = target.files ? target.files[0] : null
 
-  if (files) {
-    Array.from(files).forEach(file => {
+  if (file) {
       const reader = new FileReader()
       reader.onload = e => {
         if (e.target?.result) {
           const url = e.target.result.toString()
-          // 최근 업로드가 위로오도록 unshift사용
-          photos.value.unshift({ url, name: file.name })
-          selectedPhoto.value = e.target.result.toString()
+          photo.value = { url, name: file.name }
+          selectedPhoto.value = url
+          console.log(photo.value)
         }
       }
-      reader.readAsDataURL(file)
-      console.log(files)
-    })
+    reader.readAsDataURL(file)
   }
 }
 
+/*
 // 사진쪽 클릭하면 뜨게 하고 하는거는 나중에 짜자 그냥 사이트 라우트 되었을떄 디비에서 다 찾아내는 방식으로 짜야 안복잡할듯
 // 맘같아선 새창을 띄우고 싶은데 이게 생각처럼 쉽지 않음 store에 있는값을 사용못함 새창을 쓰면
 function removePhoto(index: number) {
@@ -50,7 +45,7 @@ function removePhoto(index: number) {
 function selectImage(image: Photo) {
   selectedPhoto.value = image.url
 }
-
+*/
 // 백엔드에서 접수 정보, 차트 정보 받아오기
 let receptionInfo = ref<Reception>()
 let chartInfo = ref<Chart[]>([])
@@ -208,31 +203,20 @@ const OpenScanning = () => {
 }
 
 // 백엔드에 chart 정보 전송
-const chartData = {
-  diagnosis: '',
-  doctor_opinion: '',
-  image_url: '',
-  patient: {
-    patient_id: store.id,
-  },
-  inspect: selectedInspection.value??[],
-  disease: selectedDisease.value??[],
-  treatment: selectedTreatment.value??[],
-  medication: selectedMedication.value??[]
-}
+const patientDiagnosis = ref('')
 
 const postChart = async () => {
   try {
+    console.log(inspectList.value)
     const data = {
-      diagnosis: chartData.diagnosis,
-      image_url: chartData.image_url,
-      patient: {
-        patient_id: chartData.patient.patient_id,
-      },
-      inspect: chartData.inspect,
-      disease: chartData.disease,
-      treatment: chartData.treatment,
-      medication: chartData.medication
+      diagnosis: patientDiagnosis.value,
+      doctor_opinion: '',
+      image_url: photo.value?.url,
+      patient: store.id,
+      inspect: selectedInspection.value,
+      disease: selectedDisease.value,
+      treatment: selectedTreatment.value,
+      medication: selectedMedication.value
     }
 
     console.log(data)
@@ -361,29 +345,25 @@ const postChart = async () => {
                 />
               </label>
               <VBtn
-                @click="clickedSendFile"
                 class="ml-4 mb-1"
                 >저장</VBtn
               >
               <div
                 class="scroll-container photo_list"
-                v-if="photos.length > 0"
+                v-if="photo"
               >
-                <div
-                  v-for="(photo, index) in photos"
-                  :key="photo.name"
-                >
+                <div>
                   <VDivider class="ma-3" />
                   <img
-                    :src="photo.url"
-                    :alt="photo.name"
+                    :src="photo?.url"
+                    :alt="photo?.name"
                     class="sm-image"
                   />
-                  <p class="name">{{ photo.name }}</p>
+                  <p class="name">{{ photo?.name }}</p>
 
-                  <button @click="selectImage(photo)">(overview)</button>
+                  <button>(overview)</button>
                   &nbsp;
-                  <button @click="removePhoto(index)">(remove)</button>
+                  <button>(remove)</button>
                 </div>
               </div>
             </VCard>
@@ -406,7 +386,7 @@ const postChart = async () => {
               rows="2"
               auto-grow
               style="margin-bottom: 5px"
-              v-model="chartData.diagnosis"
+              v-model="patientDiagnosis"
             ></VTextarea>
           </VCard>
         </VRow>

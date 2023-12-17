@@ -148,3 +148,13 @@ export interface BloodTest {
   alt: number
   gamma_gt: number
 }
+
+export interface Physio {
+  physio_id: string
+  physio_name: string
+  physio_desciption: string
+  physio_kind: string
+  physio_value: string
+  physio_type: string
+  physio_cost: number
+}

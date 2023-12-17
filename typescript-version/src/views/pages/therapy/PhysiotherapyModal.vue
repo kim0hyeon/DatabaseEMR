@@ -1,20 +1,23 @@
 <script setup lang='ts'>
 import axios from 'axios'
-import { Chart, Patient, Reception } from "@/pages/interfaces";
+import { Chart, Physio, Reception } from "@/pages/interfaces";
 import { reactive } from 'vue'
 import { useRoute } from 'vue-router'
 import { IdStore } from "@/store";
 import Scan from "@/pages/Scan.vue";
 import MedicalRecord from "@/pages/MedicalRecord.vue";
+import SelectPhysio from "@/pages/selectPhysio.vue";
+import {useStore} from "vuex";
 
 const route = useRoute()
 const store = IdStore()
 const token = sessionStorage.getItem('token')
 
-// 백엔드에서 환자 정보 받아오기
+// 백엔드에서 접수, 차트, 물리치료 정보 받아오기
 let receptionInfo = ref<Reception>()
 let chartInfo = ref<Chart[]>([])
-let recentlyChartInfo = ref<Chart>()
+let recentlyChartInfo = ref<Chart>() // 가장 최근 차트
+let physioList = ref<Physio[]>([])
 
 const getReceptionInfo = (async (id: string) => {
   try {
@@ -41,6 +44,18 @@ const getChartInfo = (async (id: string) => {
   }
 })
 
+onMounted(async () => {
+  try {
+    const response = await axios.get(`http://yunsseong.uk:8000/api/physio`, {
+      headers: { Authorization: `Token ${token}`}
+    })
+    physioList.value = response.data
+    console.log(physioList.value)
+  } catch (error) {
+    console.error(error)
+  }
+})
+
 watch(() => {
   return store.id
 }, async (newId, oldId) => {
@@ -50,16 +65,6 @@ watch(() => {
   await getChartInfo(newId)
   console.log(chartInfo.value)
 })
-
-const Cards = reactive<number[]>([])
-function addCard() {
-  Cards.push(Cards.length + 1)
-  // console.log(Cards);
-}
-function subCard() {
-  Cards.pop()
-  // console.log(Cards)
-}
 
 // 진료기록 모달
 let selectedChartId = ref('')
@@ -79,6 +84,16 @@ const OpenScanning = () => {
   isScanOpen.value = true
   console.log(isScanOpen.value)
 }
+
+// 검사목록 모달
+const isPhysioListOpen = ref(false)
+
+const openPhysioList = () => {
+  isPhysioListOpen.value = true
+}
+
+const physioStore = useStore()
+const selectedPhysio = computed(() => physioStore.getters.selectedPhysio)
 </script>
 <template>
   <VRow>
@@ -171,7 +186,8 @@ const OpenScanning = () => {
           </VCard>
         </VCol>
       </VRow>
-      <VTab></VTab>
+      <VTab/>
+
       <VCard class="px-2 py-2">
         <div class="letter-spacing">
           <img
@@ -180,41 +196,63 @@ const OpenScanning = () => {
           />
           <h2>물리치료</h2>
         </div>
-        <div>
-          <!-- 버튼 -->
-          <VRow>
-            <VCol>
-              <VBtn
-                @click="addCard"
-                style="margin-bottom: 10px"
-                >치료 추가</VBtn
+
+        <VDivider/>
+
+        <VRow>
+          <VCardText class="pt-2 table-container">
+            <table class="list_table">
+              <thead>
+              <tr>
+                <th></th>
+                <th>이름</th>
+                <th>설명</th>
+                <th>종류</th>
+                <th>수행</th>
+                <th>단위</th>
+                <th>비용</th>
+              </tr>
+              </thead>
+              <tbody>
+              <tr
+                v-for="(item, index) in selectedPhysio"
+                :key="index"
               >
-            </VCol>
-            <VCol>
-              <VBtn
-                @click="subCard"
-                style="margin-bottom: 10px"
-                >치료 삭제</VBtn
-              >
-            </VCol>
-          </VRow>
-          <VCard
-            v-for="(i, index) in Cards"
-            :key="index"
-            class="therapy-card"
-          >
-            <VCardTitle>카드제목 {{ index }}</VCardTitle>
-            <VCardText>카드의 내용을 작성하세요.</VCardText>
-          </VCard>
-        </div>
+                <template v-if="item">
+                  <td>({{ index + 1 }})</td>
+                  <td>{{ item.physio_name }}</td>
+                  <td>{{ item.physio_desciption }}</td>
+                  <td>{{ item.physio_kind }}</td>
+                  <td>{{ item.physio_value }}</td>
+                  <td>{{ item.physio_type }}</td>
+                  <td>{{ item.physio_cost }}</td>
+                </template>
+              </tr>
+              </tbody>
+            </table>
+          </VCardText>
+        </VRow>
+
+        <VDivider/>
+
         <VTextarea
-          label="치료 후기 입력"
+          label="물리치료사 소견"
           outline
-          rows="5"
+          rows="2"
           auto-grow
           style="margin-bottom: 5px"
+          class="mt-2"
         ></VTextarea>
-        <VBtn style="border-radius: 13px; font-size: 15px">저장</VBtn>
+
+        <VBtn style="font-size: 15px" class="right-btn">저장</VBtn>
+
+        <SelectPhysio v-model="isPhysioListOpen"/>
+        <VBtn
+          @click="openPhysioList"
+          style="margin-bottom: 10px"
+          class="right-btn"
+        >치료 추가</VBtn>
+
       </VCard>
     </VCol>
   </VRow>
@@ -252,5 +290,10 @@ const OpenScanning = () => {
 
 .therapy-card {
   margin-block: 10px;
+}
+
+.right-btn {
+  float: inline-end;
+  margin-inline-start: 10px;
 }
 </style>

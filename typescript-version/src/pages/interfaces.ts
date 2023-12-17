@@ -108,12 +108,15 @@ export interface Event {
   diagnosis: string
 }
 
-export interface Schedule {
-  id: number
-  name: string
+export interface Reservation {
   date: string
   hour: number
   minute: number
+  patient: {
+    patient_id: number
+    patient_name: string
+    patient_gender: string
+  }
 }
 
 export interface InBodyTest {

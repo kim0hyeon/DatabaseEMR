@@ -45,20 +45,20 @@ const closeModal = () => {
 }
 
 watch(
-  () => props.modelValue,
-  newVal => {
-    isOpen.value = newVal
-  },
-  { immediate: true },
+    () => props.modelValue,
+    newVal => {
+      isOpen.value = newVal
+    },
+    { immediate: true },
 )
 
 watch(
-  () => isOpen.value,
-  newVal => {
-    if (props.modelValue !== newVal) {
-      emit('update:modelValue', newVal)
-    }
-  },
+    () => isOpen.value,
+    newVal => {
+      if (props.modelValue !== newVal) {
+        emit('update:modelValue', newVal)
+      }
+    },
 )
 
 // 검사 검색 로직
@@ -82,8 +82,8 @@ const searchTreatment = (event: Event) => {
 
 <template>
   <VDialog
-    v-model="isOpen"
-    style="max-width: 600px"
+      v-model="isOpen"
+      style="max-width: 600px"
   >
     <VCard style="max-width: 600px">
       <VCardTitle>치료 항목</VCardTitle>
@@ -120,8 +120,8 @@ const searchTreatment = (event: Event) => {
         </VCol>
         <VCol>
           <VBtn
-            class="right-btn"
-            @click="closeModal"
+              class="right-btn"
+              @click="closeModal"
           >확인</VBtn>
         </VCol>
       </VRow>

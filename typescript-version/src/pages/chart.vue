@@ -225,7 +225,6 @@ const postChart = async () => {
   try {
     const data = {
       diagnosis: chartData.diagnosis,
-      doctor_opinion: chartData.doctor_opinion,
       image_url: chartData.image_url,
       patient: {
         patient_id: chartData.patient.patient_id,
@@ -505,26 +504,6 @@ const postChart = async () => {
               @click="openDiseaseList"
               class="right-btn"
             >질병 추가</VBtn>
-          </VCard>
-        </VRow>
-
-        <!-- 의사 소견 -->
-        <VRow>
-          <VCard class="pat_chart2 pa-2 ma-2">
-            <div class="letter-spacing">
-              <img
-                src="../assets/icons/prescription.png"
-                class="large-icon-size"
-              />
-              <h2>의사 소견</h2>
-            </div>
-            <VTextarea
-              label="의사 소견"
-              outline
-              rows="2"
-              auto-grow
-              style="margin-bottom: 5px"
-            ></VTextarea>
           </VCard>
         </VRow>
 

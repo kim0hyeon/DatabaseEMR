@@ -1,8 +1,7 @@
 <script setup lang="ts">
-import ScheduleData from '@/exampleJson/Schedule.json'
-import { Event, Schedule } from '@/pages/interfaces'
-import { Ref } from 'vue'
+import { Reservation } from '@/pages/interfaces'
 import PatientSearch from './PatientSearch.vue'
+import axios from "axios";
 const token = sessionStorage.getItem('token')
 
 let selectedDate = ref('')
@@ -17,10 +16,49 @@ const clearSelectedDate = () => {
   selectedDate.value = ''
 }
 
-let scheduleData: Ref<Schedule[] | null> = ref(null)
+let reservationData = ref<Reservation[]>([])
 
 onMounted(async () => {
-  scheduleData.value = ScheduleData.schedule
+  try {
+    const response = await axios.get(`http://yunsseong.uk:8000/api/reservation`,{
+      headers: { Authorization: `Token ${token}` },
+    })
+    reservationData.value = response.data
+  } catch (error) {
+    console.error(error)
+  }
+})
+
+watch(isPatientSearchOpen, (newVal) => {
+  if (newVal === false) {
+    location.reload()
+  }
+})
+
+// 검사 검색 로직
+const searchTerm: Ref<string> = ref('')
+const searchResults = reactive<Reservation[]>([])
+
+const searchReservation = (event: Event) => {
+  searchTerm.value = (event.target as HTMLInputElement).value
+  if (searchTerm.value) {
+    searchResults.splice(
+      0,
+      searchResults.length,
+      ...reservationData.value.filter(reservation => reservation?.patient.patient_name.includes(searchTerm.value)),
+    )
+    console.log('after:', searchResults)
+  } else {
+    searchResults.splice(0, searchResults.length)
+  }
+}
+
+const filterByDateAndSearchTerm = computed(() => {
+  let items = searchTerm.value !== '' ? searchResults : reservationData.value
+  if (selectedDate.value) {
+    items = items.filter(item => item.date === selectedDate.value)
+  }
+  return items
 })
 </script>
 
@@ -63,31 +101,25 @@ onMounted(async () => {
 
           <VDivider class="ml-2 mr-2" />
 
-          <VCardText class="pt-2 table-container">
-            <table class="list_table">
-              <thead>
-                <tr>
-                  <th>환자ID</th>
-                  <th>환자 이름</th>
-                  <th>예약일자</th>
-                  <th>예약시간</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr
-                  v-for="(item, index) in scheduleData"
-                  :key="index"
-                >
-                  <template v-if="selectedDate === '' || item.date === selectedDate">
-                    <td>{{ item.id }}</td>
-                    <td>{{ item.name }}</td>
-                    <td>{{ item.date }}</td>
-                    <td>{{ item.hour }}시 {{ item.minute }}분</td>
-                  </template>
-                </tr>
-              </tbody>
-            </table>
-          </VCardText>
+          <VTextField
+            @input="searchReservation"
+            label="예약 일정 검색"
+            class="mr-10 ml-10 mt-6 mb-6"
+          />
+
+          <v-data-table
+            :headers="[
+                { title: '환자 이름', align: 'center', value: 'patient.patient_name' },
+                { title: '예약 일자', align: 'center', value: 'date' },
+                { title: '예약 시간', align: 'center', value: `hour` },
+              ]"
+            :items="filterByDateAndSearchTerm"
+            :items-per-page="5"
+          >
+            <template v-slot:item.hour="{ item }">
+              {{ item.hour }}시 {{ item.minute }}분
+            </template>
+          </v-data-table>
         </VCard>
       </VCol>
     </VRow>

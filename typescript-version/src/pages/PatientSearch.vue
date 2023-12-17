@@ -62,7 +62,6 @@ onMounted(async () => {
       headers: { Authorization: `Token ${token}` },
     })
     patientInformation.value = response.data
-    console.log('success')
   } catch (error) {
     console.error(error)
   }
@@ -72,16 +71,20 @@ onMounted(async () => {
 const addReservation = (async () => {
   try {
     const data = {
-      patient_id: patientInformation.value.patient_id,
-      reservation_date: props.date,
-      reservation_hour: selectedHour.value,
-      reservation_minute: selectedMinute.value
+      patient: selectedPatient.value?.patient_id,
+      date: props.date,
+      hour: selectedHour.value,
+      minute: selectedMinute.value
     }
 
-    const response = await axios.get(`http://yunsseong.uk:8000/api/`, data)
+    const response = await axios.post(`http://yunsseong.uk:8000/api/reservation/`, data,{
+      headers: { Authorization: `Token ${token}` },
+    })
   } catch (error) {
     console.error(error)
   }
+
+  closeModal()
 })
 
 const search = (event: InputEvent) => {

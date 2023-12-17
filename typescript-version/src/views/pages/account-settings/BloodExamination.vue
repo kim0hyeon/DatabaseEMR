@@ -3,6 +3,7 @@ import { defineComponent, ref, onMounted } from 'vue'
 import { BloodTest } from "@/pages/interfaces";
 import { Chart, registerables } from 'chart.js'
 import axios from 'axios'
+import { IdStore } from '@/store'
 
 // 혈액검사기록을 저장할 리스트 생성 -> 변경 가능해야함
 let BloodTestRecord = ref<BloodTest[]>([])
@@ -10,13 +11,17 @@ let BloodTestRecord = ref<BloodTest[]>([])
 // 오류나지 않게 임시로 url 넣어놨음. 혈액검사에 맞는 url로 고쳐줘야함
 onMounted(async () => {
   try {
-    const response = await axios.get('http;//yunsseong.uk:8000/api/patients/') // 수정 필요
-    const BloodTestRecord = response.data // 가져온 데이터를 어떻게 가공하여 사용할지 정의 필요
-    console.log('Blood test record loading success')
+    const response = await axios.get(`http://yunsseong.uk:8000/api/blood?patient=${store.id}`, {
+      headers: { Authorization: `Token ${token}` },
+    })
+    BloodInformation.value = response.data
+    console.log(BloodInformation.value)
+    console.log(BloodInformation.value[0].hemoglobin)
+    console.log(typeof BloodInformation.value)
   } catch (error) {
-    console.error(error)
+    console.log(error)
   }
-})
+}
 
 export default defineComponent({
   data() {
@@ -60,7 +65,7 @@ export default defineComponent({
     const kidney_chart = ref<HTMLCanvasElement | null>(null)
     const liver_chart = ref<HTMLCanvasElement | null>(null)
 
-    onMounted(() => {
+    const drawChart = () => {
       if (anemia_chart.value) {
         const ctx = anemia_chart.value.getContext('2d')
         if (ctx) {
@@ -73,7 +78,7 @@ export default defineComponent({
               datasets: [
                 {
                   label: '(g/dl)',
-                  data: [10], // 데이터 입력
+                  data: BloodInformation.value[0]?.hemoglobin, // 데이터 입력
                   backgroundColor: 'rgba(54, 162, 235, 0.2)',
                   borderColor: 'rgba(54, 162, 235, 1)',
                   borderWidth: 1,
@@ -109,7 +114,7 @@ export default defineComponent({
               datasets: [
                 {
                   label: '(mg/dl)',
-                  data: [84], // 데이터 입력
+                  data: [BloodInformation.value[0]?.fasting_blood_sugar], // 데이터 입력
                   backgroundColor: 'rgba(54, 162, 235, 0.2)',
                   borderColor: 'rgba(54, 162, 235, 1)',
                   borderWidth: 1,
@@ -146,7 +151,12 @@ export default defineComponent({
               datasets: [
                 {
                   label: '(mg/dl)',
-                  data: [150, 72, 41, 69], // 데이터 입력
+                  data: [
+                    BloodInformation.value[0]?.total_cholesterol,
+                    BloodInformation.value[0]?.hdl_cholesterol,
+                    BloodInformation.value[0]?.triglycerides,
+                    BloodInformation.value[0]?.ldl_cholesterol,
+                  ], // 데이터 입력
                   backgroundColor: 'rgba(54, 162, 235, 0.2)',
                   borderColor: 'rgba(54, 162, 235, 1)',
                   borderWidth: 1,
@@ -183,7 +193,10 @@ export default defineComponent({
               datasets: [
                 {
                   label: '(mg/dl)',
-                  data: [10, 111], // 데이터 입력
+                  data: [
+                    BloodInformation.value[0]?.serum_creatinine,
+                    BloodInformation.value[0]?.glomerular_filtration_rate,
+                  ], // 데이터 입력
                   backgroundColor: 'rgba(54, 162, 235, 0.2)',
                   borderColor: 'rgba(54, 162, 235, 1)',
                   borderWidth: 1,
@@ -220,7 +233,11 @@ export default defineComponent({
               datasets: [
                 {
                   label: '(U/L)',
-                  data: [39, 23, 24], // 데이터 입력
+                  data: [
+                    BloodInformation.value[0]?.ast,
+                    BloodInformation.value[0]?.alt,
+                    BloodInformation.value[0]?.gamma_gt,
+                  ], // 데이터 입력
                   backgroundColor: 'rgba(54, 162, 235, 0.2)',
                   borderColor: 'rgba(54, 162, 235, 1)',
                   borderWidth: 1,
@@ -244,7 +261,16 @@ export default defineComponent({
           })
         }
       }
+    }
+
+    onMounted(() => {
+      loadBloodData()
+      drawChart()
     })
+
+    const updateChart = () => {
+      console.log('그래프 업데이트!')
+    }
 
     return {
       anemia_chart,
@@ -252,6 +278,8 @@ export default defineComponent({
       lipidemia_chart,
       kidney_chart,
       liver_chart,
+      BloodInformation,
+      updateChart,
     }
   },
 })
@@ -353,21 +381,15 @@ export default defineComponent({
     <VCol cols="2">
       <VCard class="inbody-record">
         <h3>혈액검사 기록</h3>
-        <VBtn
-          @click="clickInbodyRecord"
-          class="date-button"
-          >2023-12-12</VBtn
-        >
-        <VBtn
-          @click="clickInbodyRecord"
-          class="date-button"
-          >2023-12-11</VBtn
-        >
-        <VBtn
-          @click="clickInbodyRecord"
-          class="date-button"
-          >2023-12-10</VBtn
-        >
+        <div style="text-align: center">
+          <VBtn
+            v-for="(item, index) in BloodInformation"
+            :key="index"
+            style="margin: 5px"
+          >
+            {{ item.record_date.slice(0, 10) }}
+          </VBtn>
+        </div>
       </VCard>
     </VCol>
     <VCol cols="10">

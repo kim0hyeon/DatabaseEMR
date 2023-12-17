@@ -1,15 +1,29 @@
 <script lang="ts">
 import { defineComponent, ref, onMounted } from 'vue'
-import { InBodyTest } from "@/pages/interfaces";
+import { InBodyTest } from '@/pages/interfaces'
 import { Chart, registerables } from 'chart.js'
 import axios from 'axios'
 import { IdStore } from '@/store'
-const store = IdStore()
 
 // 인바디기록을 저장할 리스트 생성 -> 변경 가능해야함
 let InBodyTestRecord = ref<InBodyTest[]>([])
 
-onMounted(async () => {})
+// 백엔드에서 환자 정보 받아오기
+const token = sessionStorage.getItem('token')
+const store = IdStore()
+let InBodyInformation = ref<InBodyTest[]>([])
+const loadBloodData = async () => {
+  console.log('load inbody data')
+  try {
+    const response = await axios.get(`http://yunsseong.uk:8000/api/inbody?patient=${store.id}`, {
+      headers: { Authorization: `Token ${token}` },
+    })
+    InBodyInformation.value = response.data
+    console.log(InBodyInformation.value[0].weight)
+  } catch (error) {
+    console.log(error)
+  }
+}
 
 export default defineComponent({
   data() {

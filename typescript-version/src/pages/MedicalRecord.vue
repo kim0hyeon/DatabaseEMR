@@ -22,6 +22,7 @@ interface Reception {
 interface Chart {
   chart_id: string
   diagnosis: string
+  doctor_opinion: string
   datetime: string
   date_only: string
   image_id: string
@@ -60,12 +61,19 @@ interface Photo {
   id: string
 }
 
+interface Inspect {
+  inspect_type_id: string
+  inspect_type: string
+  inspect_cost: number
+}
+
 const photos = ref<Photo[]>([])
 const selectedPhoto = ref('')
 
 // 백엔드에서 환자 정보 받아오기
 let receptionInfo = ref<Reception>()
 let chartInfo = ref<Chart>()
+let inspectionData = ref<Inspect[]>([])
 
 const getReceptionInfo = async () => {
   try {
@@ -81,8 +89,8 @@ const getReceptionInfo = async () => {
 
 const getChartInfo = async () => {
   try {
-    const response = await axios.get(`http://yunsseong.uk:8000/api/chart?chart_id=${props.chart_id}`, {
-      headers: { Authorization: `Token ${token.value}` },
+    const response = await axios.get(`http://yunsseong.uk:8000/api/chart?chart_id=${props.chart_id}`,
+      { headers: { Authorization: `Token ${token.value}` },
     })
     chartInfo.value = response.data[0]
     console.log('chart data loading success')
@@ -90,6 +98,30 @@ const getChartInfo = async () => {
     console.error(error)
   }
 }
+
+const getInspectList = async () => {
+  try {
+    const response = await axios.get(`http://yunsseong.uk:8000/api/inspect_type/`,
+      { headers: { Authorization: `Token ${token.value}` }}
+    )
+    inspectionData.value = response.data
+  } catch (error) {
+    console.error(error)
+  }
+}
+
+// 환자가 받은 검사 목록
+let patientInspections = ref<Inspect[]>([])
+
+watchEffect(() => {
+  if (chartInfo.value && inspectionData.value.length > 0) {
+    const inspections = chartInfo.value.inspect.map(inspect_id => {
+      return inspectionData.value.find(inspection => inspection.inspect_type_id === inspect_id)
+    })
+
+    patientInspections.value = inspections.filter(Boolean) as Inspect[]
+  }
+})
 
 // 모달창 구현
 const props = defineProps({
@@ -114,6 +146,7 @@ watch(
     console.log(chartInfo)
     getReceptionInfo()
     console.log(receptionInfo.value)
+    getInspectList()
   },
   { immediate: true },
 )
@@ -228,8 +261,7 @@ watch(
                 auto-grow
                 style="border: 1px solid; border-radius: 5px"
                 class="ml-2 mr-2 cardText"
-                >{{ chartInfo?.diagnosis }}</VCardText
-              >
+                >{{ chartInfo?.diagnosis }}</VCardText>
             </VCard>
           </VRow>
 
@@ -258,13 +290,13 @@ watch(
                   </thead>
                   <tbody>
                     <tr
-                      v-for="(item, index) in selectedExam"
+                      v-for="(item, index) in patientInspections"
                       :key="index"
                     >
                       <template v-if="item">
-                        <td>{{ item.id }}</td>
-                        <td>{{ item.name }}</td>
-                        <td>{{ item.cost }}</td>
+                        <td>{{ item.inspect_type_id }}</td>
+                        <td>{{ item.inspect_type }}</td>
+                        <td>{{ item.inspect_cost }}</td>
                       </template>
                     </tr>
                   </tbody>
@@ -304,13 +336,14 @@ watch(
                 />
                 <h2>의사 소견</h2>
               </div>
-              <VTextarea
-                label="의사 소견"
+              <VCardText
+                readonly
                 outline
                 rows="2"
                 auto-grow
-                style="margin-bottom: 5px"
-              ></VTextarea>
+                style="border: 1px solid; border-radius: 5px"
+                class="ml-2 mr-2 cardText"
+              >{{ chartInfo?.doctor_opinion }}</VCardText>
             </VCard>
           </VRow>
 

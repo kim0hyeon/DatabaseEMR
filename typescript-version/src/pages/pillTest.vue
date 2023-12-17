@@ -100,6 +100,8 @@ const searchMedication = () => {
 }
 function isMedicationFound(code) {
   const inputCode = medicationCode.value.trim().toUpperCase()
+  // medicationCode.value = ''
+  store.id = ''
   const foundMedication = prescription.value.medications.find(medication => medication.code === inputCode)
   console.log(prescription.value)
   // console.log(foundMedication.code + inputCode)

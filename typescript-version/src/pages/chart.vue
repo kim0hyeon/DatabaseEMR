@@ -455,13 +455,6 @@ const OpenScanning = () => {
 
             <VDivider class="mb-2"/>
 
-            <VCard
-              v-for="(i, index) in PrescriptionCards"
-              :key="index"
-              class="add-card"
-              >추가된 치료입니다.</VCard
-            >
-
             <VBtn
               @click="subPrescriptionCard"
               class="right-btn"

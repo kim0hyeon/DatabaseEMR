@@ -2,6 +2,7 @@
 import ExaminationData from '@/exampleJson/examination.json'
 import { is } from 'quasar'
 import { useStore } from 'vuex'
+import axios from "axios";
 
 interface Inspection {
   inspect_type_id: string
@@ -25,7 +26,7 @@ onMounted(async () => {
 
 const store = useStore()
 
-watch(selectedExam, async newVal => {
+watch(selectedInspection, async newVal => {
   console.log(newVal)
   await store.dispatch('updateSelectedInspection', newVal)
 

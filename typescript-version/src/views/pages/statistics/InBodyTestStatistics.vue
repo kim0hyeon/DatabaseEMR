@@ -3,6 +3,12 @@ import axios from 'axios'
 import { useRoute } from 'vue-router'
 import { ref, onMounted } from 'vue'
 import Chart from 'chart.js/auto'
+import InBodyTestData from '@/exampleJson/inbodytest.json'
+
+interface InBodyTestCase {
+  id: string
+  name: string
+}
 
 // 인바디 테스트 기록 정보 받아오기 (속성들은 이름 정하면 그때 넣기)
 interface InBodyTest {
@@ -21,31 +27,16 @@ interface InBodyTest {
 // 인바디기록을 저장할 리스트 생성 -> 변경 가능해야함
 let InBodyTestRecord = ref<InBodyTest[]>([])
 
-// 오류나지 않게 임시로 url 넣어놨음. 인바디검사에 맞는 url로 고쳐줘야함
-onMounted(async () => {
-  try {
-    const response = await axios.get('http;//yunsseong.uk:8000/api/patients/') // 수정 필요
-    const InBodyTestRecord = response.data // 가져온 데이터를 어떻게 가공하여 사용할지 정의 필요
-    console.log('Blood test record loading success')
-  } catch (error) {
-    console.error(error)
-  }
-})
-
-// 차트 그래프 만들기
+// 그래프 만들고 없애기
 export default {
-  data() {
-    return {
-      showGraph: false,
-    }
-  },
-
   setup() {
-    const chartRef = ref<HTMLCanvasElement | null>(null)
+    const chart = ref<HTMLCanvasElement | null>(null)
 
     onMounted(() => {
-      if (chartRef.value) {
-        const ctx = chartRef.value.getContext('2d')
+      if (chart.value) {
+        const ctx = chart.value.getContext('2d')
+        const testcaselist = ref<InBodyTestCase[]>(InBodyTestData['inbodytest'])
+
         if (ctx) {
           new Chart(ctx, {
             type: 'line',
@@ -77,16 +68,25 @@ export default {
       }
     })
 
-    return { chartRef }
+    return { chart }
   },
 }
-
 const route = useRoute()
 </script>
 <template>
-  <div>
-    <canvas ref="chartRef"></canvas>
-  </div>
+  <VRow>
+    <VCol cols="3">
+      <VCard>
+        <VCardTitle>항목 선택</VCardTitle>
+        <VCardContent> </VCardContent>
+      </VCard>
+    </VCol>
+    <VCol cols="9">
+      <VCard>
+        <canvas ref="chart"></canvas>
+      </VCard>
+    </VCol>
+  </VRow>
 </template>
 <style lang='scss'>
 </style>

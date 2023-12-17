@@ -7,11 +7,11 @@ import Chart from 'chart.js/auto'
 // 차트 그래프 만들기
 export default {
   setup() {
-    const chartRef = ref<HTMLCanvasElement | null>(null)
+    const chart = ref<HTMLCanvasElement | null>(null)
 
     onMounted(() => {
-      if (chartRef.value) {
-        const ctx = chartRef.value.getContext('2d')
+      if (chart.value) {
+        const ctx = chart.value.getContext('2d')
         if (ctx) {
           new Chart(ctx, {
             type: 'line',
@@ -43,7 +43,7 @@ export default {
       }
     })
 
-    return { chartRef }
+    return { chart }
   },
 }
 
@@ -80,7 +80,7 @@ onMounted(async () => {
 </script>
 <template>
   <div>
-    <canvas ref="chartRef"></canvas>
+    <canvas ref="chart"></canvas>
   </div>
 </template>
 <style lang='scss'>

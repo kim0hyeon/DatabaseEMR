@@ -58,7 +58,7 @@ export const useUserStore = defineStore('userInfo', {
     logout() {
       this.isLogin = false
       this.userInfo = null
-      sessionStorage.removeItem('token')
+      sessionStorage.removeItem('token.ts')
       sessionStorage.removeItem('userInfo');
     },
     // 실제 필용한 getAccountInfo()
@@ -84,8 +84,8 @@ export const useUserStore = defineStore('userInfo', {
 
     // 임시로 필요한 함수 
     getAccountInfo() {
-      if(sessionStorage.getItem('token')){
-        const token = sessionStorage.getItem('token')
+      if(sessionStorage.getItem('token.ts')){
+        const token = sessionStorage.getItem('token.ts')
         console.log('Check Token ');
         const storedUserInfo = JSON.parse(sessionStorage.getItem('userInfo'));
         this.loginSuccess(storedUserInfo);

@@ -45,15 +45,28 @@ const loadPatientChart = async () => {
 }
 
 // 검사 데이터 불러오기
-let inspection = ref<Inspection>()
+let inspectionData = ref<Inspection[]>([])
 
 onMounted(async () => {
   try {
     const response = await axios.get(`http://yunsseong.uk:8000/api/inspect_type/`)
-    inspection.value = response.data
-    console.log('load', inspection.value)
+    inspectionData.value = response.data
+    console.log('load', inspectionData.value)
   } catch (error) {
     console.error(error)
+  }
+})
+
+// 환자가 받은 검사 목록
+let patientInspections = ref<Inspection[]>([])
+
+watchEffect(() => {
+  if (chartData.value && inspectionData.value.length > 0) {
+    const inspections = chartData.value.inspect.map(inspect_id => {
+      return inspectionData.value.find(inspection => inspection.inspect_type_id === inspect_id)
+    })
+
+    patientInspections.value = inspections.filter(Boolean) as Inspection[]
   }
 })
 
@@ -73,6 +86,7 @@ const inspectionTotalCost = ref(0)
 const medicineTotalCost = ref(0)
 const totalCost = ref(0)
 
+/*
 watchEffect(() => {
   let diagnosisSum = 0
   let inspectionSum = 0
@@ -93,7 +107,7 @@ watchEffect(() => {
 
   totalCost.value = inspectionTotalCost.value + medicineTotalCost.value
 })
-
+*/
 
 </script>
 <template>
@@ -152,10 +166,10 @@ watchEffect(() => {
           </tr>
           </thead>
           <tbody>
-          <template v-for="item in filteredInspectionData">
-            <tr v-for="name in item.inspectionName">
+          <template v-for="item in patientInspections">
+            <tr v-for="name in item.inspect_type">
               <td>{{ name }}</td>
-              <td>{{ findInspectionCost(name) }}원</td>
+              <td>{{ item.inspect_cost }}원</td>
             </tr>
           </template>
           </tbody>

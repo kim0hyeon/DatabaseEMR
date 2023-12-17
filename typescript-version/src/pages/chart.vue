@@ -8,6 +8,7 @@ import { IdStore } from '@/store/index'
 import axios from 'axios'
 import { ref } from 'vue'
 import { useStore } from 'vuex'
+import { token } from "@/token";
 
 const store = IdStore()
 
@@ -111,7 +112,8 @@ let chartInfo = ref<Chart[]>([])
 
 const getReceptionInfo = async (id: string) => {
   try {
-    const response = await axios.get(`http://yunsseong.uk:8000/api/receptions?patient=${ id }`)
+    const response = await axios.get(`http://yunsseong.uk:8000/api/receptions?patient=${ id }`,
+      { headers: { Authorization: `Token ${token}` }})
     receptionInfo.value = response.data[0]
     console.log('reception data loding success')
   } catch (error) {
@@ -121,7 +123,8 @@ const getReceptionInfo = async (id: string) => {
 
 const getChartInfo = (async (id: string) => {
   try {
-    const response = await axios.get(`http://yunsseong.uk:8000/api/chart?patient=${ id }`)
+    const response = await axios.get(`http://yunsseong.uk:8000/api/chart?patient=${ id }`,
+      { headers: { Authorization: `Token ${token}` }})
     chartInfo.value = response.data
     console.log('chart data loading success')
 
@@ -153,8 +156,10 @@ watch(
 let inspectList = ref<Inspect[]>([])
 
 onMounted(async () => {
+  console.log(token.value)
   try {
-    const response = await axios.get(`http://yunsseong.uk:8000/api/inspect_type/`)
+    const response = await axios.get(`http://yunsseong.uk:8000/api/inspect_type/`,
+      { headers: { Authorization: `Token ${token}` }})
     inspectList.value = response.data
     console.log('inspectList loading success')
     console.log(inspectList.value)
@@ -304,8 +309,7 @@ const OpenScanning = () => {
               <VBtn
                 @click="clickedSendFile"
                 class="ml-4 mb-1"
-                >저장</VBtn
-              >
+                >저장</VBtn>
               <div
                 class="scroll-container photo_list"
                 v-if="photos.length > 0"
@@ -410,15 +414,13 @@ const OpenScanning = () => {
             <VBtn
               @click="subDiagnosisCard"
               class="right-btn"
-              >병명 제거</VBtn
-            >
+              >병명 제거</VBtn>
 
             <SelectInspection v-model="isInspectionListOpen" />
             <VBtn
               @click="openInspectionList"
               class="right-btn"
-              >병명 추가</VBtn
-            >
+              >병명 추가</VBtn>
           </VCard>
         </VRow>
 
@@ -458,15 +460,13 @@ const OpenScanning = () => {
             <VBtn
               @click="subPrescriptionCard"
               class="right-btn"
-              >치료 제거</VBtn
-            >
+              >치료 제거</VBtn>
 
             <SelectMedicine v-model="isMedicineOpen" />
             <VBtn
               @click="openMedicine"
               class="right-btn"
-              >치료 추가</VBtn
-            >
+              >치료 추가</VBtn>
           </VCard>
         </VRow>
 

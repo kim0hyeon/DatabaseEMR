@@ -22,7 +22,7 @@ const newProject = {
   subtitle: 'Yearly Project',
 }
 
-const foo = sessionStorage.getItem('token')
+const foo = sessionStorage.getItem('token.ts')
 
 const foo1 = loginStore.$state.userInfo?.name
 const foo2 = loginStore.$state.userInfo?.job

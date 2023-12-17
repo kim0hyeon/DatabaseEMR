@@ -96,7 +96,7 @@ const handleLogin = () => {
     loginStore.loginSuccess(DUMMY_USER)
     const token = reactive({ value: loginResponse.token })
     // 세션 스토리지:
-    sessionStorage.setItem('token', loginResponse.token)
+    sessionStorage.setItem('token.ts', loginResponse.token)
     sessionStorage.setItem('userInfo', JSON.stringify(DUMMY_USER))
     alert(DUMMY_USER.name + '님 반갑습니다!')
     router.push('/home')

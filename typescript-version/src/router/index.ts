@@ -7,7 +7,7 @@ import LoginView from '../pages/login.vue';
 const basicRoute = ref('');
 // const loginStore = useUserStore(); 왠지 모르겠는데 이거하면 주석없애면 로드 안됌 
 basicRoute.value = '/login'
-if(sessionStorage.getItem('token')){
+if(sessionStorage.getItem('token.ts')){
   basicRoute.value = '/home'
 }
 // console.log(basicRoute.value)
@@ -159,7 +159,7 @@ const router = createRouter({
   ],
 });
 router.beforeEach((to, from, next) => {
-  const token = sessionStorage.getItem('token');
+  const token = sessionStorage.getItem('token.ts');
   const requiresAuth = to.matched.some(record => record.meta.requiresAuth);
   if (requiresAuth && !token) {
     // 토큰이 없으면 로그인 페이지로 리디렉션

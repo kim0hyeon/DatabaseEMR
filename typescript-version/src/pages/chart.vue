@@ -113,7 +113,7 @@ let chartInfo = ref<Chart[]>([])
 const getReceptionInfo = async (id: string) => {
   try {
     const response = await axios.get(`http://yunsseong.uk:8000/api/receptions?patient=${ id }`,
-      { headers: { Authorization: `Token ${token}` }})
+      { headers: { Authorization: `Token ${token.value}` }})
     receptionInfo.value = response.data[0]
     console.log('reception data loding success')
   } catch (error) {
@@ -124,7 +124,7 @@ const getReceptionInfo = async (id: string) => {
 const getChartInfo = (async (id: string) => {
   try {
     const response = await axios.get(`http://yunsseong.uk:8000/api/chart?patient=${ id }`,
-      { headers: { Authorization: `Token ${token}` }})
+      { headers: { Authorization: `Token ${token.value}` }})
     chartInfo.value = response.data
     console.log('chart data loading success')
 
@@ -159,7 +159,7 @@ onMounted(async () => {
   console.log(token.value)
   try {
     const response = await axios.get(`http://yunsseong.uk:8000/api/inspect_type/`,
-      { headers: { Authorization: `Token ${token}` }})
+      { headers: { Authorization: `Token ${token.value}` }})
     inspectList.value = response.data
     console.log('inspectList loading success')
     console.log(inspectList.value)

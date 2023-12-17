@@ -1,4 +1,5 @@
 <script lang="ts" setup>
+import PatientPill from '@/exampleJson/PatientPill.json'
 import { mediStore } from '@/store/index'
 import { ref, watch } from 'vue'
 import Scan from './Scan.vue'
@@ -230,8 +231,6 @@ watch(
     </VCol>
   </div>
 </template>
-
-import PatientPill from '@/exampleJson/PatientPill.json'
 
 <style scoped>
 /* 스타일 정보는 이전 HTML 예제와 유사하므로 생략했습니다. */

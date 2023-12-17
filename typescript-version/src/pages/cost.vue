@@ -5,6 +5,7 @@ import patientData from '../exampleJson/patient.json';
 import Inspection from '@/exampleJson/inspection.json'
 import costData from '@/exampleJson/Cost.json'
 import axios from "axios";
+import {token} from "@/token";
 const store = IdStore();
 
 interface Chart {
@@ -36,7 +37,8 @@ let chartData = ref<Chart>()
 
 const loadPatientChart = async () => {
   try {
-    const response = await axios.get(`http://yunsseong.uk:8000/api/chart?patient=${ patient_id.value }`)
+    const response = await axios.get(`http://yunsseong.uk:8000/api/chart?patient=${ patient_id.value }`,
+        { headers: { Authorization: `Token ${token.value}` }})
     chartData.value = response.data
     console.log('load', chartData.value)
   } catch (error) {
@@ -49,7 +51,8 @@ let inspectionData = ref<Inspection[]>([])
 
 onMounted(async () => {
   try {
-    const response = await axios.get(`http://yunsseong.uk:8000/api/inspect_type/`)
+    const response = await axios.get(`http://yunsseong.uk:8000/api/inspect_type/`,
+        { headers: { Authorization: `Token ${token.value}` }})
     inspectionData.value = response.data
     console.log('load', inspectionData.value)
   } catch (error) {

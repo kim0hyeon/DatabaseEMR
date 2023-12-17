@@ -3,6 +3,7 @@ import NewPatientRegistration from '@/views/pages/account-settings/NewPatientReg
 import axios from 'axios'
 import { Ref } from 'vue'
 import { useRoute } from 'vue-router'
+import {token} from "@/token";
 
 const route = useRoute()
 
@@ -48,7 +49,8 @@ let patientInformation = ref<Patient[]>([])
 
 onMounted(async () => {
   try {
-    const response = await axios.get('http://yunsseong.uk:8000/api/patients/')
+    const response = await axios.get('http://yunsseong.uk:8000/api/patients/',
+        { headers: { Authorization: `Token ${token.value}` }})
     patientInformation.value = response.data
     console.log('patient data loding success')
   } catch (error) {
@@ -65,7 +67,7 @@ const loadReceptionData = async () => {
     console.log(selectedPatient.value?.patient_id)
     const response = await axios.get(
       `http://yunsseong.uk:8000/api/receptions?patient=${selectedPatient.value?.patient_id}`,
-    )
+        { headers: { Authorization: `Token ${token.value}` }})
     receptionInformation.value = response.data
     console.log('reception_data loading success')
 
@@ -89,7 +91,8 @@ const addList = async () => {
       patient: patientID,
     }
 
-    const response = await axios.post(`http://yunsseong.uk:8000/api/list/`, data)
+    const response = await axios.post(`http://yunsseong.uk:8000/api/list/`, data,
+        { headers: { Authorization: `Token ${token.value}` }})
   } catch (error) {
     console.error(error)
   }
@@ -107,7 +110,8 @@ const submitForm = async () => {
     }
 
     console.log(data)
-    const response = await axios.post(`http://yunsseong.uk:8000/api/receptions/`, data)
+    const response = await axios.post(`http://yunsseong.uk:8000/api/receptions/`,  data,
+        { headers: { Authorization: `Token ${token.value}` }})
     console.log('Submit success')
 
     await addList() // 환자 리스트에 접수된 환자 추가

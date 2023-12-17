@@ -13,6 +13,7 @@ import { IdStore } from '@/store'
 import axios from 'axios'
 import { watch } from 'vue'
 import { useRoute } from 'vue-router'
+import {token} from "@/token";
 // 접수환자 리스트 ( 고정 )
 interface PatientList {
   list_id: string
@@ -38,7 +39,8 @@ const patients = ref<PatientList[]>([])
 onMounted(async () => {
   try {
     // Axios를 사용하여 백엔드로 GET 요청 보내기
-    const response = await axios.get('http://yunsseong.uk:8000/api/list/')
+    const response = await axios.get('http://yunsseong.uk:8000/api/list/',
+        { headers: { Authorization: `Token ${token.value}` }})
 
     // 받아온 데이터를 responseData에 저장
     responseData.value = response.data

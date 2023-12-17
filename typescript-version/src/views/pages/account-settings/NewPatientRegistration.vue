@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import axios from 'axios'
+import {token} from "@/token";
 
 const patientData = {
   patient_name: '',
@@ -74,7 +75,8 @@ const submitForm = async () => {
 
     console.log('submit patient data')
     console.log(data)
-    const response = await axios.post('http://yunsseong.uk:8000/api/patients/', data);
+    const response = await axios.post('http://yunsseong.uk:8000/api/patients/', data,
+        { headers: { Authorization: `Token ${token.value}` }});
     console.log('submit success')
     closeModal()
   } catch (error) {

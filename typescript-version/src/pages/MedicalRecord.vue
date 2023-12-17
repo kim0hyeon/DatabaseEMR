@@ -6,6 +6,7 @@ import MedicalRecord from '@/pages/MedicalRecord.vue'
 import { IdStore } from '@/store/index'
 import { ref } from 'vue'
 import axios from "axios";
+import {token} from "@/token";
 // 사용자 타입 예시 (백엔드에 따라 수정해야 함)
 const store = IdStore()
 
@@ -104,7 +105,8 @@ let chartInfo = ref<Chart>()
 
 const getReceptionInfo = (async () => {
   try {
-    const response = await axios.get(`http://yunsseong.uk:8000/api/receptions?id=${ props.reception_id }`)
+    const response = await axios.get(`http://yunsseong.uk:8000/api/receptions?id=${ props.reception_id }`,
+        { headers: { Authorization: `Token ${token.value}` }})
     receptionInfo.value = response.data[0]
     console.log('reception data loding success')
   } catch (error) {
@@ -114,7 +116,8 @@ const getReceptionInfo = (async () => {
 
 const getChartInfo = (async () => {
   try {
-    const response = await axios.get(`http://yunsseong.uk:8000/api/chart?id=${ props.chart_id }`)
+    const response = await axios.get(`http://yunsseong.uk:8000/api/chart?chart_id=${ props.chart_id }`,
+        { headers: { Authorization: `Token ${token.value}` }})
     chartInfo.value = response.data[0]
     console.log('chart data loading success')
   } catch (error) {

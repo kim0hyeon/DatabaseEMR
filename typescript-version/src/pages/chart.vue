@@ -3,7 +3,9 @@
 import MedicalRecord from '@/pages/MedicalRecord.vue'
 import Scan from '@/pages/Scan.vue'
 import SelectInspection from '@/pages/selectInspection.vue'
-import SelectMedicine from '@/pages/selectMedicine.vue'
+import SelectMedication from '@/pages/selectMedication.vue'
+import SelectDisease from "@/pages/selectDisease.vue";
+import SelectTreatment from "@/pages/selectTreatment.vue";
 import { IdStore } from '@/store/index'
 import axios from 'axios'
 import { ref } from 'vue'
@@ -66,6 +68,28 @@ interface Inspect {
   inspect_cost: number
 }
 
+interface Disease {
+  id: number
+  disease_code: string
+  disease_name: string
+  disease_description: string
+}
+
+interface Treatment {
+  treatment_code: string
+  treatment_name: string
+  treatment_cost: number
+}
+
+interface Medication {
+  medication_code: string
+  medication_name: string
+  medication_type: string
+  medication_description: string
+  administration_method: string
+  medication_cost: number
+}
+
 interface Photo {
   url: string
   name: string
@@ -117,6 +141,7 @@ const getReceptionInfo = async (id: string) => {
     })
     receptionInfo.value = response.data[0]
     console.log('reception data loding success')
+    console.log(receptionInfo.value)
   } catch (error) {
     console.error(error)
   }
@@ -154,18 +179,55 @@ watch(
   },
 )
 
-// 백엔드에서 검사 정보 받아오기
+// 백엔드에서 검사, 질병, 치료, 처방 정보 받아오기
 let inspectList = ref<Inspect[]>([])
+let diseaseList = ref<Disease[]>([])
+let treatmentList = ref<Treatment[]>([])
+let medicationList = ref<Medication[]>([])
 
 onMounted(async () => {
-  console.log(token)
   try {
     const response = await axios.get(`http://yunsseong.uk:8000/api/inspect_type/`, {
       headers: { Authorization: `Token ${token}` },
     })
     inspectList.value = response.data
     console.log('inspectList loading success')
-    console.log(inspectList.value)
+  } catch (error) {
+    console.error(error)
+  }
+})
+
+onMounted(async () => {
+  try {
+    const response = await axios.get(`http://yunsseong.uk:8000/api/disease/`, {
+      headers: { Authorization: `Token ${token}` },
+    })
+    diseaseList.value = response.data
+    console.log('diseaseList loading success')
+  } catch (error) {
+    console.error(error)
+  }
+})
+
+onMounted(async () => {
+  try {
+    const response = await axios.get(`http://yunsseong.uk:8000/api/treatment/`, {
+      headers: { Authorization: `Token ${token}` },
+    })
+    treatmentList.value = response.data
+    console.log('treatmentList loading success')
+  } catch (error) {
+    console.error(error)
+  }
+})
+
+onMounted(async () => {
+  try {
+    const response = await axios.get(`http://yunsseong.uk:8000/api/medication/`, {
+      headers: { Authorization: `Token ${token}` },
+    })
+    medicationList.value = response.data
+    console.log('medicationList loading success')
   } catch (error) {
     console.error(error)
   }
@@ -184,22 +246,37 @@ const openRecord = (chart_id: string, patient_id: string) => {
 
 // 검사목록 모달
 const isInspectionListOpen = ref(false)
+
 const openInspectionList = () => {
-  console.log('isInspectionListOpen before:', isInspectionListOpen.value)
   isInspectionListOpen.value = true
-  console.log('isInspectionListOpen after:', isInspectionListOpen.value)
+}
+
+// 질병목록 모달
+const isDiseaseListOpen = ref(false)
+
+const openDiseaseList = () => {
+  isDiseaseListOpen.value = true
+}
+
+// 치료목록 모달
+const isTreatmentListOpen = ref(false)
+
+const openTreatmentList = () => {
+  isTreatmentListOpen.value = true
 }
 
 // 처방목록 모달
-const isMedicineOpen = ref(false)
-const openMedicine = () => {
-  isMedicineOpen.value = true
+const isMedicationListOpen = ref(false)
+const openMedication = () => {
+  isMedicationListOpen.value = true
 }
 
 const chartStore = useStore()
 
 const selectedInspection = computed(() => chartStore.getters.selectedInspection)
-const selectedMedicine = computed(() => chartStore.getters.selectedMedicine)
+const selectedDisease = computed(() => chartStore.getters.selectedDisease)
+const selectedTreatment = computed(() => chartStore.getters.selectedTreatment)
+const selectedMedication = computed(() => chartStore.getters.selectedMedication)
 
 // 스캔 모달
 const isScanOpen = ref(false)
@@ -414,8 +491,7 @@ const OpenScanning = () => {
             <VBtn
               @click="openInspectionList"
               class="right-btn"
-              >검사 추가</VBtn
-            >
+              >검사 추가</VBtn>
           </VCard>
         </VRow>
 
@@ -431,19 +507,37 @@ const OpenScanning = () => {
             </div>
 
             <VDivider class="mb-2" />
+            <VCardText class="pt-2 table-container">
+              <table class="list_table">
+                <thead>
+                <tr>
+                  <th>질병 ID</th>
+                  <th>질병 코드</th>
+                  <th>질병 이름</th>
+                  <th>질병 상세</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr
+                  v-for="(item, index) in selectedDisease"
+                  :key="index"
+                >
+                  <template v-if="item">
+                    <td>{{ item.id }}</td>
+                    <td>{{ item.disease_code }}</td>
+                    <td>{{ item.disease_name }}</td>
+                    <td>{{ item.disease_description }}</td>
+                  </template>
+                </tr>
+                </tbody>
+              </table>
+            </VCardText>
 
+            <SelectDisease v-model="isDiseaseListOpen" />
             <VBtn
-              @click="subDiagnosisCard"
+              @click="openDiseaseList"
               class="right-btn"
-              >병명 제거</VBtn
-            >
-
-            <SelectInspection v-model="isInspectionListOpen" />
-            <VBtn
-              @click="openInspectionList"
-              class="right-btn"
-              >병명 추가</VBtn
-            >
+            >질병 추가</VBtn>
           </VCard>
         </VRow>
 
@@ -480,18 +574,35 @@ const OpenScanning = () => {
 
             <VDivider class="mb-2" />
 
-            <VBtn
-              @click="subPrescriptionCard"
-              class="right-btn"
-              >치료 제거</VBtn
-            >
+            <VCardText class="pt-2 table-container">
+              <table class="list_table">
+                <thead>
+                <tr>
+                  <th>치료 코드</th>
+                  <th>치료 이름</th>
+                  <th>치료 비용</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr
+                  v-for="(item, index) in selectedTreatment"
+                  :key="index"
+                >
+                  <template v-if="item">
+                    <td>{{ item.treatment_code }}</td>
+                    <td>{{ item.treatment_name }}</td>
+                    <td>{{ item.treatment_cost }}</td>
+                  </template>
+                </tr>
+                </tbody>
+              </table>
+            </VCardText>
 
-            <SelectMedicine v-model="isMedicineOpen" />
+            <SelectTreatment v-model="isTreatmentListOpen" />
             <VBtn
-              @click="openMedicine"
+              @click="openTreatmentList"
               class="right-btn"
-              >치료 추가</VBtn
-            >
+            >치료 추가</VBtn>
           </VCard>
         </VRow>
 
@@ -512,29 +623,35 @@ const OpenScanning = () => {
               <table class="list_table">
                 <thead>
                   <tr>
-                    <th>약품 ID</th>
+                    <th>약품 코드</th>
                     <th>약품 이름</th>
+                    <th>약품 유형</th>
+                    <th>약품 설명</th>
+                    <th>복용 방법</th>
                     <th>약품 비용</th>
                   </tr>
                 </thead>
                 <tbody>
                   <tr
-                    v-for="(item, index) in selectedMedicine"
+                    v-for="(item, index) in selectedMedication"
                     :key="index"
                   >
                     <template v-if="item">
-                      <td>{{ item.id }}</td>
-                      <td>{{ item.name }}</td>
-                      <td>{{ item.cost }}</td>
+                      <td>{{ item.medication_code }}</td>
+                      <td>{{ item.medication_name }}</td>
+                      <td>{{ item.medication_type }}</td>
+                      <td>{{ item.medication_description }}</td>
+                      <td>{{ item.administration_method }}</td>
+                      <td>{{ item.medication_cost }}</td>
                     </template>
                   </tr>
                 </tbody>
               </table>
             </VCardText>
 
-            <SelectMedicine v-model="isMedicineOpen" />
+            <SelectMedication v-model="isMedicationListOpen" />
             <VBtn
-              @click="openMedicine"
+              @click="openMedication"
               class="right-btn"
               >약품 추가</VBtn
             >

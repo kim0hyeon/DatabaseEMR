@@ -2,22 +2,23 @@
 import axios from 'axios'
 import { useStore } from 'vuex'
 
-interface Inspection {
-  inspect_type_id: string
-  inspect_type: string
-  cost: number
+interface Treatment {
+  treatment_code: string
+  treatment_name: string
+  treatment_cost: number
 }
+
 const token = sessionStorage.getItem('token')
 
-const inspectionList = ref<Inspection[]>([])
-const selectedInspection = ref([])
+const treatmentList = ref<Treatment[]>([])
+const selectedTreatment = ref([])
 
 onMounted(async () => {
   try {
-    const response = await axios.get(`http://yunsseong.uk:8000/api/inspect_type`, {
+    const response = await axios.get(`http://yunsseong.uk:8000/api/treatment`, {
       headers: { Authorization: `Token ${token}` },
     })
-    inspectionList.value = response.data
+    treatmentList.value = response.data
   } catch (error) {
     console.error(error)
   }
@@ -25,15 +26,15 @@ onMounted(async () => {
 
 const store = useStore()
 
-watch(selectedInspection, async newVal => {
+watch(selectedTreatment, async newVal => {
   console.log(newVal)
-  await store.dispatch('updateSelectedInspection', newVal)
+  await store.dispatch('updateSelectedTreatment', newVal)
 
   await nextTick()
 })
 
-const resetSelectedInspection = () => {
-  selectedInspection.value = []
+const resetSelectedTreatment = () => {
+  selectedTreatment.value = []
 }
 
 // 모달창 구현
@@ -72,31 +73,31 @@ watch(
     style="max-width: 600px"
   >
     <VCard style="max-width: 600px">
-      <VCardTitle>검사 항목</VCardTitle>
+      <VCardTitle>치료 항목</VCardTitle>
 
       <VDivider />
 
       <VRow class="ma-3">
         <VCol cols="12">
           <VCheckbox
-            v-for="(item, index) in inspectionList"
+            v-for="(item, index) in treatmentList"
             :key="index"
-            :label="item.inspect_type"
+            :label="item.treatment_name"
             :value="item"
-            v-model="selectedInspection"
+            v-model="selectedTreatment"
           ></VCheckbox>
         </VCol>
       </VRow>
 
       <VRow class="ma-1">
         <VCol>
-          <VBtn @click="resetSelectedInspection">초기화</VBtn>
+          <VBtn @click="resetSelectedTreatment">초기화</VBtn>
         </VCol>
         <VCol>
           <VBtn
             class="right-btn"
             @click="closeModal"
-            >확인</VBtn>
+          >확인</VBtn>
         </VCol>
       </VRow>
     </VCard>

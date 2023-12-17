@@ -2,6 +2,7 @@
 import { defineStore } from 'pinia';
 import { createStore } from "vuex";
 import userInfo from '../exampleJson/userInfo.json';
+import {di} from "@fullcalendar/core/internal-common";
 //환자아이디 
 export const IdStore = defineStore('id', {
   state: () => ({
@@ -99,38 +100,66 @@ export const useUserStore = defineStore('userInfo', {
 export default createStore({
   state: {
     selectedInspection: [],
-    selectedMedicine: []
+    selectedDisease: [],
+    selectedTreatment: [],
+    selectedMedication: []
   },
   mutations: {
     setSelectedInspection(state, inspections) {
       state.selectedInspection = inspections
     },
-    setSelectedMedicine(state, medicine) {
-      state.selectedMedicine = medicine
+    setSelectedDisease(state, diseases) {
+      state.selectedDisease = diseases
+    },
+    setSelectedTreatment(state, treatments) {
+      state.selectedTreatment = treatments
+    },
+    setSelectedMedication(state, Medication) {
+      state.selectedMedication = Medication
     },
     RESET_SELECTED_INSPECTION: state => {
       state.selectedInspection = []
     },
-    RESET_SELECTED_MEDICINE: state => {
-      state.selectedMedicine = []
+    RESET_SELECTED_DISEASE: state => {
+      state.selectedDisease = []
+    },
+    RESET_SELECTED_TREATMENT: state => {
+      state.selectedTreatment = []
+    },
+    RESET_SELECTED_MEDICATION: state => {
+      state.selectedMedication = []
     }
   },
   actions: {
     updateSelectedInspection({ commit }, inspections) {
       commit('setSelectedInspection', inspections)
     },
-    updateSelectedMedicine({ commit }, medicine) {
-      commit('setSelectedMedicine', medicine)
+    updateSelectedDisease({ commit }, diseases) {
+      commit('setSelectedDisease', diseases)
+    },
+    updateSelectedTreatment({ commit }, treatments) {
+      commit('setSelectedTreatment', treatments)
+    },
+    updateSelectedMedication({ commit }, medications) {
+      commit('setSelectedMedication', medications)
     },
     resetSelectedInspections: ({ commit }) => {
       commit('RESET_SELECTED_INSPECTION')
     },
-    resetSelectedMedicine: ({ commit }) => {
-      commit('RESET_SELECTED_MEDICINE')
+    resetSelectedDisease: ({ commit }) => {
+      commit('RESET_SELECTED_DISEASE')
+    },
+    resetSelectedTreatment: ({ commit }) => {
+      commit('RESET_SELECTED_TREATMENT')
+    },
+    resetSelectedMedication: ({ commit }) => {
+      commit('RESET_SELECTED_MEDICATION')
     }
   },
   getters: {
     selectedInspection: state => state.selectedInspection,
-    selectedMedicine: state => state.selectedMedicine
+    selectedDisease: state => state.selectedDisease,
+    selectedTreatment: state => state.selectedTreatment,
+    selectedMedication: state => state.selectedMedication
   }
 })

@@ -2,22 +2,24 @@
 import axios from 'axios'
 import { useStore } from 'vuex'
 
-interface Inspection {
-  inspect_type_id: string
-  inspect_type: string
-  cost: number
+interface Disease {
+  id: number
+  disease_code: string
+  disease_name: string
+  disease_description: string
 }
+
 const token = sessionStorage.getItem('token')
 
-const inspectionList = ref<Inspection[]>([])
-const selectedInspection = ref([])
+const diseaseList = ref<Disease[]>([])
+const selectedDisease = ref([])
 
 onMounted(async () => {
   try {
-    const response = await axios.get(`http://yunsseong.uk:8000/api/inspect_type`, {
+    const response = await axios.get(`http://yunsseong.uk:8000/api/disease`, {
       headers: { Authorization: `Token ${token}` },
     })
-    inspectionList.value = response.data
+    diseaseList.value = response.data
   } catch (error) {
     console.error(error)
   }
@@ -25,15 +27,15 @@ onMounted(async () => {
 
 const store = useStore()
 
-watch(selectedInspection, async newVal => {
+watch(selectedDisease, async newVal => {
   console.log(newVal)
-  await store.dispatch('updateSelectedInspection', newVal)
+  await store.dispatch('updateSelectedDisease', newVal)
 
   await nextTick()
 })
 
-const resetSelectedInspection = () => {
-  selectedInspection.value = []
+const resetSelectedDisease = () => {
+  selectedDisease.value = []
 }
 
 // 모달창 구현
@@ -72,25 +74,25 @@ watch(
     style="max-width: 600px"
   >
     <VCard style="max-width: 600px">
-      <VCardTitle>검사 항목</VCardTitle>
+      <VCardTitle>질병 항목</VCardTitle>
 
       <VDivider />
 
       <VRow class="ma-3">
         <VCol cols="12">
           <VCheckbox
-            v-for="(item, index) in inspectionList"
+            v-for="(item, index) in diseaseList"
             :key="index"
-            :label="item.inspect_type"
+            :label="item.disease_name"
             :value="item"
-            v-model="selectedInspection"
+            v-model="selectedDisease"
           ></VCheckbox>
         </VCol>
       </VRow>
 
       <VRow class="ma-1">
         <VCol>
-          <VBtn @click="resetSelectedInspection">초기화</VBtn>
+          <VBtn @click="resetSelectedDisease">초기화</VBtn>
         </VCol>
         <VCol>
           <VBtn

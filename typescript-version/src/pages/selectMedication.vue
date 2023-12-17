@@ -2,22 +2,26 @@
 import axios from 'axios'
 import { useStore } from 'vuex'
 
-interface Inspection {
-  inspect_type_id: string
-  inspect_type: string
-  cost: number
+interface Medication {
+  medication_code: string
+  medication_name: string
+  medication_type: string
+  medication_description: string
+  administration_method: string
+  medication_cost: number
 }
+
 const token = sessionStorage.getItem('token')
 
-const inspectionList = ref<Inspection[]>([])
-const selectedInspection = ref([])
+const medicationList = ref<Medication[]>([])
+const selectedMedication = ref([])
 
 onMounted(async () => {
   try {
-    const response = await axios.get(`http://yunsseong.uk:8000/api/inspect_type`, {
+    const response = await axios.get(`http://yunsseong.uk:8000/api/medication`, {
       headers: { Authorization: `Token ${token}` },
     })
-    inspectionList.value = response.data
+    medicationList.value = response.data
   } catch (error) {
     console.error(error)
   }
@@ -25,15 +29,15 @@ onMounted(async () => {
 
 const store = useStore()
 
-watch(selectedInspection, async newVal => {
+watch(selectedMedication, async newVal => {
   console.log(newVal)
-  await store.dispatch('updateSelectedInspection', newVal)
+  await store.dispatch('updateSelectedMedication', newVal)
 
   await nextTick()
 })
 
-const resetSelectedInspection = () => {
-  selectedInspection.value = []
+const resetSelectedMedication = () => {
+  selectedMedication.value = []
 }
 
 // 모달창 구현
@@ -79,24 +83,24 @@ watch(
       <VRow class="ma-3">
         <VCol cols="12">
           <VCheckbox
-            v-for="(item, index) in inspectionList"
+            v-for="(item, index) in medicationList"
             :key="index"
-            :label="item.inspect_type"
+            :label="item.medication_name"
             :value="item"
-            v-model="selectedInspection"
+            v-model="selectedMedication"
           ></VCheckbox>
         </VCol>
       </VRow>
 
       <VRow class="ma-1">
         <VCol>
-          <VBtn @click="resetSelectedInspection">초기화</VBtn>
+          <VBtn @click="resetSelectedMedication">초기화</VBtn>
         </VCol>
         <VCol>
           <VBtn
             class="right-btn"
             @click="closeModal"
-            >확인</VBtn>
+          >확인</VBtn>
         </VCol>
       </VRow>
     </VCard>

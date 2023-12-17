@@ -8,6 +8,9 @@ const token = sessionStorage.getItem('token')
 
 interface Chart {
   chart_id: string
+  patient: {
+    patient_name: string
+  }
   inspect: []
   disease: []
   treatment: []
@@ -22,14 +25,6 @@ interface Inspection {
 
 let patient_id = ref('')
 
-const route = useRoute()
-
-watchEffect(async () => {
-  console.log(`ID changed to ${store.id}`)
-  patient_id.value = store.id
-  await loadPatientChart()
-})
-
 // 환자 차트 불러오기
 let chartData = ref<Chart>()
 
@@ -38,8 +33,7 @@ const loadPatientChart = async () => {
     const response = await axios.get(`http://yunsseong.uk:8000/api/chart?patient=${patient_id.value}`, {
       headers: { Authorization: `Token ${token}` },
     })
-    chartData.value = response.data
-    console.log('load', chartData.value)
+    chartData.value = response.data[0]
   } catch (error) {
     console.error(error)
   }
@@ -54,17 +48,24 @@ onMounted(async () => {
       headers: { Authorization: `Token ${token}` },
     })
     inspectionData.value = response.data
-    console.log('load', inspectionData.value)
   } catch (error) {
     console.error(error)
   }
 })
 
+const route = useRoute()
+
 // 환자가 받은 검사 목록
 let patientInspections = ref<Inspection[]>([])
 
+watchEffect(async () => {
+  console.log(`ID changed to ${store.id}`)
+  patient_id.value = store.id
+  await loadPatientChart()
+})
+
 watchEffect(() => {
-  if (chartData.value && inspectionData.value.length > 0) {
+  if (chartData.value && chartData.value.inspect && inspectionData.value.length > 0) {
     const inspections = chartData.value.inspect.map(inspect_id => {
       return inspectionData.value.find(inspection => inspection.inspect_type_id === inspect_id)
     })
@@ -73,44 +74,32 @@ watchEffect(() => {
   }
 })
 
-// Cost.json에서 환자의 검사 및 약제 비용 찾기
-const findInspectionCost = (name: string) => {
-  const item = costs.inspectionCost.find(cost => cost.name === name)
-  return item ? item.cost : 0
-}
-
-const findMedicineCost = (name: string) => {
-  const item = costs.medicineCost.find(cost => cost.name === name)
-  return item ? item.cost : 0
-}
-
 // 최종 금액 계산
+const diagnosisTotalCost = ref(0)
 const inspectionTotalCost = ref(0)
+const treatmentTotalCost = ref(0)
 const medicineTotalCost = ref(0)
 const totalCost = ref(0)
 
-/*
+
 watchEffect(() => {
   let diagnosisSum = 0
   let inspectionSum = 0
   let treatmentSum = 0
   let medicineSum = 0
-  inspectionData.value?.forEach(item => {
-    if (item.patientId === patientInfo.value?.id) {
-      item.inspectionName.forEach(name => {
-        inspectionSum += findInspectionCost(name)
-      })
-      item.medicineName.forEach(name => {
-        medicineSum += findMedicineCost(name)
-      })
-    }
+
+  patientInspections.value?.forEach(item => {
+    inspectionSum += item.inspect_cost
   })
+
   inspectionTotalCost.value = inspectionSum
   medicineTotalCost.value = medicineSum
 
-  totalCost.value = inspectionTotalCost.value + medicineTotalCost.value
+  totalCost.value =
+    diagnosisTotalCost.value + inspectionTotalCost.value +
+    treatmentTotalCost.value + medicineTotalCost.value
 })
-*/
+
 </script>
 <template>
   <VRow>
@@ -173,8 +162,8 @@ watchEffect(() => {
           </thead>
           <tbody>
             <template v-for="item in patientInspections">
-              <tr v-for="name in item.inspect_type">
-                <td>{{ name }}</td>
+              <tr>
+                <td>{{ item.inspect_type }}</td>
                 <td>{{ item.inspect_cost }}원</td>
               </tr>
             </template>
@@ -296,14 +285,14 @@ watchEffect(() => {
             </tr>
           </thead>
           <tbody>
-            <template v-for="item in filteredInspectionData">
-              <tr>
-                <td>{{ item.patientName }}</td>
-                <td>{{ inspectionTotalCost }}원</td>
-                <td>{{ medicineTotalCost }}원</td>
-                <td>{{ totalCost }}원</td>
-              </tr>
-            </template>
+            <tr>
+              <td>{{ chartData?.patient.patient_name }}</td>
+              <td>{{ diagnosisTotalCost }}</td>
+              <td>{{ inspectionTotalCost }}원</td>
+              <td>{{ treatmentTotalCost }}</td>
+              <td>{{ medicineTotalCost }}원</td>
+              <td>{{ totalCost }}원</td>
+            </tr>
           </tbody>
         </table>
       </VCard>

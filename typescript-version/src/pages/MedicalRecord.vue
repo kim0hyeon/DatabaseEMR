@@ -67,6 +67,28 @@ interface Inspect {
   inspect_cost: number
 }
 
+interface Disease {
+  id: number
+  disease_code: string
+  disease_name: string
+  disease_description: string
+}
+
+interface Treatment {
+  treatment_code: string
+  treatment_name: string
+  treatment_cost: number
+}
+
+interface Medication {
+  medication_code: string
+  medication_name: string
+  medication_type: string
+  medication_description: string
+  administration_method: string
+  medication_cost: number
+}
+
 const photos = ref<Photo[]>([])
 const selectedPhoto = ref('')
 
@@ -74,6 +96,9 @@ const selectedPhoto = ref('')
 let receptionInfo = ref<Reception>()
 let chartInfo = ref<Chart>()
 let inspectionData = ref<Inspect[]>([])
+let diseaseData = ref<Disease[]>([])
+let treatmentData = ref<Treatment[]>([])
+let medicationData = ref<Medication[]>([])
 
 const getReceptionInfo = async () => {
   try {
@@ -102,9 +127,42 @@ const getChartInfo = async () => {
 const getInspectList = async () => {
   try {
     const response = await axios.get(`http://yunsseong.uk:8000/api/inspect_type/`,
-      { headers: { Authorization: `Token ${token.value}` }}
+      { headers: { Authorization: `Token ${token}` }}
     )
     inspectionData.value = response.data
+  } catch (error) {
+    console.error(error)
+  }
+}
+
+const getDiseaseList = async () => {
+  try {
+    const response = await axios.get(`http://yunsseong.uk:8000/api/disease/`,
+      { headers: { Authorization: `Token ${token}` }}
+    )
+    diseaseData.value = response.data
+  } catch (error) {
+    console.error(error)
+  }
+}
+
+const getTreatmentList = async () => {
+  try {
+    const response = await axios.get(`http://yunsseong.uk:8000/api/treatment/`,
+      { headers: { Authorization: `Token ${token}` }}
+    )
+    treatmentData.value = response.data
+  } catch (error) {
+    console.error(error)
+  }
+}
+
+const getMedicationList = async () => {
+  try {
+    const response = await axios.get(`http://yunsseong.uk:8000/api/medication/`,
+      { headers: { Authorization: `Token ${token}` }}
+    )
+    medicationData.value = response.data
   } catch (error) {
     console.error(error)
   }
@@ -120,6 +178,46 @@ watchEffect(() => {
     })
 
     patientInspections.value = inspections.filter(Boolean) as Inspect[]
+  }
+})
+
+// 환자의 병명 목록
+let patientDiseases = ref<Disease[]>([])
+
+watchEffect(() => {
+  if (chartInfo.value && diseaseData.value.length > 0) {
+    const diseases = chartInfo.value?.disease.map(disease_id => {
+      return diseaseData.value.find(disease => disease.id === disease_id)
+    })
+
+    patientDiseases.value = diseases.filter(Boolean) as Disease[]
+    console.log(patientDiseases.value)
+  }
+})
+
+// 환자의 치료 목록
+let patientTreatment = ref<Treatment[]>([])
+
+watchEffect(() => {
+  if (chartInfo.value && treatmentData.value.length > 0) {
+    const treatments = chartInfo.value?.treatment.map(treatment_code => {
+      return treatmentData.value.find(treatment => treatment.treatment_code === treatment_code)
+    })
+
+    patientTreatment.value = treatments.filter(Boolean) as Treatment[]
+  }
+})
+
+// 환자의 처방 목록
+let patientMedication = ref<Medication[]>([])
+
+watchEffect(() => {
+  if (chartInfo.value && medicationData.value.length > 0) {
+    const medications = chartInfo.value?.medication.map(medication_code => {
+      return medicationData.value.find(medication => medication.medication_code === medication_code)
+    })
+
+    patientMedication.value = medications.filter(Boolean) as Medication[]
   }
 })
 
@@ -142,11 +240,17 @@ watch(
   newVal => {
     isOpen.value = newVal
     console.log('load data')
+
     getChartInfo()
     console.log(chartInfo)
+
     getReceptionInfo()
     console.log(receptionInfo.value)
+
     getInspectList()
+    getDiseaseList()
+    getTreatmentList()
+    getMedicationList()
   },
   { immediate: true },
 )
@@ -320,6 +424,31 @@ watch(
               </div>
 
               <VDivider class="mb-2" />
+              <VCardText class="pt-2 table-container">
+                <table class="list_table">
+                  <thead>
+                  <tr>
+                    <th>질병 ID</th>
+                    <th>질병 코드</th>
+                    <th>질병 이름</th>
+                    <th>질병 상세</th>
+                  </tr>
+                  </thead>
+                  <tbody>
+                  <tr
+                    v-for="(item, index) in patientDiseases"
+                    :key="index"
+                  >
+                    <template v-if="item">
+                      <td>{{ item.id }}</td>
+                      <td>{{ item.disease_code }}</td>
+                      <td>{{ item.disease_name }}</td>
+                      <td>{{ item.disease_description }}</td>
+                    </template>
+                  </tr>
+                  </tbody>
+                </table>
+              </VCardText>
             </VCard>
           </VRow>
 
@@ -362,6 +491,30 @@ watch(
               </div>
 
               <VDivider class="mb-2" />
+
+              <VCardText class="pt-2 table-container">
+                <table class="list_table">
+                  <thead>
+                  <tr>
+                    <th>치료 코드</th>
+                    <th>치료 이름</th>
+                    <th>치료 비용</th>
+                  </tr>
+                  </thead>
+                  <tbody>
+                  <tr
+                    v-for="(item, index) in patientTreatment"
+                    :key="index"
+                  >
+                    <template v-if="item">
+                      <td>{{ item.treatment_code }}</td>
+                      <td>{{ item.treatment_name }}</td>
+                      <td>{{ item.treatment_cost }}</td>
+                    </template>
+                  </tr>
+                  </tbody>
+                </table>
+              </VCardText>
             </VCard>
           </VRow>
 
@@ -385,20 +538,26 @@ watch(
                 <table class="list_table">
                   <thead>
                     <tr>
-                      <th>약품 ID</th>
+                      <th>약품 코드</th>
                       <th>약품 이름</th>
+                      <th>약품 유형</th>
+                      <th>약품 설명</th>
+                      <th>복용 방법</th>
                       <th>약품 비용</th>
                     </tr>
                   </thead>
                   <tbody>
                     <tr
-                      v-for="(item, index) in selectedMedicine"
+                      v-for="(item, index) in patientMedication"
                       :key="index"
                     >
                       <template v-if="item">
-                        <td>{{ item.id }}</td>
-                        <td>{{ item.name }}</td>
-                        <td>{{ item.cost }}</td>
+                        <td>{{ item.medication_code }}</td>
+                        <td>{{ item.medication_name }}</td>
+                        <td>{{ item.medication_type }}</td>
+                        <td>{{ item.medication_description }}</td>
+                        <td>{{ item.administration_method }}</td>
+                        <td>{{ item.medication_cost }}</td>
                       </template>
                     </tr>
                   </tbody>

@@ -1,12 +1,7 @@
 <script lang="ts" setup>
 import axios from 'axios'
+import { Treatment } from "@/pages/interfaces";
 import { useStore } from 'vuex'
-
-interface Treatment {
-  treatment_code: string
-  treatment_name: string
-  treatment_cost: number
-}
 
 const token = sessionStorage.getItem('token')
 

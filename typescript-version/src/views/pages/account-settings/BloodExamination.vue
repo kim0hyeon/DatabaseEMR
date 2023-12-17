@@ -1,22 +1,8 @@
 <script lang="ts">
 import { defineComponent, ref, onMounted } from 'vue'
+import { BloodTest } from "@/pages/interfaces";
 import { Chart, registerables } from 'chart.js'
 import axios from 'axios'
-
-// 혈액검사 테스트 기록 정보 받아오기 (속성들은 이름 정하면 그때 넣기)
-interface BloodTest {
-  hemoglobin: number
-  fasting_blood_sugar: number
-  total_cholesterol: number
-  hdl_cholesterol: number
-  triglycerides: number
-  ldl_cholesterol: number
-  serum_creatinine: number
-  glomerular_filtration_rate: number
-  ast: number
-  alt: number
-  gamma_gt: number
-}
 
 // 혈액검사기록을 저장할 리스트 생성 -> 변경 가능해야함
 let BloodTestRecord = ref<BloodTest[]>([])

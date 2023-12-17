@@ -1,25 +1,9 @@
 <script setup lang="ts">
-import Schedule from '@/exampleJson/Schedule.json'
+import ScheduleData from '@/exampleJson/Schedule.json'
+import { Event, Schedule } from '@/pages/interfaces'
 import { Ref } from 'vue'
 import PatientSearch from './PatientSearch.vue'
 const token = sessionStorage.getItem('token')
-
-// json 양식
-interface Event {
-  date: Date
-  hour: number
-  minute: number
-  title: string
-  diagnosis: string
-}
-
-interface Schedule {
-  id: number
-  name: string
-  date: string
-  hour: number
-  minute: number
-}
 
 const selectedDate: Ref<string | null> = ref(null)
 const isPatientSearchOpen = ref(false)
@@ -46,7 +30,7 @@ const clearSelectedDate = () => {
 let scheduleData: Ref<Schedule[] | null> = ref(null)
 
 onMounted(async () => {
-  scheduleData.value = Schedule.schedule
+  scheduleData.value = ScheduleData.schedule
 })
 </script>
 

@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import PhysiotherapyModal from '@/views/pages/therapy/PhysiotherapyModal.vue'
 import RehabilitationModal from '@/views/pages/therapy/RehabilitationModal.vue'
+import { Patient } from "@/pages/interfaces";
 // Components 일단 환자 정보를 불러와야 하기 때문에 사용함
 import axios from 'axios'
 import { ref } from 'vue'
@@ -14,20 +15,6 @@ const tabs = [
   { title: '물리치료', icon: 'mdi-camera', tab: 'Physiotherapy' },
   { title: '재활치료', icon: 'mdi-water', tab: 'rehabilitation' },
 ]
-
-// 사용자 타입
-interface Patient {
-  patient_id: string
-  patient_name: string
-  patient_gender: string
-  patient_birth: string
-  patient_residence_number: string
-  patient_phone_number: string
-  patient_emergency_phone_number: string
-  patient_address: string
-  patient_agree_essential_term: boolean
-  patient_agree_optional_term: boolean
-}
 const token = sessionStorage.getItem('token')
 // 백엔드에서 환자 정보 받아오기
 let patientInformation = ref<Patient[]>([])

@@ -1,25 +1,9 @@
 <script setup lang="ts">
 import axios from 'axios'
+import { Patient, Event } from "@/pages/interfaces";
 import { Ref } from 'vue'
-// json 양식
-interface Patient {
-  patient_id: string
-  patient_name: string
-  patient_gender: string
-  patient_birthday: string
-  patient_residence_number: string
-  patient_phone_number: string
-  patient_emergency_phone_number: string
-  patient_address: string
-}
-const token = sessionStorage.getItem('token')
 
-interface Event {
-  date: Date
-  hour: number
-  minute: number
-  title: string
-}
+const token = sessionStorage.getItem('token')
 
 const selectedDate = inject<Ref<Date>>('selectedDate')
 const isPatientSearchOpen = inject<Ref<boolean>>('isPatientSearchOpen', ref(false))

@@ -1,5 +1,6 @@
 <script setup lang="ts">
 // Components
+import { Reception, Chart, Inspect, Disease, Treatment, Medication, Photo } from "@/pages/interfaces";
 import MedicalRecord from '@/pages/MedicalRecord.vue'
 import Scan from '@/pages/Scan.vue'
 import SelectInspection from '@/pages/selectInspection.vue'
@@ -13,87 +14,6 @@ import { useStore } from 'vuex'
 
 const store = IdStore()
 const token = sessionStorage.getItem('token')
-
-interface Reception {
-  reception_id: string
-  visit_reason: string
-  reception_date: string
-  reception_date_only: string
-  patient: {
-    patient_id: string
-    patient_name: string
-    patient_gender: string
-  }
-}
-
-interface Chart {
-  chart_id: string
-  diagnosis: string
-  datetime: string
-  date_only: string
-  image_id: string
-  image_url: string
-  patient: {
-    patient_id: string
-    patient_name: string
-    patient_gender: string
-    patient_birth: string
-    patient_residence_number: string
-    patient_phone_number: string
-    patient_emergency_phone_number: string
-    patient_address: string
-    patient_agree_essential_term: boolean
-    patient_agree_optional_term: boolean
-  }
-  medical: {
-    medical_person_id: string
-    medical_person_name: string
-    medical_person_system_id: string
-    medical_person_gender: string
-    medical_person_birthday: string
-    medical_person_phone_number: string
-    medical_person_main_address: string
-    medical_person_license: string
-    classification_code: string
-  }
-  inspect: []
-  disease: []
-  treatment: []
-  medication: []
-}
-
-interface Inspect {
-  inspect_type_id: string
-  inspect_type: string
-  inspect_cost: number
-}
-
-interface Disease {
-  id: number
-  disease_code: string
-  disease_name: string
-  disease_description: string
-}
-
-interface Treatment {
-  treatment_code: string
-  treatment_name: string
-  treatment_cost: number
-}
-
-interface Medication {
-  medication_code: string
-  medication_name: string
-  medication_type: string
-  medication_description: string
-  administration_method: string
-  medication_cost: number
-}
-
-interface Photo {
-  url: string
-  name: string
-}
 
 const photos = ref<Photo[]>([])
 const selectedPhoto = ref('')
@@ -117,6 +37,7 @@ function handleFilesUpload(event: Event) {
         }
       }
       reader.readAsDataURL(file)
+      console.log(files)
     })
   }
 }
@@ -140,7 +61,6 @@ const getReceptionInfo = async (id: string) => {
       headers: { Authorization: `Token ${token}` },
     })
     receptionInfo.value = response.data[0]
-    console.log('reception data loding success')
     console.log(receptionInfo.value)
   } catch (error) {
     console.error(error)
@@ -153,7 +73,6 @@ const getChartInfo = async (id: string) => {
       headers: { Authorization: `Token ${token}` },
     })
     chartInfo.value = response.data
-    console.log('chart data loading success')
 
     chartInfo.value = response.data.map((item: Chart) => {
       return {
@@ -462,17 +381,20 @@ const OpenScanning = () => {
               />
               <h2>검사</h2>
             </div>
+
             <VDivider />
-            <VCardText class="pt-2 table-container">
-              <table class="list_table">
-                <thead>
+
+            <VRow>
+              <VCardText class="pt-2 table-container">
+                <table class="list_table">
+                  <thead>
                   <tr>
                     <th>검사 ID</th>
                     <th>검사 이름</th>
                     <th>검사 비용</th>
                   </tr>
-                </thead>
-                <tbody>
+                  </thead>
+                  <tbody>
                   <tr
                     v-for="(item, index) in selectedInspection"
                     :key="index"
@@ -483,9 +405,10 @@ const OpenScanning = () => {
                       <td>{{ item.inspect_cost }}</td>
                     </template>
                   </tr>
-                </tbody>
-              </table>
-            </VCardText>
+                  </tbody>
+                </table>
+              </VCardText>
+            </VRow>
 
             <SelectInspection v-model="isInspectionListOpen" />
             <VBtn
@@ -507,31 +430,34 @@ const OpenScanning = () => {
             </div>
 
             <VDivider class="mb-2" />
-            <VCardText class="pt-2 table-container">
-              <table class="list_table">
-                <thead>
-                <tr>
-                  <th>질병 ID</th>
-                  <th>질병 코드</th>
-                  <th>질병 이름</th>
-                  <th>질병 상세</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr
-                  v-for="(item, index) in selectedDisease"
-                  :key="index"
-                >
-                  <template v-if="item">
-                    <td>{{ item.id }}</td>
-                    <td>{{ item.disease_code }}</td>
-                    <td>{{ item.disease_name }}</td>
-                    <td>{{ item.disease_description }}</td>
-                  </template>
-                </tr>
-                </tbody>
-              </table>
-            </VCardText>
+
+            <VRow>
+              <VCardText class="pt-2 table-container">
+                <table class="list_table">
+                  <thead>
+                  <tr>
+                    <th>질병 ID</th>
+                    <th>질병 코드</th>
+                    <th>질병 이름</th>
+                    <th>질병 상세</th>
+                  </tr>
+                  </thead>
+                  <tbody>
+                  <tr
+                    v-for="(item, index) in selectedDisease"
+                    :key="index"
+                  >
+                    <template v-if="item">
+                      <td>{{ item.id }}</td>
+                      <td>{{ item.disease_code }}</td>
+                      <td>{{ item.disease_name }}</td>
+                      <td>{{ item.disease_description }}</td>
+                    </template>
+                  </tr>
+                  </tbody>
+                </table>
+              </VCardText>
+            </VRow>
 
             <SelectDisease v-model="isDiseaseListOpen" />
             <VBtn
@@ -574,29 +500,31 @@ const OpenScanning = () => {
 
             <VDivider class="mb-2" />
 
-            <VCardText class="pt-2 table-container">
-              <table class="list_table">
-                <thead>
-                <tr>
-                  <th>치료 코드</th>
-                  <th>치료 이름</th>
-                  <th>치료 비용</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr
-                  v-for="(item, index) in selectedTreatment"
-                  :key="index"
-                >
-                  <template v-if="item">
-                    <td>{{ item.treatment_code }}</td>
-                    <td>{{ item.treatment_name }}</td>
-                    <td>{{ item.treatment_cost }}</td>
-                  </template>
-                </tr>
-                </tbody>
-              </table>
-            </VCardText>
+            <VRow>
+              <VCardText class="pt-2 table-container">
+                <table class="list_table">
+                  <thead>
+                  <tr>
+                    <th>치료 코드</th>
+                    <th>치료 이름</th>
+                    <th>치료 비용</th>
+                  </tr>
+                  </thead>
+                  <tbody>
+                  <tr
+                    v-for="(item, index) in selectedTreatment"
+                    :key="index"
+                  >
+                    <template v-if="item">
+                      <td>{{ item.treatment_code }}</td>
+                      <td>{{ item.treatment_name }}</td>
+                      <td>{{ item.treatment_cost }}</td>
+                    </template>
+                  </tr>
+                  </tbody>
+                </table>
+              </VCardText>
+            </VRow>
 
             <SelectTreatment v-model="isTreatmentListOpen" />
             <VBtn
@@ -618,10 +546,10 @@ const OpenScanning = () => {
             </div>
 
             <VDivider />
-
-            <VCardText class="pt-2 table-container">
-              <table class="list_table">
-                <thead>
+            <VRow>
+              <VCardText class="pt-2 table-container">
+                <table class="list_table">
+                  <thead>
                   <tr>
                     <th>약품 코드</th>
                     <th>약품 이름</th>
@@ -630,8 +558,8 @@ const OpenScanning = () => {
                     <th>복용 방법</th>
                     <th>약품 비용</th>
                   </tr>
-                </thead>
-                <tbody>
+                  </thead>
+                  <tbody>
                   <tr
                     v-for="(item, index) in selectedMedication"
                     :key="index"
@@ -645,9 +573,10 @@ const OpenScanning = () => {
                       <td>{{ item.medication_cost }}</td>
                     </template>
                   </tr>
-                </tbody>
-              </table>
-            </VCardText>
+                  </tbody>
+                </table>
+              </VCardText>
+            </VRow>
 
             <SelectMedication v-model="isMedicationListOpen" />
             <VBtn

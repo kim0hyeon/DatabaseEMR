@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import NewPatientRegistration from '@/views/pages/account-settings/NewPatientRegistration.vue'
+import { Patient, Reception } from "@/pages/interfaces";
 import GenerateQR from "@/pages/generateQR.vue";
 import axios from 'axios'
 import QRCode from "qrcode";
@@ -8,36 +9,6 @@ import { useRoute } from 'vue-router'
 
 const route = useRoute()
 const token = sessionStorage.getItem('token')
-// 인터페이스
-interface Patient {
-  patient_id: string
-  patient_name: string
-  patient_gender: string
-  patient_birth: string
-  patient_residence_number: string
-  patient_phone_number: string
-  patient_emergency_phone_number: string
-  patient_address: string
-  patient_agree_essential_term: boolean
-  patient_agree_optional_term: boolean
-}
-
-interface Reception {
-  reception: string
-  visit_reason: string
-  reception_date: string
-  reception_date_only: string
-  patient: {
-    patient_id: string
-    patient_name: string
-    patient_gender: string
-    patient_birthday: string
-    patient_residence_number: string
-    patient_phone_number: string
-    patient_emergency_phone_number: string
-    patient_address: string
-  }
-}
 
 // 모달창 구현
 // 신규 환자 등록 모달

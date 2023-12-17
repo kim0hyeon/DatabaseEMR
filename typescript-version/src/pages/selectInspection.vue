@@ -1,15 +1,11 @@
 <script lang="ts" setup>
 import axios from 'axios'
+import { Inspect } from "@/pages/interfaces";
 import { useStore } from 'vuex'
 
-interface Inspection {
-  inspect_type_id: string
-  inspect_type: string
-  cost: number
-}
 const token = sessionStorage.getItem('token')
 
-const inspectionList = ref<Inspection[]>([])
+const inspectionList = ref<Inspect[]>([])
 const selectedInspection = ref([])
 
 onMounted(async () => {

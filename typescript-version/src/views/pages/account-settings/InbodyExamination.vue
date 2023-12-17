@@ -1,26 +1,11 @@
 <script lang="ts">
 import { defineComponent, ref, onMounted } from 'vue'
+import { InBodyTest } from "@/pages/interfaces";
 import { Chart, registerables } from 'chart.js'
 import axios from 'axios'
 import { IdStore } from '@/store'
 const store = IdStore()
 
-// 인바디 테스트 기록 정보 받아오기 (속성들은 이름 정하면 그때 넣기)
-interface InBodyTest {
-  weight: number
-  muscle_mass: number
-  body_fat_mass: number
-  bmi: number
-  percent_body_fat: number
-  right_arm: number
-  left_arm: number
-  trunk: number
-  right_leg: number
-  left_leg: number
-  patient_id: string
-  record_date: string
-  inbody_id: string
-}
 // 인바디기록을 저장할 리스트 생성 -> 변경 가능해야함
 let InBodyTestRecord = ref<InBodyTest[]>([])
 

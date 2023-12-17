@@ -1,93 +1,11 @@
 <script lang="ts" setup>
-// 모달창 구현
 import { IdStore } from '@/store/index'
+import { Reception, Chart, Photo, Inspect, Treatment, Disease, Medication } from "@/pages/interfaces";
 import axios from 'axios'
 import { ref } from 'vue'
 // 사용자 타입 예시 (백엔드에 따라 수정해야 함)
 const store = IdStore()
 const token = sessionStorage.getItem('token')
-
-interface Reception {
-  reception: string
-  visit_reason: string
-  reception_date: string
-  reception_date_only: string
-  patient: {
-    patient_id: string
-    patient_name: string
-    patient_gender: string
-  }
-}
-
-interface Chart {
-  chart_id: string
-  diagnosis: string
-  doctor_opinion: string
-  datetime: string
-  date_only: string
-  image_id: string
-  image_url: string
-  patient: {
-    patient_id: string
-    patient_name: string
-    patient_gender: string
-    patient_birth: string
-    patient_residence_number: string
-    patient_phone_number: string
-    patient_emergency_phone_number: string
-    patient_address: string
-    patient_agree_essential_term: boolean
-    patient_agree_optional_term: boolean
-  }
-  medical: {
-    medical_person_id: string
-    medical_person_name: string
-    medical_person_system_id: string
-    medical_person_gender: string
-    medical_person_birthday: string
-    medical_person_phone_number: string
-    medical_person_main_address: string
-    medical_person_license: string
-    classification_code: string
-  }
-  inspect: []
-  disease: []
-  treatment: []
-  medication: []
-}
-
-interface Photo {
-  url: string
-  id: string
-}
-
-interface Inspect {
-  inspect_type_id: string
-  inspect_type: string
-  inspect_cost: number
-}
-
-interface Disease {
-  id: number
-  disease_code: string
-  disease_name: string
-  disease_description: string
-}
-
-interface Treatment {
-  treatment_code: string
-  treatment_name: string
-  treatment_cost: number
-}
-
-interface Medication {
-  medication_code: string
-  medication_name: string
-  medication_type: string
-  medication_description: string
-  administration_method: string
-  medication_cost: number
-}
 
 const photos = ref<Photo[]>([])
 const selectedPhoto = ref('')

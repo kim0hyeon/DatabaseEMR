@@ -57,6 +57,7 @@ let chartInfo = ref<Chart[]>([])
 
 const getReceptionInfo = async (id: string) => {
   try {
+    console.log(id)
     const response = await axios.get(`http://yunsseong.uk:8000/api/receptions?patient=${id}`, {
       headers: { Authorization: `Token ${token}` },
     })
@@ -270,8 +271,7 @@ const postChart = async () => {
               <VBtn
                 @click="OpenScanning"
                 class="right-btn"
-                >Scan</VBtn
-              >
+                >Scan</VBtn>
             </VCol>
           </VRow>
           <VDivider />

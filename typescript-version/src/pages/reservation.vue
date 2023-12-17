@@ -5,26 +5,16 @@ import { Ref } from 'vue'
 import PatientSearch from './PatientSearch.vue'
 const token = sessionStorage.getItem('token')
 
-const selectedDate: Ref<string | null> = ref(null)
+let selectedDate = ref('')
 const isPatientSearchOpen = ref(false)
-const events = inject<Ref<Event[]>>('events')
 
-provide('selectedDate', selectedDate)
-provide('isPatientSearchOpen', isPatientSearchOpen)
-
-const openPatientSearch = () => {
-  console.log('Selected Date :', selectedDate.value)
+const openPatientSearch = (date: string) => {
+  selectedDate.value = date
   isPatientSearchOpen.value = true
-  console.log('open')
-  console.log(isPatientSearchOpen.value)
-}
-
-const showEvent = (event: Event) => {
-  console.log(event)
 }
 
 const clearSelectedDate = () => {
-  selectedDate.value = null
+  selectedDate.value = ''
 }
 
 let scheduleData: Ref<Schedule[] | null> = ref(null)
@@ -48,12 +38,11 @@ onMounted(async () => {
             :value="selectedDate"
             @dayclick="(date : Date) => selectedDate = date.id"
           />
-
-          <PatientSearch v-model="isPatientSearchOpen" />
         </VCard>
 
+        <PatientSearch v-model="isPatientSearchOpen" :date="selectedDate"/>
         <VBtn
-          @click="openPatientSearch"
+          @click="openPatientSearch(selectedDate)"
           class="mr-3 reservationBtn"
           >예약 일정 추가</VBtn
         >
@@ -68,7 +57,7 @@ onMounted(async () => {
         <VCard class="user_list scroll-container1">
           <VCardItem class="justify-center">
             <VCardTitle class="font-weight-semibold text-2xl text-uppercase">
-              {{ selectedDate ?? '전체' }} 예약 일정
+              {{ selectedDate !== '' ? selectedDate : '전체' }} 예약 일정
             </VCardTitle>
           </VCardItem>
 
@@ -89,7 +78,7 @@ onMounted(async () => {
                   v-for="(item, index) in scheduleData"
                   :key="index"
                 >
-                  <template v-if="selectedDate === null || item.date === selectedDate">
+                  <template v-if="selectedDate === '' || item.date === selectedDate">
                     <td>{{ item.id }}</td>
                     <td>{{ item.name }}</td>
                     <td>{{ item.date }}</td>

@@ -5,26 +5,54 @@ import { Ref } from 'vue'
 
 const token = sessionStorage.getItem('token')
 
-const selectedDate = inject<Ref<Date>>('selectedDate')
-const isPatientSearchOpen = inject<Ref<boolean>>('isPatientSearchOpen', ref(false))
-const events = ref<Event[]>([])
 const selectedHour = ref()
 const selectedMinute = ref()
 
-provide('selectedHour', selectedHour)
-provide('selectedMinute', selectedMinute)
-provide('events', events)
+// 모달창 구현
+const props = defineProps({
+  modelValue: Boolean,
+  date: String
+})
 
-const closePatientSearch = () => {
-  isPatientSearchOpen.value = false
-  selectedPatient.value = null
+const emit = defineEmits(['update:modelValue'])
+
+let isOpen = ref(props.modelValue)
+
+const closeModal = () => {
+  isOpen.value = false
 }
+
+watch(
+    () => props.modelValue,
+    newVal => {
+      isOpen.value = newVal
+    },
+    { immediate: true },
+)
+
+watch(
+    () => isOpen.value,
+    newVal => {
+      if (props.modelValue !== newVal) {
+        emit('update:modelValue', newVal)
+      }
+    },
+)
+
+watch(
+    () => {
+  return props.date
+  },
+  async (newDate, oldDate) => {
+      console.log(`SelectedDate changed from ${ oldDate } to ${ newDate }`)
+  }
+)
 
 // 환자 정보 검색
 let patientInformation = ref<Patient[]>([])
 const searchTerm: Ref<string> = ref('')
 const searchResults = reactive<Patient[]>([])
-const selectedPatient = ref<Patient | null>(null)
+const selectedPatient = ref<Patient>()
 const searchCondition: Ref<string> = ref('선택 안함')
 
 // 백엔드에서 환자 정보 받아오기
@@ -35,6 +63,22 @@ onMounted(async () => {
     })
     patientInformation.value = response.data
     console.log('success')
+  } catch (error) {
+    console.error(error)
+  }
+})
+
+// 예약 일정을 백엔드에 포스트
+const addReservation = (async () => {
+  try {
+    const data = {
+      patient_id: patientInformation.value.patient_id,
+      reservation_date: props.date,
+      reservation_hour: selectedHour.value,
+      reservation_minute: selectedMinute.value
+    }
+
+    const response = await axios.get(`http://yunsseong.uk:8000/api/`, data)
   } catch (error) {
     console.error(error)
   }
@@ -82,27 +126,11 @@ const selectPatient = (patient: Patient | null) => {
   selectedPatient.value = patient
   searchResults.splice(0, searchResults.length)
 }
-
-const addEvent = (patient: Patient | null) => {
-  events?.value.push({
-    date: selectedDate?.value || new Date(),
-    hour: selectedHour.value || 0,
-    minute: selectedMinute.value || 0,
-    title: patient?.patient_name || '환자 이름 없음',
-  })
-  console.log(toRaw(selectedDate?.value))
-  events.value.forEach(event => console.log(event))
-
-  isPatientSearchOpen.value = false
-  selectedPatient.value = null
-  selectedMinute.value = null
-  selectedHour.value = null
-}
 </script>
 
 <template>
   <VDialog
-    v-model="isPatientSearchOpen"
+    v-model="isOpen"
     max-width="1000px"
   >
     <div>
@@ -205,7 +233,7 @@ const addEvent = (patient: Patient | null) => {
                   cols="12"
                   md="4"
                 >
-                  <VCardText> 생년월일 : {{ selectedPatient?.patient_birthday }} </VCardText>
+                  <VCardText> 생년월일 : {{ selectedPatient?.patient_birth }} </VCardText>
                 </VCol>
 
                 <VCol
@@ -270,14 +298,14 @@ const addEvent = (patient: Patient | null) => {
             md="1"
             class="mr-0"
           >
-            <v-btn @click="addEvent(selectedPatient)">선택</v-btn>
+            <v-btn @click="addReservation">선택</v-btn>
           </VCol>
           <VCol
             cols="12"
             md="1"
             class="mr-8"
           >
-            <v-btn @click="closePatientSearch">닫기</v-btn>
+            <v-btn @click="closeModal">닫기</v-btn>
           </VCol>
         </VRow>
       </VCard>

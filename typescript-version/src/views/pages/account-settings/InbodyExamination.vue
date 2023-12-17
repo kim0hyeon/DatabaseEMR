@@ -4,14 +4,16 @@ import { InBodyTest } from '@/pages/interfaces'
 import { Chart, registerables } from 'chart.js'
 import axios from 'axios'
 import { IdStore } from '@/store'
+import Vue from 'vue'
 
 const token = sessionStorage.getItem('token')
 const store = IdStore()
 // 백엔드에서 환자 정보 받아오기
 let InBodyInformation = ref<InBodyTest[]>([])
 const loadInBodyData = async () => {
-  console.log('load inbody data')
+  InBodyInformation.value = []
   try {
+    console.log(store.id)
     const response = await axios.get(`http://yunsseong.uk:8000/api/inbody?patient=${store.id}`, {
       headers: { Authorization: `Token ${token}` },
     })
@@ -46,7 +48,7 @@ export default defineComponent({
   },
   setup() {
     // 값들을 values 배열을 통해서 받기. 앞에서부터 weight라고 가정함
-    const values = ref([0, 0, 0, 0, 0, 0, 0, 0, 0, 0])
+    const values = ref([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0])
     // 인바디 데이터 추가하기
     const addData = async () => {
       try {
@@ -68,15 +70,15 @@ export default defineComponent({
         const response = await axios.post(`http://yunsseong.uk:8000/api/inbody/`, data, {
           headers: { Authorization: `Token ${token}` },
         })
-        location.reload()
+        values.value[10] = 0
       } catch (error) {
         console.error(error)
       }
     }
 
     watch(store, (newValue, oldValue) => {
-      loadInBodyData()
       console.log('id가 바뀌었습니다!', store.id)
+      loadInBodyData()
       console.log(InBodyInformation.value)
       resetChart()
     })
@@ -482,6 +484,7 @@ export default defineComponent({
       updateChart,
       addData,
       values,
+      loadInBodyData,
     }
   },
 })
@@ -573,6 +576,7 @@ export default defineComponent({
               () => {
                 addData()
                 saveRecord()
+                loadInBodyData()
               }
             "
             >저장</VBtn
@@ -591,7 +595,11 @@ export default defineComponent({
           v-for="(item, index) in InBodyInformation"
           :key="index"
           style="margin: 5px"
-          @click="updateChart(index)"
+          @click="
+            () => {
+              updateChart(index)
+            }
+          "
         >
           {{ item.record_date.slice(0, 10) }}</VBtn
         >

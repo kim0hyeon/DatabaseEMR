@@ -126,9 +126,9 @@ const getChartInfo = async () => {
 
 const getInspectList = async () => {
   try {
-    const response = await axios.get(`http://yunsseong.uk:8000/api/inspect_type/`,
-      { headers: { Authorization: `Token ${token}` }}
-    )
+    const response = await axios.get(`http://yunsseong.uk:8000/api/inspect_type/`, {
+      headers: { Authorization: `Token ${token}` },
+    })
     inspectionData.value = response.data
   } catch (error) {
     console.error(error)

@@ -1,7 +1,7 @@
 
 import { defineStore } from 'pinia';
+import { createStore } from "vuex";
 import userInfo from '../exampleJson/userInfo.json';
-import {createStore} from "vuex";
 //환자아이디 
 export const IdStore = defineStore('id', {
   state: () => ({
@@ -58,7 +58,7 @@ export const useUserStore = defineStore('userInfo', {
     logout() {
       this.isLogin = false
       this.userInfo = null
-      sessionStorage.removeItem('token.ts')
+      sessionStorage.removeItem('token')
       sessionStorage.removeItem('userInfo');
     },
     // 실제 필용한 getAccountInfo()
@@ -84,8 +84,8 @@ export const useUserStore = defineStore('userInfo', {
 
     // 임시로 필요한 함수 
     getAccountInfo() {
-      if(sessionStorage.getItem('token.ts')){
-        const token = sessionStorage.getItem('token.ts')
+      if(sessionStorage.getItem('token')){
+        const token = sessionStorage.getItem('token')
         console.log('Check Token ');
         const storedUserInfo = JSON.parse(sessionStorage.getItem('userInfo'));
         this.loginSuccess(storedUserInfo);

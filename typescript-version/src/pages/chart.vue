@@ -1,14 +1,13 @@
 <script setup lang="ts">
 // Components
-import MedicalRecord from '@/pages/MedicalRecord.vue';
-import Scan from "@/pages/Scan.vue";
-import SelectInspection from '@/pages/selectInspection.vue';
-import SelectMedicine from '@/pages/selectMedicine.vue';
-import { IdStore } from '@/store/index';
-import { token } from "@/token";
-import axios from 'axios';
-import { ref } from 'vue';
-import { useStore } from 'vuex';
+import MedicalRecord from '@/pages/MedicalRecord.vue'
+import Scan from '@/pages/Scan.vue'
+import SelectInspection from '@/pages/selectInspection.vue'
+import SelectMedicine from '@/pages/selectMedicine.vue'
+import { IdStore } from '@/store/index'
+import axios from 'axios'
+import { ref } from 'vue'
+import { useStore } from 'vuex'
 
 const store = IdStore()
 const token = sessionStorage.getItem('token')
@@ -113,8 +112,9 @@ let chartInfo = ref<Chart[]>([])
 
 const getReceptionInfo = async (id: string) => {
   try {
-    const response = await axios.get(`http://yunsseong.uk:8000/api/receptions?patient=${ id }`,
-      { headers: { Authorization: `Token ${token.value}` }})
+    const response = await axios.get(`http://yunsseong.uk:8000/api/receptions?patient=${id}`, {
+      headers: { Authorization: `Token ${token}` },
+    })
     receptionInfo.value = response.data[0]
     console.log('reception data loding success')
   } catch (error) {
@@ -124,12 +124,13 @@ const getReceptionInfo = async (id: string) => {
 
 const getChartInfo = async (id: string) => {
   try {
-    const response = await axios.get(`http://yunsseong.uk:8000/api/chart?patient=${ id }`,
-      { headers: { Authorization: `Token ${token.value}` }})
+    const response = await axios.get(`http://yunsseong.uk:8000/api/chart?patient=${id}`, {
+      headers: { Authorization: `Token ${token}` },
+    })
     chartInfo.value = response.data
     console.log('chart data loading success')
 
-    chartInfo.value = respons e.data.map((item: Chart) => {
+    chartInfo.value = response.data.map((item: Chart) => {
       return {
         ...item,
         date_only: item.datetime.split('T')[0],
@@ -159,8 +160,9 @@ let inspectList = ref<Inspect[]>([])
 onMounted(async () => {
   console.log(token)
   try {
-    const response = await axios.get(`http://yunsseong.uk:8000/api/inspect_type/`,
-      { headers: { Authorization: `Token ${token.value}` }})
+    const response = await axios.get(`http://yunsseong.uk:8000/api/inspect_type/`, {
+      headers: { Authorization: `Token ${token}` },
+    })
     inspectList.value = response.data
     console.log('inspectList loading success')
     console.log(inspectList.value)
@@ -268,7 +270,7 @@ const OpenScanning = () => {
     >
       <div
         class="pat_chart"
-        style="padding-top: 15px; padding-right: 15px; padding-bottom: 15px;"
+        style="padding-top: 15px; padding-right: 15px; padding-bottom: 15px"
       >
         <VRow>
           <VCol
@@ -277,7 +279,7 @@ const OpenScanning = () => {
           >
             <VCard
               class="pat_chart px-2 py-2"
-              style="height: 90%;"
+              style="height: 90%"
             >
               <div class="letter-spacing">
                 <img
@@ -291,7 +293,7 @@ const OpenScanning = () => {
                 outline
                 rows="2"
                 auto-grow
-                style="border: 1px solid; border-radius: 5px;"
+                style="border: 1px solid; border-radius: 5px"
                 class="ml-2 mr-2 cardText"
                 >{{ receptionInfo?.visit_reason }}</VCardText
               >
@@ -303,7 +305,7 @@ const OpenScanning = () => {
           >
             <VCard
               class="pat_chart px-2 py-2"
-              style="height: 90%;"
+              style="height: 90%"
             >
               <div class="letter-spacing">
                 <img
@@ -368,7 +370,7 @@ const OpenScanning = () => {
               outline
               rows="2"
               auto-grow
-              style="margin-bottom: 5px;"
+              style="margin-bottom: 5px"
             ></VTextarea>
           </VCard>
         </VRow>
@@ -460,7 +462,7 @@ const OpenScanning = () => {
               outline
               rows="2"
               auto-grow
-              style="margin-bottom: 5px;"
+              style="margin-bottom: 5px"
             ></VTextarea>
           </VCard>
         </VRow>
@@ -549,7 +551,7 @@ const OpenScanning = () => {
 </template>
 
 <style lang="scss">
-@use "@core/scss/pages/page-auth.scss";
+@use '@core/scss/pages/page-auth.scss';
 
 .sm-image {
   max-block-size: 50px;
@@ -567,7 +569,7 @@ const OpenScanning = () => {
   cursor: pointer;
 }
 
-.custom-file-upload1 input[type="file"] {
+.custom-file-upload1 input[type='file'] {
   display: none;
 }
 

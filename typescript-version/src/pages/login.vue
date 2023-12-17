@@ -61,8 +61,12 @@ const handleLogin = async () => {
 
     // 서버로부터 받은 토큰을 활용하여 로그인 성공 후의 처리
     const token = response.data.token
+    console.log(token)
     sessionStorage.setItem('token', token)
-    // const userInfo = await axios.get('http://yunsseong.uk:8001/api/medical?user={loginForm.email}')
+    const userInfo = await axios.get('http://yunsseong.uk:8000/api/medical/', {
+      headers: { Authorization: `Token ${token}` },
+    })
+    console.log(userInfo.data[0].medical_person_birthday)
     sessionStorage.setItem('userInfo', JSON.stringify(userInfo))
     console.log('로그인 성공! 토큰:', token)
     router.push('home')

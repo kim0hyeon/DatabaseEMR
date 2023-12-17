@@ -101,9 +101,9 @@ const getChartInfo = async () => {
 
 const getInspectList = async () => {
   try {
-    const response = await axios.get(`http://yunsseong.uk:8000/api/inspect_type/`,
-      { headers: { Authorization: `Token ${token.value}` }}
-    )
+    const response = await axios.get(`http://yunsseong.uk:8000/api/inspect_type/`, {
+      headers: { Authorization: `Token ${token}` },
+    })
     inspectionData.value = response.data
   } catch (error) {
     console.error(error)
@@ -261,7 +261,8 @@ watch(
                 auto-grow
                 style="border: 1px solid; border-radius: 5px"
                 class="ml-2 mr-2 cardText"
-                >{{ chartInfo?.diagnosis }}</VCardText>
+                >{{ chartInfo?.diagnosis }}</VCardText
+              >
             </VCard>
           </VRow>
 
@@ -343,7 +344,8 @@ watch(
                 auto-grow
                 style="border: 1px solid; border-radius: 5px"
                 class="ml-2 mr-2 cardText"
-              >{{ chartInfo?.doctor_opinion }}</VCardText>
+                >{{ chartInfo?.doctor_opinion }}</VCardText
+              >
             </VCard>
           </VRow>
 

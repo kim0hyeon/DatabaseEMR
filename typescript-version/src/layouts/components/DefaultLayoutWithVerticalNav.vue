@@ -249,8 +249,7 @@ const userInfo = useUserStore().$state.userInfo
                 @click="getID(item.patient.patient_id)"
                 active-class="patItem"
                 :to="pathway"
-                >{{ item.patient.patient_name }}</router-link
-              >
+                >{{ item.patient.patient_name }}</router-link>
               {{ item.patient.patient_gender }}
             </div>
           </div>

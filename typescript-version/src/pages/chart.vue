@@ -62,7 +62,7 @@ interface Chart {
 interface Inspect {
   inspect_type_id: string
   inspect_type: string
-  cost: number
+  inspect_cost: number
 }
 
 interface Photo {
@@ -210,9 +210,15 @@ const OpenScanning = () => {
     >
       <div class="pat_list">
         <VCard class="pa-4">
-          <h2 class="letter-spacing">{{ receptionInfo?.patient.patient_name ?? '이름' }}</h2>
-          <Scan v-model="isScanOpen"/>
-          <VBtn @click="OpenScanning">Scan</VBtn>
+          <VRow>
+            <VCol cols="12" md="6">
+              <h3 class="letter-spacing">{{ receptionInfo?.patient.patient_name ?? '이름' }}</h3>
+            </VCol>
+            <VCol cols="12" md="6" class="mt-1">
+              <Scan v-model="isScanOpen"/>
+              <VBtn @click="OpenScanning" class="right-btn">Scan</VBtn>
+            </VCol>
+          </VRow>
           <VDivider />
 
           <h3 class="mt-4 ml-2 mb-4"><b>내원이력</b></h3>
@@ -342,26 +348,6 @@ const OpenScanning = () => {
               auto-grow
               style="margin-bottom: 5px"
             ></VTextarea>
-
-            <VCard
-              v-for="(i, index) in DiagnosisCards"
-              :key="index"
-              class="add-card"
-              >추가된 진단입니다.</VCard
-            >
-
-            <VBtn
-              @click="subDiagnosisCard"
-              class="right-btn"
-              >진단 제거</VBtn
-            >
-
-            <SelectInspection v-model="isInspectionListOpen" />
-            <VBtn
-              @click="openInspectionList"
-              class="right-btn"
-              >진단 추가</VBtn
-            >
           </VCard>
         </VRow>
 

@@ -207,13 +207,6 @@ const selectPatient = (patient: Patient | null) => {
               <VRow class="mb-0">
                 <VCol
                   cols="12"
-                  md="8"
-                >
-                  <VCardText>ID: {{ result.patient_id }}</VCardText>
-                </VCol>
-
-                <VCol
-                  cols="12"
                   md="3"
                 >
                   <VCardText>이름: {{ result.patient_name }}</VCardText>
@@ -221,9 +214,21 @@ const selectPatient = (patient: Patient | null) => {
 
                 <VCol
                   cols="12"
-                  md="5"
+                  md="3">
+                  <VCardText>성별: {{ result.patient_gender }}</VCardText>
+                </VCol>
+
+                <VCol>
+                  <VCardText>생년월일: {{ result.patient_birth }}</VCardText>
+                </VCol>
+
+                <VCol
+                  cols="12"
+                  md="6"
                 >
-                  <VCardText>주민등록번호: {{ result.patient_residence_number }}</VCardText>
+                  <VCardText>
+                    주민등록번호: {{ result.patient_birth}}-{{ result.patient_residence_number[0] }}******
+                  </VCardText>
                 </VCol>
 
                 <VCol>
@@ -274,10 +279,43 @@ const selectPatient = (patient: Patient | null) => {
             <VRow>
               <VCol
                 cols="12"
-                md="8"
+                md="2"
               >
-                <VCardText>
-                  이름 : {{ selectedPatient?.patient_name }} (환자ID : {{ selectedPatient?.patient_id }})
+                <VCardText class="infoFont">
+                  이름 : {{ selectedPatient?.patient_name }}
+                </VCardText>
+              </VCol>
+
+              <VCol
+                cols="12"
+                md="2"
+              >
+                <VCardText class="infoFont"> 성별 : {{ selectedPatient?.patient_gender }} </VCardText>
+              </VCol>
+
+              <VCol
+                cols="12"
+                md="3"
+              >
+                <VCardText class="infoFont"> 생년월일 : {{ selectedPatient?.patient_birth }} </VCardText>
+              </VCol>
+
+              <VCol
+                cols="12"
+                md="5"
+              >
+                <VCardText class="infoFont">
+                  주민등록번호 : {{ selectedPatient?.patient_birth }}-{{ selectedPatient?.patient_residence_number[0] }}******
+                </VCardText>
+              </VCol>
+            </VRow>
+            <VRow class="mt-0">
+              <VCol
+                cols="12"
+                md="3"
+              >
+                <VCardText class="infoFont">
+                  연락처 : {{ selectedPatient?.patient_phone_number }}
                 </VCardText>
               </VCol>
 
@@ -285,67 +323,34 @@ const selectPatient = (patient: Patient | null) => {
                 cols="12"
                 md="4"
               >
-                <VCardText> 성별 : {{ selectedPatient?.patient_gender }} </VCardText>
+                <VCardText class="infoFont">
+                  비상 연락처 : {{ selectedPatient?.patient_emergency_phone_number }}
+                </VCardText>
               </VCol>
 
               <VCol
                 cols="12"
-                md="4"
+                md="5"
               >
-                <VCardText> 생년월일 : {{ selectedPatient?.patient_birth }} </VCardText>
-              </VCol>
-
-              <VCol
-                cols="12"
-                md="4"
-              >
-                <VCardText> 주민등록번호 : {{ selectedPatient?.patient_residence_number }} </VCardText>
-              </VCol>
-
-              <VCol
-                cols="12"
-                md="4"
-              >
-                <VCardText> 주소 : {{ selectedPatient?.patient_address }} </VCardText>
+                <VCardText class="infoFont"> 주소 : {{ selectedPatient?.patient_address }} </VCardText>
               </VCol>
             </VRow>
-            <VRow>
-              <VCol
-                cols="12"
-                md="4"
-              >
-                <VCardText> 연락처 : {{ selectedPatient?.patient_phone_number }} </VCardText>
+
+            <VRow class="mt-0">
+              <VCol cols="12" md="3">
+                <VCardText class="infoFont">
+                  필수 약관 동의 여부 : {{ selectedPatient?.patient_agree_essential_term ? '동의' : '비동의' }}
+                </VCardText>
               </VCol>
 
-              <VCol
-                cols="12"
-                md="4"
-              >
-                <VCardText> 비상 연락처 : {{ selectedPatient?.patient_emergency_phone_number }} </VCardText>
+              <VCol cols="12" md="3">
+                <VCardText class="infoFont">
+                  선택 약관 동의 여부 : {{ selectedPatient?.patient_agree_optional_term ? '동의' : '비동의' }}
+                </VCardText>
               </VCol>
             </VRow>
-          </VCol>
-        </VRow>
-        <VRow class="ml-3">
-          <!--
-          <VCol cols="12" md="4">
-            <VCardText>
-              약관 동의 여부 : {{ selectedPatient?.admitted ? '동의' : '비동의' }}
-            </VCardText>
-          </VCol>
 
-          <VCol
-            cols="12"
-            md="4"
-          >
-            <VCardText> 최초 방문일 : {{ selectedPatient?.firstVisit }} </VCardText>
           </VCol>
-
-          <VCol cols="12" md="4">
-            <VCardText>
-              최근 방문일 : {{ selectedPatient?.lastVisit }}
-            </VCardText>
-          </VCol>-->
         </VRow>
       </VCol>
     </VRow>
@@ -432,5 +437,10 @@ const selectPatient = (patient: Patient | null) => {
 
 .search-condition {
   inline-size: 125px;
+}
+
+.infoFont {
+  font-size: 15px;
+  font-weight: bold;
 }
 </style>

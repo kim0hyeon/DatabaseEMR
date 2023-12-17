@@ -79,6 +79,7 @@ watch(
     getRoutePath()
   },
 )
+
 // var str = route.path;
 var pathway = route.name // default 값이 dashboard
 const getRoutePath = () => {

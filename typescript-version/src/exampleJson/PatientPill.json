@@ -1,32 +1,148 @@
-{
-    "patient": {
-        "code": "P001",
-        "name": "홍길동",
-        "age": 30,
-        "gender": "남성"
+[
+    {
+        "patient": {
+            "code": "None",
+            "name": "None",
+            "age": 0,
+            "gender": "None"
+        },
+        "prescription": {
+            "symptoms": [],
+            "medications": []
+        }
     },
-    "prescription": {
-        "symptoms": [
-            "기침",
-            "콧물",
-            "목감기"
-        ],
-        "medications": [
-            {
-                "code": "ABC123",
-                "name": "판콜",
-                "dosage": 1
-            },
-            {
-                "code": "DEF456",
-                "name": "비타민 C",
-                "dosage": 2
-            },
-            {
-                "code": "GHI789",
-                "name": "레보세트",
-                "dosage": 3
-            }
-        ]
+    {
+        "patient": {
+            "code": "3c6c2b39-9383-4a77-91ef-29b62c65cca8",
+            "name": "김영희",
+            "age": 30,
+            "gender": "남성"
+        },
+        "prescription": {
+            "symptoms": [
+                "기침",
+                "콧물",
+                "목감기"
+            ],
+            "medications": [
+                {
+                    "code": "ABC123",
+                    "name": "판콜",
+                    "dosage": 1
+                },
+                {
+                    "code": "DEF456",
+                    "name": "비타민 C",
+                    "dosage": 2
+                },
+                {
+                    "code": "GHI789",
+                    "name": "레보세트",
+                    "dosage": 3
+                }
+            ]
+        }
+    },
+    {
+        "patient": {
+            "code": "bf51904b-3a2d-4b14-ac87-cb9345aa0a65",
+            "name": "김영훈",
+            "age": 25,
+            "gender": "여성"
+        },
+        "prescription": {
+            "symptoms": [
+                "두통",
+                "열",
+                "피로감"
+            ],
+            "medications": [
+                {
+                    "code": "XYZ789",
+                    "name": "페리린",
+                    "dosage": 2
+                },
+                {
+                    "code": "LMN456",
+                    "name": "아세트아미노펜",
+                    "dosage": 1
+                },
+                {
+                    "code": "OPQ123",
+                    "name": "비타민 D",
+                    "dosage": 1
+                }
+            ]
+        }
+    },
+    {
+        "patient": {
+            "code": "d9cc2e18-24d7-4a82-9872-2e7c0128988a",
+            "name": "박미영",
+            "age": 35,
+            "gender": "여성"
+        },
+        "prescription": {
+            "symptoms": [
+                "피로",
+                "손발이 시리함",
+                "무기력감"
+            ],
+            "medications": [
+                {
+                    "code": "JKL456",
+                    "name": "에너지부스트",
+                    "dosage": 2
+                },
+                {
+                    "code": "MNO789",
+                    "name": "비타민 B12",
+                    "dosage": 1
+                },
+                {
+                    "code": "PQR012",
+                    "name": "철분 보충제",
+                    "dosage": 1
+                }
+            ]
+        }
+    },
+    {
+        "patient": {
+            "code": "5c4260d4-5955-4655-95ca-297c7b493f95",
+            "name": "김영현",
+            "age": 30,
+            "gender": "남성"
+        },
+        "prescription": {
+            "symptoms": [
+                "두통",
+                "코막힘",
+                "피로감"
+            ],
+            "medications": [
+                {
+                    "code": "ABC123",
+                    "name": "판콜",
+                    "dosage": 2,
+                    "type": "진통제",
+                    "description": "두통 및 통증 완화에 사용되는 일반적인 진통제입니다."
+                },
+                {
+                    "code": "DEF456",
+                    "name": "비타민 C",
+                    "dosage": 1,
+                    "type": "영양제",
+                    "description": "필수 비타민인 비타민 C를 보충하기 위한 영양제입니다."
+                },
+                {
+                    "code": "GHI789",
+                    "name": "레보세트",
+                    "dosage": 3,
+                    "type": "감기약",
+                    "description": "감기 증상 완화 및 예방을 위한 약물입니다."
+                }
+            ]
+        }
     }
-}
+]

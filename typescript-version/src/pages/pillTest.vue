@@ -1,70 +1,82 @@
 <script lang="ts" setup>
 import PatientPill from '@/exampleJson/PatientPill.json'
-import { mediStore } from '@/store/index'
+import { IdStore, mediStore } from '@/store/index'
 import { ref, watch } from 'vue'
 import Scan from './Scan.vue'
 import ScanMD from './ScanMedi.vue'
 import MedicationsData from './medications.interface'
 const store = mediStore()
+const userStore = IdStore()
 interface Medication {
   code: string
   name: string
   type: string
   description: string
 }
-const token = sessionStorage.getItem('token')
 
 // 예시 데이터
 const medicationsData: MedicationsData = {
   medications: [
     {
       code: 'ABC123',
-      name: '아스피린',
+      name: '판콜',
       type: '진통제',
       description: '두통 및 통증 완화에 사용되는 일반적인 진통제입니다.',
     },
     {
       code: 'DEF456',
-      name: '로타티드',
-      type: '소화제',
-      description: '소화 불량 및 위장 문제에 사용되는 소화제입니다.',
+      name: '비타민 C',
+      type: '비타민',
+      description: '면역 강화 및 각종 질병 예방에 도움을 주는 비타민 C입니다.',
     },
     {
       code: 'GHI789',
-      name: '클라리틴',
-      type: '항히스타민제',
-      description: '알레르기 증상 완화에 사용되는 항히스타민제입니다.',
-    },
-    {
-      code: 'JKL012',
-      name: '메트포민',
-      type: '당뇨병 치료제',
-      description: '2형 당뇨병의 초기 치료에 사용되는 약물입니다.',
-    },
-    {
-      code: 'MNO345',
-      name: '에나프로직',
-      type: '고혈압 치료제',
-      description: '고혈압 및 심장부전의 치료에 사용되는 약물입니다.',
-    },
-    {
-      code: 'PQR678',
-      name: '파모클로짓',
-      type: '항생제',
-      description: '균에 의한 감염의 치료에 사용되는 항생제입니다.',
-    },
-    {
-      code: 'STU901',
-      name: '삐콤',
+      name: '레보세트',
       type: '해열제',
-      description: '열이 나거나 고통을 완화하기 위해 사용되는 해열제입니다.',
+      description: '열이 나거나 발열을 완화하기 위해 사용되는 약물입니다.',
+    },
+    {
+      code: 'XYZ789',
+      name: '페리린',
+      type: '진통제',
+      description: '통증 완화 및 염증 감소에 도움을 주는 진통제입니다.',
+    },
+    {
+      code: 'LMN456',
+      name: '아세트아미노펜',
+      type: '해열제',
+      description: '열이 나거나 발열을 완화하기 위해 사용되는 해열제입니다.',
+    },
+    {
+      code: 'OPQ123',
+      name: '비타민 D',
+      type: '비타민',
+      description: '뼈와 치아 형성, 면역 강화에 도움을 주는 비타민 D입니다.',
+    },
+    {
+      code: 'JKL456',
+      name: '에너지부스트',
+      type: '영양제',
+      description: '체력과 에너지를 증진시키는 영양 보충제입니다.',
+    },
+    {
+      code: 'MNO789',
+      name: '비타민 B12',
+      type: '비타민',
+      description: '신경 기능 개선 및 혈액 형성에 도움을 주는 비타민 B12입니다.',
+    },
+    {
+      code: 'PQR012',
+      name: '철분 보충제',
+      type: '영양제',
+      description: '빈혈 예방 및 철분 공급에 도움을 주는 철분 보충제입니다.',
     },
   ],
 }
 const searchedMedicationCode = ref('')
 const medicationNotFound = ref(false)
-const patient = ref(PatientPill.patient)
-const prescription = ref(PatientPill.prescription)
+const patient = ref(PatientPill[0].patient)
+const prescription = ref(PatientPill[0].prescription)
 const searchedMedications = ref<MedicationsData['medications']>([])
 
 const medicationCode = ref('')
@@ -74,7 +86,8 @@ const searchAttempted = ref(false)
 const searchMedication = () => {
   if (store.id) medicationCode.value = store.id
   const code = medicationCode.value.trim().toUpperCase()
-  console.log(store.id)
+  // store.id = code
+  // console.log(store.id)
   searchAttempted.value = true
   searchedMedicationCode.value = code
   medicationNotFound.value = isMedicationFound(searchedMedicationCode)
@@ -88,6 +101,7 @@ const searchMedication = () => {
 function isMedicationFound(code) {
   const inputCode = medicationCode.value.trim().toUpperCase()
   const foundMedication = prescription.value.medications.find(medication => medication.code === inputCode)
+  console.log(prescription.value)
   // console.log(foundMedication.code + inputCode)
   if (foundMedication && foundMedication.code === inputCode) return true
   else {
@@ -131,8 +145,21 @@ const openMDScan = () => {
   isMDScanOpen.value = true
   console.log(isScanOpen.value)
 }
+const foundPatient = ref(null)
 
-let pillInfo = PatientPill
+const searchPatient = () => {
+  foundPatient.value = PatientPill.find(patient => patient.patient.code === userStore.id)
+  pillInfo.value = foundPatient.value
+  prescription.value = pillInfo.value.prescription
+  console.log(pillInfo.value)
+}
+watch(
+  () => userStore.id,
+  () => {
+    searchPatient()
+  },
+)
+const pillInfo = ref(PatientPill[0])
 watch(
   () => store.id,
   (newId, oldId) => {

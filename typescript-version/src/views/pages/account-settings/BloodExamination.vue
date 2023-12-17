@@ -1,9 +1,8 @@
 <script lang="ts">
-import { defineComponent, ref, onMounted } from 'vue'
-import { BloodTest } from "@/pages/interfaces";
-import { Chart, registerables } from 'chart.js'
+import { BloodTest } from '@/pages/interfaces'
 import axios from 'axios'
-import { IdStore } from '@/store'
+import { Chart, registerables } from 'chart.js'
+import { defineComponent, onMounted, ref } from 'vue'
 
 // 혈액검사기록을 저장할 리스트 생성 -> 변경 가능해야함
 let BloodTestRecord = ref<BloodTest[]>([])
@@ -21,7 +20,7 @@ onMounted(async () => {
   } catch (error) {
     console.log(error)
   }
-}
+})
 
 export default defineComponent({
   data() {
@@ -287,7 +286,7 @@ export default defineComponent({
 
 <template>
   <div class="title-container">
-    <h2 style="margin-left: 10px; margin-bottom: 10px">Blood Test Result</h2>
+    <h2 style="margin-bottom: 10px; margin-left: 10px">Blood Test Result</h2>
     <VDialog
       v-model="dialog"
       max-width="500"
@@ -450,29 +449,34 @@ export default defineComponent({
 </template>
 <style lang='scss'>
 .container {
-  padding-top: 10px;
-  padding-bottom: 10px;
+  padding-block: 10px;
 }
+
 .numeric-container {
   text-align: center;
 }
+
 .divider {
-  border-bottom: 1px solid #000;
+  border-block-end: 1px solid #000;
 }
+
 .table-container {
-  width: 100%;
+  inline-size: 100%;
 }
+
 .table-content {
   padding: 20px;
 }
+
 .title-container {
   display: grid;
   grid-template-columns: 11fr 1fr;
 }
+
 .dialog-content {
-  padding-top: 10px;
-  padding-bottom: 10px;
+  padding-block: 10px;
 }
+
 .text-field {
   margin: 10px;
 }

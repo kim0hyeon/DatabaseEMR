@@ -1,8 +1,7 @@
 <script setup lang='ts'>
 // Components 일단 환자 정보를 불러와야 하기 때문에 사용함
-import { IdStore } from '@/store/index'
-import { reactive } from 'vue'
 import axios from 'axios'
+import { reactive } from 'vue'
 import { useRoute } from 'vue-router'
 
 const route = useRoute()
@@ -22,10 +21,12 @@ interface Patient {
 }
 
 let patientInformation = ref<Patient[]>([])
-
+const token = sessionStorage.getItem('token')
 onMounted(async () => {
   try {
-    const response = await axios.get('http://yunsseong.uk:8000/api/patients/')
+    const response = await axios.get('http://yunsseong.uk:8000/api/patients/', {
+      headers: { Authorization: `Token ${token}` },
+    })
     patientInformation.value = response.data
     console.log('patient data loding success')
   } catch (error) {
@@ -179,10 +180,11 @@ function subCard() {
 </template>
 <style>
 @use '@core/scss/pages/page-auth.scss';
+
 .text-box {
-  border: 1px solid #ccc;
   padding: 10px;
-  min-height: 100px;
+  border: 1px solid #ccc;
+  min-block-size: 100px;
 }
 
 .visit-history-box {
@@ -214,7 +216,6 @@ function subCard() {
 }
 
 .therapy-card {
-  margin-top: 10px;
-  margin-bottom: 10px;
+  margin-block: 10px;
 }
 </style>

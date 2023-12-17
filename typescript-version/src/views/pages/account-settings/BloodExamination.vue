@@ -16,7 +16,7 @@ const loadBloodData = async () => {
       headers: { Authorization: `Token ${token}` },
     })
     BloodInformation.value = response.data
-    console.log(BloodInformation.value[0].hemoglobin)
+    console.log(BloodInformation.value)
   } catch (error) {
     console.log(error)
   }

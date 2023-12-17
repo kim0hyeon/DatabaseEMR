@@ -634,7 +634,7 @@ export default defineComponent({
             </td>
             <td class="standard-range">
               <h4>표준점수</h4>
-              <div class="standard-score">18.5 - 23.0</div>
+              <div class="standard-score">18.5 - 25.0</div>
               <div class="standard-score">10.0 - 20.0</div>
             </td>
           </tr>

@@ -141,7 +141,7 @@ function selectImage(image: Photo) {
     </Vcol>
     <VCol cols="3">
       <VCard class="photo_list scroll-container">
-        <h2 v-if="store.id != 0">ID가 &nbsp;{{ store.id }}인 이름</h2>
+        <h2 style="margin-left: 10px; margin-bottom: 20px">이미지</h2>
         <label
           for="xray_image"
           class="custom-file-upload"

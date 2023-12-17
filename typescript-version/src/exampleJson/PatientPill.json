@@ -13,8 +13,8 @@
     },
     {
         "patient": {
-            "code": "3c6c2b39-9383-4a77-91ef-29b62c65cca8",
-            "name": "김영희",
+            "code": "5ec2e19b-2d4a-429d-8bde-1a85de819fa9",
+            "name": "이동빈",
             "age": 30,
             "gender": "남성"
         },
@@ -45,8 +45,8 @@
     },
     {
         "patient": {
-            "code": "bf51904b-3a2d-4b14-ac87-cb9345aa0a65",
-            "name": "김영훈",
+            "code": "7bb5bd42-3801-4ff8-832f-2ea434b17be7",
+            "name": "이동후",
             "age": 25,
             "gender": "여성"
         },
@@ -77,8 +77,8 @@
     },
     {
         "patient": {
-            "code": "d9cc2e18-24d7-4a82-9872-2e7c0128988a",
-            "name": "박미영",
+            "code": "fdf69281-d799-4fe6-834f-d958d1341d65",
+            "name": "이동한",
             "age": 35,
             "gender": "여성"
         },

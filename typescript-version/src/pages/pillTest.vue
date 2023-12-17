@@ -182,7 +182,6 @@ watch(
           md="6"
         >
           <h2 class="PatientName">{{ pillInfo.patient.name }}</h2>
-          ({{ pillInfo.patient.code }})
         </VCol>
       </VCard>
       <VRow>

@@ -1,6 +1,8 @@
 <script lang="ts" setup>
 import NewPatientRegistration from '@/views/pages/account-settings/NewPatientRegistration.vue'
+import GenerateQR from "@/pages/generateQR.vue";
 import axios from 'axios'
+import QRCode from "qrcode";
 import { Ref } from 'vue'
 import { useRoute } from 'vue-router'
 import {token} from "@/token";
@@ -39,9 +41,21 @@ interface Reception {
 }
 
 // 모달창 구현
+// 신규 환자 등록 모달
 const isModalOpen = ref(false)
 const openModal = () => {
   isModalOpen.value = true
+}
+
+// QR코드 생성 모달
+const isQROpen = ref(false)
+let selectedPatientId = ref('')
+let selectedPatientQR = ref('')
+
+const OpenQR = (patient_id: string, url: string) => {
+  isQROpen.value = true
+  selectedPatientId.value = patient_id
+  selectedPatientQR.value = url
 }
 
 // 백엔드에서 환자 정보 받아오기
@@ -176,6 +190,17 @@ const selectPatient = (patient: Patient | null) => {
     console.log(receptionData.value)
   })
 }
+
+// 환자 QR url 생성
+let QR_url = ref('')
+
+watch(() => selectedPatient.value, async (newVal) => {
+  try {
+    QR_url.value = await QRCode.toDataURL(newVal?.patient_id)
+  } catch (err) {
+    console.error('Error: ' + err)
+  }
+})
 </script>
 
 <template>
@@ -264,14 +289,26 @@ const selectPatient = (patient: Patient | null) => {
 
   <VCard class="mt-4">
     <template v-slot:title>
-      <div class="d-flex align-center justify-space-between">
-        환자 접수
-        <VBtn
-          color="primary"
-          @click="submitForm"
-          >접수</VBtn
-        >
-      </div>
+      <VRow>
+        <VCol>
+          <div class="d-flex align-center justify-space-between">
+            환자 접수
+          </div>
+        </VCol>
+
+        <VCol>
+          <VBtn class="right-btn"
+                color="primary"
+                @click="submitForm">
+            접수
+          </VBtn>
+
+          <GenerateQR v-model="isQROpen" :patient_id="selectedPatientId" :url="selectedPatientQR"/>
+          <VBtn class="right-btn" @click="OpenQR(selectedPatient?.patient_id, QR_url)">
+            QR코드 생성
+          </VBtn>
+        </VCol>
+      </VRow>
     </template>
     <VDivider class="mb-1" />
 
@@ -446,5 +483,10 @@ const selectPatient = (patient: Patient | null) => {
 .infoFont {
   font-size: 15px;
   font-weight: bold;
+}
+
+.right-btn {
+  float: inline-end;
+  margin-inline-start: 10px;
 }
 </style>

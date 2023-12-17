@@ -66,39 +66,6 @@ interface Photo {
 const photos = ref<Photo[]>([])
 const selectedPhoto = ref('')
 
-const clickedSendFile = () => {
-  photos.value = []
-  alert('저장완료')
-}
-function handleFilesUpload(event: Event) {
-  const target = event.target as HTMLInputElement
-  const files = target.files
-
-  if (files) {
-    Array.from(files).forEach(file => {
-      const reader = new FileReader()
-      reader.onload = e => {
-        if (e.target?.result) {
-          const url = e.target.result.toString()
-          // 최근 업로드가 위로오도록 unshift사용
-          photos.value.unshift({ url, name: file.name })
-          selectedPhoto.value = e.target.result.toString()
-        }
-      }
-      reader.readAsDataURL(file)
-    })
-  }
-}
-
-// 사진쪽 클릭하면 뜨게 하고 하는거는 나중에 짜자 그냥 사이트 라우트 되었을떄 디비에서 다 찾아내는 방식으로 짜야 안복잡할듯
-// 맘같아선 새창을 띄우고 싶은데 이게 생각처럼 쉽지 않음 store에 있는값을 사용못함 새창을 쓰면
-function removePhoto(index: number) {
-  photos.value.splice(index, 1)
-}
-function selectImage(image: Photo) {
-  selectedPhoto.value = image.url
-}
-
 // 백엔드에서 환자 정보 받아오기
 let receptionInfo = ref<Reception>()
 let chartInfo = ref<Chart>()

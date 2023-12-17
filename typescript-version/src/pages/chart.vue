@@ -67,9 +67,11 @@ interface Inspect {
 }
 
 interface Photo {
-  url: string
-  name: string
+  image_url: string
 }
+
+const image = ref('')
+const selectedImage = ref('')
 
 const photos = ref<Photo[]>([])
 const selectedPhoto = ref('')
@@ -80,6 +82,8 @@ const clickedSendFile = () => {
 function handleFilesUpload(event: Event) {
   const target = event.target as HTMLInputElement
   const files = target.files
+
+  console.log(target.files)
 
   if (files) {
     Array.from(files).forEach(file => {
@@ -112,9 +116,11 @@ let chartInfo = ref<Chart[]>([])
 
 const getReceptionInfo = async (id: string) => {
   try {
+    console.log(id)
     const response = await axios.get(`http://yunsseong.uk:8000/api/receptions?patient=${ id }`,
       { headers: { Authorization: `Token ${token.value}` }})
     receptionInfo.value = response.data[0]
+    console.log(receptionInfo.value)
     console.log('reception data loding success')
   } catch (error) {
     console.error(error)

@@ -3,6 +3,7 @@ import { BloodTest } from '@/pages/interfaces'
 import axios from 'axios'
 import { Chart, registerables } from 'chart.js'
 import { IdStore } from '@/store'
+import { ref, onMounted, watch } from 'vue'
 
 // 백엔드에서 환자 정보 받아오기
 const token = sessionStorage.getItem('token')
@@ -25,17 +26,6 @@ export default defineComponent({
   data() {
     return {
       dialog: false,
-      hemoglobin: 0,
-      fasting_blood_sugar: 0,
-      total_cholesterol: 0,
-      hdl_cholesterol: 0,
-      triglycerides: 0,
-      ldl_cholesterol: 0,
-      serum_creatinine: 0,
-      glomerular_filtration_rate: 0,
-      ast: 0,
-      alt: 0,
-      gamma_gt: 0,
     }
   },
   methods: {
@@ -57,13 +47,76 @@ export default defineComponent({
     },
   },
   setup() {
+    // 값들을 values 배열을 통해서 받기. 앞에서부터 weight라고 가정함
+    const values = ref([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0])
+    const fakes = ref([])
+    // 인바디 데이터 추가하기
+    const addData = async () => {
+      fakes.value = []
+      console.log('addData가 호출되었음! 자동으로 갱신되나 볼 것!')
+      try {
+        const data = {
+          hemoglobin: values.value[0],
+          fasting_blood_sugar: values.value[1],
+          total_cholesterol: values.value[2],
+          hdl_cholesterol: values.value[3],
+          triglycerides: values.value[4],
+          ldl_cholesterol: values.value[5],
+          serum_creatinine: values.value[6],
+          glomerular_filtration_rate: values.value[7],
+          ast: values.value[8],
+          alt: values.value[9],
+          gamma_gt: values.value[10],
+          patient: store.id,
+        }
+        console.log(data)
+        const response = await axios.post(`http://yunsseong.uk:8000/api/blood/`, data, {
+          headers: { Authorization: `Token ${token}` },
+        })
+      } catch (error) {
+        console.error(error)
+      }
+    }
+
+    watch(store, (newValue, oldValue) => {
+      loadBloodData()
+      console.log('id가 바뀌었습니다!', store.id)
+      console.log(BloodInformation.value)
+      resetChart()
+    })
+
     const anemia_chart = ref<HTMLCanvasElement | null>(null)
     const diabetes_chart = ref<HTMLCanvasElement | null>(null)
     const lipidemia_chart = ref<HTMLCanvasElement | null>(null)
     const kidney_chart = ref<HTMLCanvasElement | null>(null)
     const liver_chart = ref<HTMLCanvasElement | null>(null)
 
-    const drawChart = () => {
+    const resetChart = () => {
+      // 차트 1 파괴하기
+      const existingChart1 = anemia_chart.value ? Chart.getChart(anemia_chart.value) : null
+      if (existingChart1) {
+        existingChart1.destroy()
+      }
+      // 차트 2 파괴하기
+      const existingChart2 = diabetes_chart.value ? Chart.getChart(diabetes_chart.value) : null
+      if (existingChart2) {
+        existingChart2.destroy()
+      }
+      // 차트 3 파괴하기
+      const existingChart3 = lipidemia_chart.value ? Chart.getChart(lipidemia_chart.value) : null
+      if (existingChart3) {
+        existingChart3.destroy()
+      }
+      // 차트 4 파괴하기
+      const existingChart4 = kidney_chart.value ? Chart.getChart(kidney_chart.value) : null
+      if (existingChart4) {
+        existingChart4.destroy()
+      }
+      // 차트 5 파괴하기
+      const existingChart5 = liver_chart.value ? Chart.getChart(liver_chart.value) : null
+      if (existingChart5) {
+        existingChart5.destroy()
+      }
       if (anemia_chart.value) {
         const ctx = anemia_chart.value.getContext('2d')
         if (ctx) {
@@ -76,7 +129,7 @@ export default defineComponent({
               datasets: [
                 {
                   label: '(g/dl)',
-                  data: [10], // 데이터 입력
+                  data: [0], // 데이터 입력
                   backgroundColor: 'rgba(54, 162, 235, 0.2)',
                   borderColor: 'rgba(54, 162, 235, 1)',
                   borderWidth: 1,
@@ -112,7 +165,7 @@ export default defineComponent({
               datasets: [
                 {
                   label: '(mg/dl)',
-                  data: [10], // 데이터 입력
+                  data: [0], // 데이터 입력
                   backgroundColor: 'rgba(54, 162, 235, 0.2)',
                   borderColor: 'rgba(54, 162, 235, 1)',
                   borderWidth: 1,
@@ -149,7 +202,7 @@ export default defineComponent({
               datasets: [
                 {
                   label: '(mg/dl)',
-                  data: [10, 11, 12, 13], // 데이터 입력
+                  data: [0, 0, 0, 0], // 데이터 입력
                   backgroundColor: 'rgba(54, 162, 235, 0.2)',
                   borderColor: 'rgba(54, 162, 235, 1)',
                   borderWidth: 1,
@@ -186,7 +239,7 @@ export default defineComponent({
               datasets: [
                 {
                   label: '(mg/dl)',
-                  data: [10, 11], // 데이터 입력
+                  data: [0, 0], // 데이터 입력
                   backgroundColor: 'rgba(54, 162, 235, 0.2)',
                   borderColor: 'rgba(54, 162, 235, 1)',
                   borderWidth: 1,
@@ -223,7 +276,193 @@ export default defineComponent({
               datasets: [
                 {
                   label: '(U/L)',
-                  data: [10, 11, 12], // 데이터 입력
+                  data: [0, 0, 0], // 데이터 입력
+                  backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                  borderColor: 'rgba(54, 162, 235, 1)',
+                  borderWidth: 1,
+                },
+              ],
+            },
+            options: {
+              indexAxis: 'y', // 가로로 출력되도록 설정
+              responsive: true,
+              scales: {
+                x: {
+                  beginAtZero: true,
+                  min: 0,
+                  max: 200,
+                },
+                y: {
+                  beginAtZero: true,
+                },
+              },
+            },
+          })
+        }
+      }
+    }
+
+    const drawChart = () => {
+      if (anemia_chart.value) {
+        const ctx = anemia_chart.value.getContext('2d')
+        if (ctx) {
+          Chart.register(...registerables)
+
+          new Chart(ctx, {
+            type: 'bar', // 막대 그래프
+            data: {
+              labels: ['혈색소'],
+              datasets: [
+                {
+                  label: '(g/dl)',
+                  data: [0], // 데이터 입력
+                  backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                  borderColor: 'rgba(54, 162, 235, 1)',
+                  borderWidth: 1,
+                },
+              ],
+            },
+            options: {
+              indexAxis: 'y', // 가로로 출력되도록 설정
+              responsive: true,
+              scales: {
+                x: {
+                  beginAtZero: true,
+                  min: 0,
+                  max: 20,
+                },
+                y: {
+                  beginAtZero: true,
+                },
+              },
+            },
+          })
+        }
+      }
+      if (diabetes_chart.value) {
+        const ctx = diabetes_chart.value.getContext('2d')
+        if (ctx) {
+          Chart.register(...registerables)
+
+          new Chart(ctx, {
+            type: 'bar', // 막대 그래프
+            data: {
+              labels: ['공복혈당'],
+              datasets: [
+                {
+                  label: '(mg/dl)',
+                  data: [0], // 데이터 입력
+                  backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                  borderColor: 'rgba(54, 162, 235, 1)',
+                  borderWidth: 1,
+                },
+              ],
+            },
+            options: {
+              indexAxis: 'y', // 가로로 출력되도록 설정
+              responsive: true,
+              scales: {
+                x: {
+                  beginAtZero: true,
+                  min: 0,
+                  max: 150,
+                },
+                y: {
+                  beginAtZero: true,
+                },
+              },
+            },
+          })
+        }
+      }
+
+      if (lipidemia_chart.value) {
+        const ctx = lipidemia_chart.value.getContext('2d')
+        if (ctx) {
+          Chart.register(...registerables)
+
+          new Chart(ctx, {
+            type: 'bar', // 막대 그래프
+            data: {
+              labels: ['총콜레스테롤', 'HDL-콜레스테롤', '중성지방', 'LDL-콜레스테롤'],
+              datasets: [
+                {
+                  label: '(mg/dl)',
+                  data: [0, 0, 0, 0], // 데이터 입력
+                  backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                  borderColor: 'rgba(54, 162, 235, 1)',
+                  borderWidth: 1,
+                },
+              ],
+            },
+            options: {
+              indexAxis: 'y', // 가로로 출력되도록 설정
+              responsive: true,
+              scales: {
+                x: {
+                  beginAtZero: true,
+                  min: 0,
+                  max: 250,
+                },
+                y: {
+                  beginAtZero: true,
+                },
+              },
+            },
+          })
+        }
+      }
+
+      if (kidney_chart.value) {
+        const ctx = kidney_chart.value.getContext('2d')
+        if (ctx) {
+          Chart.register(...registerables)
+
+          new Chart(ctx, {
+            type: 'bar', // 막대 그래프
+            data: {
+              labels: ['혈청크레아티닌', '신사구체여과율(e-GFR)'],
+              datasets: [
+                {
+                  label: '(mg/dl)',
+                  data: [0, 0], // 데이터 입력
+                  backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                  borderColor: 'rgba(54, 162, 235, 1)',
+                  borderWidth: 1,
+                },
+              ],
+            },
+            options: {
+              indexAxis: 'y', // 가로로 출력되도록 설정
+              responsive: true,
+              scales: {
+                x: {
+                  beginAtZero: true,
+                  min: 0,
+                  max: 160,
+                },
+                y: {
+                  beginAtZero: true,
+                },
+              },
+            },
+          })
+        }
+      }
+
+      if (liver_chart.value) {
+        const ctx = liver_chart.value.getContext('2d')
+        if (ctx) {
+          Chart.register(...registerables)
+
+          new Chart(ctx, {
+            type: 'bar', // 막대 그래프
+            data: {
+              labels: ['AST(SGOT)', 'ALT(SGPT)', '감마지티피(v-GTP)'],
+              datasets: [
+                {
+                  label: '(U/L)',
+                  data: [0, 0, 0], // 데이터 입력
                   backgroundColor: 'rgba(54, 162, 235, 0.2)',
                   borderColor: 'rgba(54, 162, 235, 1)',
                   borderWidth: 1,
@@ -488,6 +727,9 @@ export default defineComponent({
       liver_chart,
       BloodInformation,
       updateChart,
+      values,
+      addData,
+      loadBloodData,
     }
   },
 })
@@ -511,74 +753,83 @@ export default defineComponent({
         <VCardTitle>혈액검사 측정값 입력</VCardTitle>
         <VCardContent>
           <VTextField
-            v-model="hemoglobin"
+            v-model="values[0]"
             label="혈색소"
             type="number"
             class="text-field"
           ></VTextField>
           <VTextField
-            v-model="fasting_blood_sugar"
+            v-model="values[1]"
             label="공복혈당"
             type="number"
             class="text-field"
           ></VTextField>
           <VTextField
-            v-model="total_cholesterol"
+            v-model="values[2]"
             label="총 콜레스테롤"
             type="number"
             class="text-field"
           ></VTextField>
           <VTextField
-            v-model="hdl_cholesterol"
+            v-model="values[3]"
             label="HDL-콜레스테롤"
             type="number"
             class="text-field"
           ></VTextField>
           <VTextField
-            v-model="triglycerides"
+            v-model="values[4]"
             label="중성지방"
             type="number"
             class="text-field"
           ></VTextField>
           <VTextField
-            v-model="ldl_cholesterol"
+            v-model="values[5]"
             label="LDL-콜레스테롤"
             type="number"
             class="text-field"
           ></VTextField>
           <VTextField
-            v-model="serum_creatinine"
+            v-model="values[6]"
             label="혈청크레아티닌"
             type="number"
             class="text-field"
           ></VTextField>
           <VTextField
-            v-model="glomerular_filtration_rate"
+            v-model="values[7]"
             label="신사구체여과율"
             type="number"
             class="text-field"
           ></VTextField>
           <VTextField
-            v-model="ast"
+            v-model="values[8]"
             label="AST"
             type="number"
             class="text-field"
           ></VTextField>
           <VTextField
-            v-model="alt"
+            v-model="values[9]"
             label="ALT"
             type="number"
             class="text-field"
           ></VTextField>
           <VTextField
-            v-model="gamma_gt"
+            v-model="values[10]"
             label="감마지티피"
             type="number"
             class="text-field"
           ></VTextField>
         </VCardContent>
         <VCardActions>
-          <VBtn @click="saveRecord">저장</VBtn>
+          <VBtn
+            @click="
+              () => {
+                addData()
+                saveRecord()
+                loadBloodData()
+              }
+            "
+            >저장</VBtn
+          >
           <VBtn @click="closeDialog">나가기</VBtn>
         </VCardActions>
       </VCard>

@@ -105,19 +105,6 @@ const userInfo = useUserStore().$state.userInfo
 
         <VSpacer />
 
-        <IconBtn
-          class="me-2"
-          href="https://github.com/kim0hyeon/DatabaseEMR"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <VIcon icon="mdi-github" />
-        </IconBtn>
-
-        <IconBtn class="me-2">
-          <VIcon icon="mdi-bell-outline" />
-        </IconBtn>
-
         <NavbarThemeSwitcher class="me-2" />
 
         <UserProfile />

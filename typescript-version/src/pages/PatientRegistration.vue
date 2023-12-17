@@ -1,11 +1,11 @@
 <script lang="ts" setup>
+import { token } from '@/token'
 import NewPatientRegistration from '@/views/pages/account-settings/NewPatientRegistration.vue'
 import GenerateQR from "@/pages/generateQR.vue";
 import axios from 'axios'
 import QRCode from "qrcode";
 import { Ref } from 'vue'
 import { useRoute } from 'vue-router'
-import {token} from "@/token";
 
 const route = useRoute()
 
@@ -63,8 +63,9 @@ let patientInformation = ref<Patient[]>([])
 
 onMounted(async () => {
   try {
-    const response = await axios.get('http://yunsseong.uk:8000/api/patients/',
-        { headers: { Authorization: `Token ${token.value}` }})
+    const response = await axios.get('http://yunsseong.uk:8000/api/patients/', {
+      headers: { Authorization: `Token ${token.value}` },
+    })
     patientInformation.value = response.data
     console.log('patient data loding success')
   } catch (error) {
@@ -81,7 +82,8 @@ const loadReceptionData = async () => {
     console.log(selectedPatient.value?.patient_id)
     const response = await axios.get(
       `http://yunsseong.uk:8000/api/receptions?patient=${selectedPatient.value?.patient_id}`,
-        { headers: { Authorization: `Token ${token.value}` }})
+      { headers: { Authorization: `Token ${token.value}` } },
+    )
     receptionInformation.value = response.data
     console.log('reception_data loading success')
 
@@ -105,8 +107,9 @@ const addList = async () => {
       patient: patientID,
     }
 
-    const response = await axios.post(`http://yunsseong.uk:8000/api/list/`, data,
-        { headers: { Authorization: `Token ${token.value}` }})
+    const response = await axios.post(`http://yunsseong.uk:8000/api/list/`, data, {
+      headers: { Authorization: `Token ${token.value}` },
+    })
   } catch (error) {
     console.error(error)
   }
@@ -124,8 +127,9 @@ const submitForm = async () => {
     }
 
     console.log(data)
-    const response = await axios.post(`http://yunsseong.uk:8000/api/receptions/`,  data,
-        { headers: { Authorization: `Token ${token.value}` }})
+    const response = await axios.post(`http://yunsseong.uk:8000/api/receptions/`, data, {
+      headers: { Authorization: `Token ${token.value}` },
+    })
     console.log('Submit success')
 
     await addList() // 환자 리스트에 접수된 환자 추가
@@ -243,7 +247,8 @@ watch(() => selectedPatient.value, async (newVal) => {
 
                 <VCol
                   cols="12"
-                  md="3">
+                  md="3"
+                >
                   <VCardText>성별: {{ result.patient_gender }}</VCardText>
                 </VCol>
 
@@ -256,7 +261,7 @@ watch(() => selectedPatient.value, async (newVal) => {
                   md="6"
                 >
                   <VCardText>
-                    주민등록번호: {{ result.patient_birth}}-{{ result.patient_residence_number[0] }}******
+                    주민등록번호: {{ result.patient_birth }}-{{ result.patient_residence_number[0] }}******
                   </VCardText>
                 </VCol>
 
@@ -322,9 +327,7 @@ watch(() => selectedPatient.value, async (newVal) => {
                 cols="12"
                 md="2"
               >
-                <VCardText class="infoFont">
-                  이름 : {{ selectedPatient?.patient_name }}
-                </VCardText>
+                <VCardText class="infoFont"> 이름 : {{ selectedPatient?.patient_name }} </VCardText>
               </VCol>
 
               <VCol
@@ -346,7 +349,9 @@ watch(() => selectedPatient.value, async (newVal) => {
                 md="5"
               >
                 <VCardText class="infoFont">
-                  주민등록번호 : {{ selectedPatient?.patient_birth }}-{{ selectedPatient?.patient_residence_number[0] }}******
+                  주민등록번호 : {{ selectedPatient?.patient_birth }}-{{
+                    selectedPatient?.patient_residence_number[0]
+                  }}******
                 </VCardText>
               </VCol>
             </VRow>
@@ -355,9 +360,7 @@ watch(() => selectedPatient.value, async (newVal) => {
                 cols="12"
                 md="3"
               >
-                <VCardText class="infoFont">
-                  연락처 : {{ selectedPatient?.patient_phone_number }}
-                </VCardText>
+                <VCardText class="infoFont"> 연락처 : {{ selectedPatient?.patient_phone_number }} </VCardText>
               </VCol>
 
               <VCol
@@ -378,19 +381,24 @@ watch(() => selectedPatient.value, async (newVal) => {
             </VRow>
 
             <VRow class="mt-0">
-              <VCol cols="12" md="3">
+              <VCol
+                cols="12"
+                md="3"
+              >
                 <VCardText class="infoFont">
                   필수 약관 동의 여부 : {{ selectedPatient?.patient_agree_essential_term ? '동의' : '비동의' }}
                 </VCardText>
               </VCol>
 
-              <VCol cols="12" md="3">
+              <VCol
+                cols="12"
+                md="3"
+              >
                 <VCardText class="infoFont">
                   선택 약관 동의 여부 : {{ selectedPatient?.patient_agree_optional_term ? '동의' : '비동의' }}
                 </VCardText>
               </VCol>
             </VRow>
-
           </VCol>
         </VRow>
       </VCol>

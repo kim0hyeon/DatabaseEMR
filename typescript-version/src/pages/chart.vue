@@ -67,11 +67,9 @@ interface Inspect {
 }
 
 interface Photo {
-  image_url: string
+  url: string
+  name: string
 }
-
-const image = ref('')
-const selectedImage = ref('')
 
 const photos = ref<Photo[]>([])
 const selectedPhoto = ref('')
@@ -82,8 +80,6 @@ const clickedSendFile = () => {
 function handleFilesUpload(event: Event) {
   const target = event.target as HTMLInputElement
   const files = target.files
-
-  console.log(target.files)
 
   if (files) {
     Array.from(files).forEach(file => {
@@ -116,18 +112,16 @@ let chartInfo = ref<Chart[]>([])
 
 const getReceptionInfo = async (id: string) => {
   try {
-    console.log(id)
     const response = await axios.get(`http://yunsseong.uk:8000/api/receptions?patient=${ id }`,
       { headers: { Authorization: `Token ${token.value}` }})
     receptionInfo.value = response.data[0]
-    console.log(receptionInfo.value)
     console.log('reception data loding success')
   } catch (error) {
     console.error(error)
   }
 }
 
-const getChartInfo = (async (id: string) => {
+const getChartInfo = async (id: string) => {
   try {
     const response = await axios.get(`http://yunsseong.uk:8000/api/chart?patient=${ id }`,
       { headers: { Authorization: `Token ${token.value}` }})
@@ -137,25 +131,25 @@ const getChartInfo = (async (id: string) => {
     chartInfo.value = response.data.map((item: Chart) => {
       return {
         ...item,
-        date_only: item.datetime.split('T')[0]
-      };
-    });
+        date_only: item.datetime.split('T')[0],
+      }
+    })
 
     return chartInfo.value
   } catch (error) {
     console.error(error)
   }
-})
+}
 
 watch(
-    () => {
-      return store.id
-    },
-    async (newId, oldId) => {
-      console.log(`ID changed from ${oldId} to ${newId}`);
-      await getReceptionInfo(newId)
-      await getChartInfo(newId)
-    },
+  () => {
+    return store.id
+  },
+  async (newId, oldId) => {
+    console.log(`ID changed from ${oldId} to ${newId}`)
+    await getReceptionInfo(newId)
+    await getChartInfo(newId)
+  },
 )
 
 // 백엔드에서 검사 정보 받아오기
@@ -235,7 +229,11 @@ const OpenScanning = () => {
           <h3 class="mt-4 ml-2 mb-4"><b>내원이력</b></h3>
           <div class="scroll-container history">
             <VCard class="px-1 py-1">
-              <MedicalRecord v-model="isRecordOpen" :chart_id="selectedChartId" :patient_id="selectedReceptionId"/>
+              <MedicalRecord
+                v-model="isRecordOpen"
+                :chart_id="selectedChartId"
+                :patient_id="selectedReceptionId"
+              />
               <VCard
                 v-if="chartInfo"
                 v-for="item in chartInfo"
@@ -435,17 +433,17 @@ const OpenScanning = () => {
           <VCard class="pat_chart2 pa-2 ma-2">
             <div class="letter-spacing">
               <img
-                  src="../assets/icons/prescription.png"
-                  class="large-icon-size"
+                src="../assets/icons/prescription.png"
+                class="large-icon-size"
               />
               <h2>의사 소견</h2>
             </div>
             <VTextarea
-                label="의사 소견"
-                outline
-                rows="2"
-                auto-grow
-                style="margin-bottom: 5px"
+              label="의사 소견"
+              outline
+              rows="2"
+              auto-grow
+              style="margin-bottom: 5px"
             ></VTextarea>
           </VCard>
         </VRow>

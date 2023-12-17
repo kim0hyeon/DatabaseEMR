@@ -1,9 +1,7 @@
 <script lang="ts" setup>
-import ExaminationData from '@/exampleJson/examination.json'
-import { is } from 'quasar'
+import { token } from '@/token'
+import axios from 'axios'
 import { useStore } from 'vuex'
-import axios from "axios";
-import {token} from "@/token";
 
 interface Inspection {
   inspect_type_id: string
@@ -16,8 +14,9 @@ const selectedInspection = ref([])
 
 onMounted(async () => {
   try {
-    const response = await axios.get(`http://yunsseong.uk:8000/api/inspect_type`,
-        { headers: { Authorization: `Token ${token.value}` }})
+    const response = await axios.get(`http://yunsseong.uk:8000/api/inspect_type`, {
+      headers: { Authorization: `Token ${token.value}` },
+    })
     inspectionList.value = response.data
     console.log('load inspectionList success')
     console.log(inspectionList.value)

@@ -60,6 +60,24 @@ watch(
     }
   },
 )
+
+// 검사 검색 로직
+const searchTerm: Ref<string> = ref('')
+const searchResults = reactive<Treatment[]>([])
+
+const searchTreatment = (event: Event) => {
+  searchTerm.value = (event.target as HTMLInputElement).value
+  if (searchTerm.value) {
+    searchResults.splice(
+        0,
+        searchResults.length,
+        ...treatmentList.value.filter(treatment => treatment?.treatment_name.includes(searchTerm.value)),
+    )
+    console.log('after:', searchResults)
+  } else {
+    searchResults.splice(0, searchResults.length)
+  }
+}
 </script>
 
 <template>
@@ -74,13 +92,17 @@ watch(
 
       <VRow class="ma-3">
         <VCol cols="12">
+          <VTextField
+              @input="searchTreatment"
+              label="치료 검색"
+          />
           <v-data-table
               :headers="[
                 { title: '선택', align: 'center', value: 'select' },
                 { title: '치료 종류', align: 'center', value: 'treatment_name' },
                 { title: '치료 비용', align: 'center', value: 'treatment_cost' },
               ] as any"
-              :items="treatmentList"
+              :items="searchTerm !== '' ? searchResults : treatmentList"
               :items-per-page="5"
           >
             <template v-slot:item.select="{ item }">

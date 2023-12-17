@@ -60,6 +60,24 @@ watch(
     }
   },
 )
+
+// 검사 검색 로직
+const searchTerm: Ref<string> = ref('')
+const searchResults = reactive<Inspect[]>([])
+
+const searchInspection = (event: Event) => {
+  searchTerm.value = (event.target as HTMLInputElement).value
+  if (searchTerm.value) {
+    searchResults.splice(
+        0,
+        searchResults.length,
+        ...inspectionList.value.filter(inspection => inspection?.inspect_type.includes(searchTerm.value)),
+    )
+    console.log('after:', searchResults)
+  } else {
+    searchResults.splice(0, searchResults.length)
+  }
+}
 </script>
 
 <template>
@@ -74,13 +92,17 @@ watch(
 
       <VRow class="ma-3">
         <VCol cols="12">
+          <VTextField
+              @input="searchInspection"
+              label="검사 검색"
+          />
           <v-data-table
               :headers="[
                 { title: '선택', align: 'center', value: 'select' },
                 { title: '검사 종류', align: 'center', value: 'inspect_type' },
                 { title: '검사 비용', align: 'center', value: 'inspect_cost' },
               ] as any"
-              :items="inspectionList"
+              :items="searchTerm !== '' ? searchResults : inspectionList"
               :items-per-page="5"
           >
             <template v-slot:item.select="{ item }">

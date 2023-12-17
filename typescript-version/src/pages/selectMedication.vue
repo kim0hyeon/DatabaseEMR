@@ -60,6 +60,24 @@ watch(
     }
   },
 )
+
+// 약품 검색 로직
+const searchTerm: Ref<string> = ref('')
+const searchResults = reactive<Medication[]>([])
+
+const searchMedication = (event: Event) => {
+  searchTerm.value = (event.target as HTMLInputElement).value
+  if (searchTerm.value) {
+    searchResults.splice(
+        0,
+        searchResults.length,
+        ...medicationList.value.filter(medication => medication?.medication_name.includes(searchTerm.value)),
+    )
+    console.log('after:', searchResults)
+  } else {
+    searchResults.splice(0, searchResults.length)
+  }
+}
 </script>
 
 <template>
@@ -71,9 +89,12 @@ watch(
       <VCardTitle>검사 항목</VCardTitle>
 
       <VDivider />
-
       <VRow class="ma-3">
         <VCol cols="12">
+          <VTextField
+              @input="searchMedication"
+              label="약품 검색"
+          />
           <v-data-table
               :headers="[
                 { title: '선택', align: 'center', value: 'select' },
@@ -83,7 +104,7 @@ watch(
                 { title: '복용 방법', align: 'center', value: 'administration_method' },
                 { title: '약품 비용', align: 'center', value: 'medication_cost' },
               ] as any"
-              :items="medicationList"
+              :items="searchTerm !== '' ? searchResults : medicationList"
               :items-per-page="5"
           >
             <template v-slot:item.select="{ item }">

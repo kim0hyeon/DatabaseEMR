@@ -1,8 +1,7 @@
 <script lang="ts" setup>
-import ExaminationData from "@/exampleJson/examination.json";
-import {is} from "quasar";
-import {useStore} from "vuex";
-import axios from "axios";
+import ExaminationData from '@/exampleJson/examination.json'
+import { is } from 'quasar'
+import { useStore } from 'vuex'
 
 interface Inspection {
   inspect_type_id: string
@@ -19,14 +18,14 @@ onMounted(async () => {
     inspectionList.value = response.data
     console.log('load inspectionList success')
     console.log(inspectionList.value)
-  } catch(error) {
+  } catch (error) {
     console.error(error)
   }
 })
 
 const store = useStore()
 
-watch(selectedInspection, async (newVal) => {
+watch(selectedExam, async newVal => {
   console.log(newVal)
   await store.dispatch('updateSelectedInspection', newVal)
 
@@ -39,7 +38,7 @@ const resetSelectedInspection = () => {
 
 // 모달창 구현
 const props = defineProps({
-  modelValue: Boolean
+  modelValue: Boolean,
 })
 
 const emit = defineEmits(['update:modelValue'])
@@ -49,23 +48,33 @@ const closeModal = () => {
   isOpen.value = false
 }
 
-watch(() => props.modelValue, (newVal) => {
-  isOpen.value = newVal
-}, { immediate: true })
+watch(
+  () => props.modelValue,
+  newVal => {
+    isOpen.value = newVal
+  },
+  { immediate: true },
+)
 
-watch(() => isOpen.value, (newVal) => {
-  if (props.modelValue !== newVal) {
-    emit('update:modelValue', newVal)
-  }
-})
+watch(
+  () => isOpen.value,
+  newVal => {
+    if (props.modelValue !== newVal) {
+      emit('update:modelValue', newVal)
+    }
+  },
+)
 </script>
 
 <template>
-  <VDialog v-model="isOpen" style="max-width: 600px;">
-    <VCard style="max-width: 600px;">
+  <VDialog
+    v-model="isOpen"
+    style="max-width: 600px"
+  >
+    <VCard style="max-width: 600px">
       <VCardTitle>검사 항목</VCardTitle>
 
-      <VDivider/>
+      <VDivider />
 
       <VRow class="ma-3">
         <VCol cols="12">
@@ -74,7 +83,8 @@ watch(() => isOpen.value, (newVal) => {
             :key="index"
             :label="item.inspect_type"
             :value="item"
-            v-model="selectedInspection"></VCheckbox>
+            v-model="selectedExam"
+          ></VCheckbox>
         </VCol>
       </VRow>
 
@@ -83,7 +93,11 @@ watch(() => isOpen.value, (newVal) => {
           <VBtn @click="resetSelectedInspection">초기화</VBtn>
         </VCol>
         <VCol>
-          <VBtn class="right-btn" @click="closeModal">확인</VBtn>
+          <VBtn
+            class="right-btn"
+            @click="closeModal"
+            >확인</VBtn
+          >
         </VCol>
       </VRow>
     </VCard>

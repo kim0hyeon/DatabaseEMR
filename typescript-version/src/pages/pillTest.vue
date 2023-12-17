@@ -176,12 +176,13 @@ watch(
 <template>
   <div class="auth-wrapper d-flex">
     <VCol>
-      <VCard class="ma-5">
+      <VCard class="mb-3">
         <VCol
           cols="12"
-          md="3"
+          md="6"
         >
-          <VCardText class="PatientName">{{ pillInfo.patient.name }} ({{ pillInfo.patient.code }} )</VCardText>
+          <h2 class="PatientName">{{ pillInfo.patient.name }}</h2>
+          ({{ pillInfo.patient.code }})
         </VCol>
       </VCard>
       <VRow>

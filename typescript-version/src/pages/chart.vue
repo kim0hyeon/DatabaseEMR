@@ -11,7 +11,6 @@ import { IdStore } from '@/store/index'
 import axios from 'axios'
 import { ref } from 'vue'
 import { useStore } from 'vuex'
-import {di} from "@fullcalendar/core/internal-common";
 
 const store = IdStore()
 const token = sessionStorage.getItem('token')

@@ -151,7 +151,7 @@ watchEffect(() => {
     >
       <!-- 진료 비용 -->
       <VCard>
-        <VCardTitle>진료 비용</VCardTitle>
+        <VCardTitle>일반 진료 비용</VCardTitle>
 
         <VDivider />
 
@@ -163,10 +163,10 @@ watchEffect(() => {
             </tr>
           </thead>
           <tbody>
-            <template v-for="item in filteredInspectionData">
-              <tr v-for="name in item.inspectionName">
-                <td>{{ name }}</td>
-                <td>{{ findInspectionCost(name) }}원</td>
+            <template v-for="item in patientTreatments">
+              <tr>
+                <td>{{ item.treatment_name }}</td>
+                <td>{{ item.treatment_cost }}원</td>
               </tr>
             </template>
           </tbody>

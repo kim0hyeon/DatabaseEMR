@@ -23,18 +23,13 @@ function handleFilesUpload(event: Event) {
   const file = target.files ? target.files[0] : null
 
   if (file) {
-      const reader = new FileReader()
-      reader.onload = e => {
-        if (e.target?.result) {
-          const url = e.target.result.toString()
-          photo.value = { url, name: file.name }
-          selectedPhoto.value = url
-          console.log(photo.value)
-        }
-      }
-    reader.readAsDataURL(file)
+    photo.value = { file, name: file.name }  // 파일 객체 그대로 저장
+    selectedPhoto.value = URL.createObjectURL(file)  // 파일 객체로부터 URL 생성
+    console.log(photo.value)
   }
 }
+
+
 
 /*
 // 사진쪽 클릭하면 뜨게 하고 하는거는 나중에 짜자 그냥 사이트 라우트 되었을떄 디비에서 다 찾아내는 방식으로 짜야 안복잡할듯
@@ -207,27 +202,73 @@ const patientDiagnosis = ref('')
 
 const postChart = async () => {
   try {
-    console.log(inspectList.value)
-    const data = {
-      diagnosis: patientDiagnosis.value,
-      doctor_opinion: '',
-      image_url: photo.value?.url,
-      patient: store.id,
-      inspect: selectedInspection.value,
-      disease: selectedDisease.value,
-      treatment: selectedTreatment.value,
-      medication: selectedMedication.value
+    const diagnosis_data = patientDiagnosis.value
+    const doctor_opinion_data = ref('의사 소견')
+    const image_file_data = photo.value?.file // 이미지 파일 객체
+    const patient_data = store.id
+    const inspect_id = selectedInspection.value.map(item => item.inspect_type_id)
+    const disease_id = selectedDisease.value.map(item => item.id)
+    const treatment_code = selectedTreatment.value.map(item => item.treatment_code)
+    const medication_code = selectedMedication.value.map(item => item.medication_code)
+
+    const formData = new FormData();
+    formData.append('diagnosis', diagnosis_data);
+    formData.append('doctor_opinion', doctor_opinion_data.value);
+
+    if(image_file_data) {
+      formData.append('image_url', image_file_data, image_file_data.name);
     }
 
-    console.log(data)
+    formData.append('patient', patient_data);
 
-    const response = await axios.post(`http://yunsseong.uk:8000/api/chart/`, data, {
-      headers: { Authorization: `Token ${token}` },
+    if (inspect_id.length > 1) {
+      for(let i = 0; i < inspect_id.length; i++) {
+        formData.append('inspect', inspect_id[i]);
+      }
+    } else {
+      formData.append('inspect', inspect_id[0]);
+    }
+    if (disease_id.length > 1) {
+      for(let i = 0; i < disease_id.length; i++) {
+        formData.append('disease', disease_id[i]);
+      }
+    } else {
+      formData.append('disease', disease_id[0]);
+    }
+    if (treatment_code.length > 1) {
+      for(let i = 0; i < treatment_code.length; i++) {
+        formData.append('treatment', treatment_code[i]);
+      }
+    } else {
+      formData.append('treatment', treatment_code[0]);
+    }
+    if (medication_code.length > 1) {
+      for(let i = 0; i < medication_code.length; i++) {
+        formData.append('medication', medication_code[i]);
+      }
+    } else {
+      formData.append('medication', medication_code[0]);
+    }
+
+    for (let [key, value] of formData.entries()) {
+      console.log(key, value);
+    }
+
+
+    const response = await axios.post(`http://yunsseong.uk:8000/api/chart/`, formData, {
+      headers: {
+        'Authorization': `Token ${token}`,
+        'Content-Type': 'multipart/form-data', // 내용 타입을 multipart/form-data로 설정
+      },
     })
+
+    console.log('Post chart success')
+    location.reload()
   } catch (error) {
     console.error(error)
   }
 }
+
 </script>
 
 <template>

@@ -88,7 +88,7 @@ export interface Medication {
 }
 
 export interface Photo {
-  url: string
+  file: File
   name: string
 }
 

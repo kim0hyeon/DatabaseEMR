@@ -175,6 +175,12 @@ watch(() => selectedPatient.value, async (newVal) => {
     console.error('Error: ' + err)
   }
 })
+
+watch(() => isModalOpen.value, async (newVal) => {
+  if (newVal === false) {
+    location.reload() // 페이지 새로고침
+  }
+})
 </script>
 
 <template>

@@ -86,7 +86,7 @@ const searchMedication = (event: Event) => {
     style="max-width: 800px"
   >
     <VCard style="max-width: 800px">
-      <VCardTitle>검사 항목</VCardTitle>
+      <VCardTitle>처방 약품 목록</VCardTitle>
 
       <VDivider />
       <VRow class="ma-3">

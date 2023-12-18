@@ -95,6 +95,12 @@ let diseaseList = ref<Disease[]>([])
 let treatmentList = ref<Treatment[]>([])
 let medicationList = ref<Medication[]>([])
 
+onMounted(() => {
+  console.log(store.id)
+  getReceptionInfo(store.id)
+  getChartInfo(store.id)
+})
+
 onMounted(async () => {
   try {
     const response = await axios.get(`http://yunsseong.uk:8000/api/inspect_type/`, {

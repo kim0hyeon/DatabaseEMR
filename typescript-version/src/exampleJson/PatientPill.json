@@ -13,7 +13,7 @@
     },
     {
         "patient": {
-            "code": "af43ff4b-d26f-45b1-a90d-0275332ca794",
+            "code": "484e927a-7624-405e-9f36-2fd485d43a7a",
             "name": "홍길동",
             "age": 30,
             "gender": "남성"
@@ -45,10 +45,10 @@
     },
     {
         "patient": {
-            "code": "7bb5bd42-3801-4ff8-832f-2ea434b17be7",
-            "name": "이동후",
+            "code": "6509b489-9bfb-4c40-b26a-cbcde9028643",
+            "name": "홍길수",
             "age": 25,
-            "gender": "여성"
+            "gender": "남성"
         },
         "prescription": {
             "symptoms": [
@@ -77,10 +77,10 @@
     },
     {
         "patient": {
-            "code": "fdf69281-d799-4fe6-834f-d958d1341d65",
-            "name": "이동한",
+            "code": "67605ebf-43cb-4fde-b08d-2e3092f25694",
+            "name": "김철수",
             "age": 35,
-            "gender": "여성"
+            "gender": "남성"
         },
         "prescription": {
             "symptoms": [

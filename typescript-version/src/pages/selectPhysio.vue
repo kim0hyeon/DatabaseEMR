@@ -10,7 +10,7 @@ const selectedPhysio = ref([])
 
 onMounted(async () => {
   try {
-    const response = await axios.get(`http://yunsseong.uk:8000/api/physio`, {
+    const response = await axios.get(`http://yunsseong.uk:8000/api/physio_type`, {
       headers: { Authorization: `Token ${token}` },
     })
     physioList.value = response.data

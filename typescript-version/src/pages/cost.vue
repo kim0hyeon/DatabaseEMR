@@ -1,8 +1,9 @@
 <script setup lang="ts">
-import { Chart, Inspect, Treatment, Medication } from "@/pages/interfaces";
+import { Chart, Inspect, Treatment, Medication, Physio } from "@/pages/interfaces";
 import { IdStore } from '@/store'
 import axios from 'axios'
 import { useRoute } from 'vue-router'
+import {useStore} from "vuex";
 const store = IdStore()
 const token = sessionStorage.getItem('token')
 
@@ -27,6 +28,7 @@ const loadPatientChart = async () => {
 let inspectionData = ref<Inspect[]>([])
 let treatmentData = ref<Treatment[]>([])
 let medicationData = ref<Medication[]>([])
+let physioData = ref<Physio[]>([])
 
 onMounted(async () => {
   try {
@@ -59,6 +61,17 @@ onMounted(async () => {
   } catch (error) {
     console.error(error)
   }
+})
+
+onMounted(async () => {
+    try {
+        const response = await axios.get(`http://yunsseong.uk:8000/api/physio_type/`, {
+            headers: { Authorization: `Token ${token}` },
+        })
+        physioData.value = response.data
+    } catch (error) {
+        console.error(error)
+    }
 })
 
 
@@ -105,8 +118,11 @@ watchEffect(() => {
   }
 })
 
+const physioStore = useStore()
+const selectedPhysio = computed(() => physioStore.getters.selectedPhysio)
+
 // 최종 금액 계산
-const diagnosisTotalCost = ref(0)
+const physioTotalCost = ref(0)
 const inspectionTotalCost = ref(0)
 const treatmentTotalCost = ref(0)
 const medicationTotalCost = ref(0)
@@ -114,7 +130,7 @@ const totalCost = ref(0)
 
 
 watchEffect(() => {
-  let diagnosisSum = 0
+  let physioSum = 0
   let inspectionSum = 0
   let treatmentSum = 0
   let medicationSum = 0
@@ -133,16 +149,20 @@ watchEffect(() => {
     medicationSum += item.medication_cost
   })
 
+  selectedPhysio.value.forEach(item => {
+      physioSum += item.physio_cost
+  })
+
   inspectionTotalCost.value = inspectionSum
   treatmentTotalCost.value = treatmentSum
   medicationTotalCost.value = medicationSum
+  physioTotalCost.value = physioSum
 
   // 최종비용 계산
   totalCost.value =
-    diagnosisTotalCost.value + inspectionTotalCost.value +
+    physioTotalCost.value + inspectionTotalCost.value +
     treatmentTotalCost.value + medicationTotalCost.value
 })
-
 </script>
 <template>
   <VRow>
@@ -244,10 +264,10 @@ watchEffect(() => {
             </tr>
           </thead>
           <tbody>
-            <template v-for="item in patientTreatments">
+            <template v-for="item in selectedPhysio">
               <tr>
-                <td>{{ item.treatment_name }}</td>
-                <td>{{ item.treatment_cost }}원</td>
+                <td>{{ item.physio_name }}</td>
+                <td>{{ item.physio_cost }}원</td>
               </tr>
             </template>
           </tbody>
@@ -261,7 +281,7 @@ watchEffect(() => {
           </VCol>
 
           <VCol>
-            <VCardTitle class="font-weight-semibold text-2xl text-uppercase"> {{ treatmentTotalCost }}원 </VCardTitle>
+            <VCardTitle class="font-weight-semibold text-2xl text-uppercase"> {{ physioTotalCost }}원 </VCardTitle>
           </VCol>
         </VRow>
       </VCard>
@@ -320,19 +340,19 @@ watchEffect(() => {
           <thead>
             <tr>
               <th>이름</th>
-              <th>진료비용</th>
-              <th>검사비용</th>
+              <th>일반 진료 비용</th>
+              <th>검사 비용</th>
               <th>물리 및 재활치료 비용</th>
-              <th>약제비용</th>
-              <th>최종금액</th>
+              <th>약제 비용</th>
+              <th>최종 금액</th>
             </tr>
           </thead>
           <tbody>
             <tr>
               <td>{{ chartData?.patient.patient_name }}</td>
-              <td>{{ diagnosisTotalCost }}</td>
+              <td>{{ treatmentTotalCost }}원</td>
               <td>{{ inspectionTotalCost }}원</td>
-              <td>{{ treatmentTotalCost }}</td>
+              <td>{{ physioTotalCost }}원</td>
               <td>{{ medicationTotalCost }}원</td>
               <td>{{ totalCost }}원</td>
             </tr>

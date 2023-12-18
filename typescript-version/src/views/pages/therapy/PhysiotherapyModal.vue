@@ -47,7 +47,7 @@ const getChartInfo = (async (id: string) => {
 
 onMounted(async () => {
   try {
-    const response = await axios.get(`http://yunsseong.uk:8000/api/physio`, {
+    const response = await axios.get(`http://yunsseong.uk:8000/api/physio_type`, {
       headers: { Authorization: `Token ${token}`}
     })
     physioList.value = response.data
@@ -112,6 +112,11 @@ const findDiseaseName = (ids: number[]) => {
         const disease = diseaseList.value.find(disease => disease.id === id)
         return disease ? disease.disease_name : ""
     }).join(", ")
+}
+
+const alertSave = () => {
+    alert('저장되었습니다.')
+    location.reload()
 }
 </script>
 <template>
@@ -225,8 +230,7 @@ const findDiseaseName = (ids: number[]) => {
               <tr>
                 <th></th>
                 <th>이름</th>
-                <th>설명</th>
-                <th>종류</th>
+                <th>유형</th>
                 <th>수행</th>
                 <th>단위</th>
                 <th>비용</th>
@@ -240,9 +244,10 @@ const findDiseaseName = (ids: number[]) => {
                 <template v-if="item">
                   <td>({{ index + 1 }})</td>
                   <td>{{ item.physio_name }}</td>
-                  <td>{{ item.physio_desciption }}</td>
                   <td>{{ item.physio_kind }}</td>
-                  <td>{{ item.physio_value }}</td>
+                  <td style="text-align: center">
+                    <VTextField class="physio-value"></VTextField>
+                  </td>
                   <td>{{ item.physio_type }}</td>
                   <td>{{ item.physio_cost }}</td>
                 </template>
@@ -263,7 +268,7 @@ const findDiseaseName = (ids: number[]) => {
           class="mt-2"
         ></VTextarea>
 
-        <VBtn style="font-size: 15px" class="right-btn">저장</VBtn>
+        <VBtn style="font-size: 15px" class="right-btn" @click="alertSave">저장</VBtn>
 
         <SelectPhysio v-model="isPhysioListOpen"/>
         <VBtn
@@ -314,5 +319,16 @@ const findDiseaseName = (ids: number[]) => {
 .right-btn {
   float: inline-end;
   margin-inline-start: 10px;
+}
+
+.physio-value.v-input__control{
+    height:30px;
+}
+
+.physio-value input {
+    padding-top: 0;
+    padding-bottom: 0;
+    height: 100%;
+    width: 100%;
 }
 </style>

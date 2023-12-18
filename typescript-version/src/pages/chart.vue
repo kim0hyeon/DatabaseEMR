@@ -381,38 +381,27 @@ const findDiseaseName = (ids: number[]) => {
                 />
                 <h2>사진</h2>
               </div>
-              <label
-                for="image"
-                class="custom-file-upload1 chart"
-              >
-                <span>파일 선택</span>
-                <input
-                  type="file"
-                  id="image"
-                  @change="handleFilesUpload"
-                />
-              </label>
-              <VBtn
-                class="ml-4 mb-1"
-                >저장</VBtn
-              >
-              <div
-                class="scroll-container photo_list"
-                v-if="photo"
-              >
-                <div>
-                  <VDivider class="ma-3" />
-                  <img
-                    :src="photo?.url"
-                    :alt="photo?.name"
-                    class="sm-image"
-                  />
-                  <p class="name">{{ photo?.name }}</p>
 
-                  <button>(overview)</button>
-                  &nbsp;
-                  <button>(remove)</button>
-                </div>
+              <VDivider />
+              <div style="text-align: center" class="ma-3">
+                <img
+                        :src="selectedPhoto"
+                        :alt="photo?.name"
+                        style="width: 100px;"
+                />
+              </div>
+              <div style="text-align: right" class="mb-3">
+                <label
+                  for="image"
+                  class="custom-file-upload1 chart"
+                >
+                  <span>파일 선택</span>
+                  <input
+                          type="file"
+                          id="image"
+                          @change="handleFilesUpload"
+                  />
+                </label>
               </div>
             </VCard>
           </VCol>

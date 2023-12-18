@@ -11,6 +11,7 @@ const store = IdStore()
 let BloodInformation = ref<BloodTest[]>([])
 const loadBloodData = async () => {
   console.log('load inbody data')
+  BloodInformation.value = []
   try {
     const response = await axios.get(`http://yunsseong.uk:8000/api/blood?patient=${store.id}`, {
       headers: { Authorization: `Token ${token}` },

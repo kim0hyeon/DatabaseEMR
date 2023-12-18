@@ -63,10 +63,10 @@ const handleLogin = async () => {
     const token = response.data.token
     console.log(token)
     sessionStorage.setItem('token', token)
-    const userInfo = await axios.get('http://yunsseong.uk:8000/api/medical/', {
+    const userInfo = await axios.get('http://yunsseong.uk:8000/api/medical-info/', {
       headers: { Authorization: `Token ${token}` },
     })
-    console.log(userInfo.data[0].medical_person_birthday)
+    console.log(userInfo.data.medical_person_birthday)
     sessionStorage.setItem('userInfo', JSON.stringify(userInfo))
     console.log('로그인 성공! 토큰:', token)
     router.push('home')
@@ -174,7 +174,7 @@ const isPasswordVisible = ref(false)
           </div>
         </template>
 
-        <VCardTitle class="font-weight-semibold text-2xl text-uppercase"> EMR SYSTEM </VCardTitle>
+        <VCardTitle class="font-weight-semibold text-2xl text-uppercase"> QMR </VCardTitle>
       </VCardItem>
 
       <VCardText class="InputIDPW mt-6">

@@ -37,7 +37,7 @@ const isPasswordVisible = ref(false)
           </div>
         </template>
 
-        <VCardTitle class="font-weight-semibold text-2xl text-uppercase"> EMR SYSTEM </VCardTitle>
+        <VCardTitle class="font-weight-semibold text-2xl text-uppercase"> QMR </VCardTitle>
       </VCardItem>
 
       <VCardText class="pt-2">

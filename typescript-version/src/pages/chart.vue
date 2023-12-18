@@ -11,6 +11,7 @@ import { IdStore } from '@/store/index'
 import axios from 'axios'
 import { ref } from 'vue'
 import { useStore } from 'vuex'
+import {di} from "@fullcalendar/core/internal-common";
 
 const store = IdStore()
 const token = sessionStorage.getItem('token')
@@ -269,6 +270,12 @@ const postChart = async () => {
   }
 }
 
+const findDiseaseName = (ids: number[]) => {
+  return ids.map(id => {
+      const disease = diseaseList.value.find(disease => disease.id === id)
+      return disease ? disease.disease_name : ""
+  }).join(", ")
+}
 </script>
 
 <template>
@@ -316,7 +323,7 @@ const postChart = async () => {
                 @click="openRecord(item.chart_id, receptionInfo?.reception_id)"
               >
                 <h4 class="letter-spacing">진료날짜: {{ item.date_only }}</h4>
-                <h4 class="letter-spacing">병 아이디: {{ item.disease }}</h4>
+                <h4 class="letter-spacing">병명: {{ findDiseaseName(item.disease) }}</h4>
                 <h4 class="letter-spacing">진단: {{ item.diagnosis }}</h4>
               </VCard>
             </VCard>

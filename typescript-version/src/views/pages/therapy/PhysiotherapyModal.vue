@@ -1,6 +1,6 @@
 <script setup lang='ts'>
 import axios from 'axios'
-import { Chart, Physio, Reception } from "@/pages/interfaces";
+import { Chart, Physio, Reception, Disease } from "@/pages/interfaces";
 import { reactive } from 'vue'
 import { useRoute } from 'vue-router'
 import { IdStore } from "@/store";
@@ -13,11 +13,12 @@ const route = useRoute()
 const store = IdStore()
 const token = sessionStorage.getItem('token')
 
-// 백엔드에서 접수, 차트, 물리치료 정보 받아오기
+// 백엔드에서 접수, 차트, 물리치료, 질병 정보 받아오기
 let receptionInfo = ref<Reception>()
 let chartInfo = ref<Chart[]>([])
 let recentlyChartInfo = ref<Chart>() // 가장 최근 차트
 let physioList = ref<Physio[]>([])
+let diseaseList = ref<Disease[]>([])
 
 const getReceptionInfo = (async (id: string) => {
   try {
@@ -54,6 +55,17 @@ onMounted(async () => {
   } catch (error) {
     console.error(error)
   }
+})
+
+onMounted(async () => {
+    try {
+        const response = await axios.get(`http://yunsseong.uk:8000/api/disease`, {
+            headers: { Authorization: `Token ${token}`}
+        })
+        diseaseList.value = response.data
+    } catch (error) {
+        console.error(error)
+    }
 })
 
 watch(() => {
@@ -94,6 +106,13 @@ const openPhysioList = () => {
 
 const physioStore = useStore()
 const selectedPhysio = computed(() => physioStore.getters.selectedPhysio)
+
+const findDiseaseName = (ids: number[]) => {
+    return ids.map(id => {
+        const disease = diseaseList.value.find(disease => disease.id === id)
+        return disease ? disease.disease_name : ""
+    }).join(", ")
+}
 </script>
 <template>
   <VRow>
@@ -141,7 +160,7 @@ const selectedPhysio = computed(() => physioStore.getters.selectedPhysio)
                   @click="openRecord(item.chart_id, receptionInfo?.reception_id)"
               >
                 <h4 class="letter-spacing">진료날짜: {{ item.date_only }}</h4>
-                <h4 class="letter-spacing">병 아이디: {{ item.disease }}</h4>
+                <h4 class="letter-spacing">병명: {{ findDiseaseName(item.disease) }}</h4>
                 <h4 class="letter-spacing">진단: {{ item.diagnosis }}</h4>
               </VCard>
             </VCard>

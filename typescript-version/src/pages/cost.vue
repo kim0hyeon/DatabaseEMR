@@ -16,6 +16,7 @@ const loadPatientChart = async () => {
     const response = await axios.get(`http://yunsseong.uk:8000/api/chart?patient=${patient_id.value}`, {
       headers: { Authorization: `Token ${token}` },
     })
+    console.log(response.data)
     chartData.value = response.data[0]
   } catch (error) {
     console.error(error)
